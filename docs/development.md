@@ -134,13 +134,15 @@ The tour is scripted in `scripts/record-demo.mjs`; frames come from Chromium's s
 
 ## CI
 
-`.github/workflows/ci.yml`:
+Changes go through a branch and a pull request. `.github/workflows/ci.yml` runs on every pull
+request and again on `main` after the merge. Documentation-only changes (`docs/**`, `*.md`,
+`LICENSE`) skip it.
 
 | Job       | Steps |
 |-----------|-------|
 | `module`  | workspace lint and formatting, module types, unit |
 | `package` | packaged consumption |
-| `stand`   | matrix `{octane, clockwork}`, `{octane, debugbar}`, `{classic, clockwork}`: `demo/bin/setup`, PHPUnit, stand up, leak test, e2e; logs and Playwright traces on failure |
+| `stand`   | matrix `{octane, clockwork}`, `{octane, debugbar}`, `{classic, clockwork}`: `demo/bin/setup`, Pint (once), PHPUnit, stand up, leak test, e2e; logs and Playwright traces on failure |
 
 On CI, Playwright retries a failed test once (a cold dev server may reload while Vite pre-bundles)
 and reports it as flaky.

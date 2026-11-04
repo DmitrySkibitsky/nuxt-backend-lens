@@ -27,6 +27,13 @@ denies, and an existing `node_modules` hides it.
 Git hooks run lint-staged on commit and `pnpm check:push` on push: never bypass them with
 `--no-verify`; fix the cause.
 
+## Workflow
+
+- Every change goes through a branch and a pull request; never commit or push to `main` directly.
+  Branch names follow the commit type (`feat/…`, `fix/…`, `ci/…`, `docs/…`).
+- CI runs on the pull request; merge only when it is green. Documentation-only changes skip CI.
+- PR titles follow Conventional Commits, like the commits.
+
 ## Testing conventions
 
 - Never assert absolute query counts in e2e: the Sanctum session adds its own. Count by statement
