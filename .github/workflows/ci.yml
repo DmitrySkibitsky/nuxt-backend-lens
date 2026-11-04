@@ -1,20 +1,13 @@
 name: CI
 
 # Changes are made on branches and merged through pull requests; `main` is checked again after the
-# merge. Documentation-only changes skip the whole workflow. If these checks are ever made required
-# in branch protection, a skipped workflow leaves them pending: move the filter into the jobs then.
+# merge. Branch protection requires the single "CI result" check. Documentation-only changes skip
+# the heavy jobs inside the workflow rather than skipping the workflow: a workflow that never runs
+# leaves a required check pending forever, a skipped job counts as passed.
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - 'docs/**'
-      - '**/*.md'
-      - 'LICENSE'
   pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - '**/*.md'
-      - 'LICENSE'
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -25,8 +18,34 @@ env:
   COMPOSER_IN_CONTAINER: '1'
 
 jobs:
+  changes:
+    name: Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      code: ${{ steps.diff.outputs.code }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: diff
+        name: Anything besides docs/, Markdown and LICENSE?
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            # New branch or an unknown base: check everything.
+            echo "code=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git diff --name-only "$BASE" "$GITHUB_SHA"
+          code=$(git diff --name-only "$BASE" "$GITHUB_SHA" | grep -v -E '^docs/|\.md$|^LICENSE$' | head -1)
+          echo "code=$([ -n "$code" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
   module:
     name: Lint, formatting, module types and unit
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -46,6 +65,8 @@ jobs:
 
   package:
     name: Packaged consumption
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -62,6 +83,8 @@ jobs:
 
   stand:
     name: Stand — ${{ matrix.backend-mode }} / ${{ matrix.debug-backend }}
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -111,3 +134,24 @@ jobs:
           name: playwright-${{ matrix.backend-mode }}-${{ matrix.debug-backend }}
           path: test-results/
           retention-days: 7
+
+  # The one check branch protection requires: matrix jobs skipped as a whole would not report their
+  # expanded names, so they cannot be required one by one.
+  result:
+    name: CI result
+    if: always()
+    needs: [changes, module, package, stand]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Every job passed, or was skipped for a documentation-only change
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "job results: $RESULTS"
+          for result in $RESULTS; do
+            case "$result" in
+              success | skipped) ;;
+              *) exit 1 ;;
+            esac
+          done

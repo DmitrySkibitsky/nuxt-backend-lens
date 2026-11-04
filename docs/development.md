@@ -134,14 +134,21 @@ The tour is scripted in `scripts/record-demo.mjs`; frames come from Chromium's s
 
 ## CI
 
-Changes go through a branch and a pull request. `.github/workflows/ci.yml` runs on every pull
-request and again on `main` after the merge. Documentation-only changes (`docs/**`, `*.md`,
-`LICENSE`) skip it.
+Changes go through a branch and a pull request; `main` is protected (no direct pushes, no force
+pushes, linear history) and accepts a pull request only when the **CI result** check passed.
+`.github/workflows/ci.yml` runs on every pull request and again on `main` after the merge.
+
+A `changes` job looks at the changed files first. When they are all documentation (`docs/**`,
+`*.md`, `LICENSE`), the jobs below are skipped and **CI result** still passes. The filter lives
+inside the workflow on purpose: a workflow that does not start would leave the required check
+pending.
 
 | Job       | Steps |
 |-----------|-------|
+| `changes` | decides whether the change is documentation only |
 | `module`  | workspace lint and formatting, module types, unit |
 | `package` | packaged consumption |
+| `result`  | **CI result**, the required check: every job passed or was skipped |
 | `stand`   | matrix `{octane, clockwork}`, `{octane, debugbar}`, `{classic, clockwork}`: `demo/bin/setup`, Pint (once), PHPUnit, stand up, leak test, e2e; logs and Playwright traces on failure |
 
 On CI, Playwright retries a failed test once (a cold dev server may reload while Vite pre-bundles)
