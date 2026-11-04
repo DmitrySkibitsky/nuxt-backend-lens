@@ -79,7 +79,8 @@ N+1 and duplicate groups never overlap. In the Queries tab:
   more`);
 - opening it lists the other members **right below that query, indented**, with a coloured left
   border, each with its own number, duration and call site;
-- clicking an issue in the summary above the list opens its group and scrolls to it.
+- clicking an issue in the summary above the list opens its group and scrolls to it; clicking it
+  again closes the group. The summary item and the query's toggle drive the same group.
 
 *Call site* is the first application frame of the query's stack trace: the first frame outside
 `vendor/`. When application middleware wraps the whole stack, queries made by vendor middleware

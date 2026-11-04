@@ -58,6 +58,14 @@ test('N+1 is collapsed into its first query and opens indented below it', async 
   const indent = await members.evaluate(element => Number.parseFloat(getComputedStyle(element).marginLeft))
   expect(indent).toBeGreaterThan(0)
 
+  // A second click on the issue closes the group again, a third one reopens it.
+  await expect(issue).toHaveAttribute('aria-expanded', 'true')
+  await issue.click()
+  await expect(members).toHaveCount(0)
+  await expect(issue).toHaveAttribute('aria-expanded', 'false')
+  await issue.click()
+  await expect(members.getByTestId('backend-lens-query')).toHaveCount(29)
+
   await toggle.click()
   await expect(members).toHaveCount(0)
   await expect(querySql(panel)).toHaveCount(total - 29)
@@ -97,6 +105,10 @@ test('duplicate queries are reported with their counts', async ({ page }) => {
     await expect(member).toContainText(/count\(\*\).*"books"/i)
     await expect(member).toContainText('BookController.php:')
   }
+
+  // The summary item and the chip drive the same group: the item closes what the chip opened.
+  await duplicates.filter({ hasText: '3×' }).click()
+  await expect(members).toHaveCount(0)
 })
 
 test('the slow query is flagged', async ({ page }) => {

@@ -14,8 +14,9 @@
           class="bl-issue"
           :class="`bl-issue-${issueClass(issue.kind)}`"
           :data-testid="`backend-lens-issue-${issueClass(issue.kind)}`"
-          :title="issue.kind === 'slow' ? 'Scroll to the query' : 'Show the group in the list below'"
-          @click="reveal(issue.indexes[0]!, issue.kind !== 'slow')"
+          :title="issueTitle(issue)"
+          :aria-expanded="issue.kind === 'slow' ? undefined : expanded.has(issue.indexes[0]!)"
+          @click="onIssue(issue)"
         >
           <span class="bl-chip">{{ ISSUE_LABELS[issue.kind] }}</span>
           <span v-if="issue.kind === 'n+1'">
@@ -172,11 +173,28 @@ function toggle(lead: number) {
   expanded.value = next
 }
 
-/** From the issues summary: open the group (if any) and bring its first query into view. */
-async function reveal(lead: number, expand: boolean) {
-  if (expand && !expanded.value.has(lead)) {
+/** From the issues summary: a group toggles like its own chip; opening (or a slow query) scrolls to it. */
+function onIssue(issue: QueryIssue) {
+  const lead = issue.indexes[0]!
+  if (issue.kind !== 'slow' && expanded.value.has(lead)) {
+    toggle(lead)
+    return
+  }
+  if (issue.kind !== 'slow') {
     toggle(lead)
   }
+  void reveal(lead)
+}
+
+function issueTitle(issue: QueryIssue): string {
+  if (issue.kind === 'slow') {
+    return 'Scroll to the query'
+  }
+  return expanded.value.has(issue.indexes[0]!) ? 'Hide the group' : 'Show the group in the list below'
+}
+
+/** Brings a query into view and flashes it. */
+async function reveal(lead: number) {
   flashed.value = lead
   await nextTick()
   list.value?.querySelector(`[data-index="${lead}"]`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
