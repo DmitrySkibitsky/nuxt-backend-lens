@@ -15,7 +15,7 @@ env:
 
 jobs:
   module:
-    name: Module — lint, types, unit
+    name: Lint, formatting, module types and unit
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -28,7 +28,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm -F nuxt-backend-lens dev:prepare
-      - run: pnpm -F nuxt-backend-lens lint
+      - name: Lint and formatting (whole workspace)
+        run: pnpm lint
       - run: pnpm -F nuxt-backend-lens test:types
       - run: pnpm -F nuxt-backend-lens test
 

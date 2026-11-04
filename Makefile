@@ -18,7 +18,7 @@ STAND_ENV := $(strip $(if $(MODE),BACKEND_MODE=$(MODE)) $(if $(BACKEND),DEBUG_BA
 COMPOSE := cd demo && $(STAND_ENV) docker compose
 
 .PHONY: help setup up down restart ps logs devtools-auth \
-	dev prepare lint types unit module \
+	dev prepare lint types unit module format format-check \
 	backend-test pint leak e2e package stand stand-all check
 
 help: ## List targets
@@ -57,7 +57,7 @@ dev: ## Playground (replays captured records, no PHP needed)
 prepare: ## Module stub build + types
 	$(MODULE) dev:prepare
 
-lint: ## ESLint
+lint: ## ESLint on the module
 	$(MODULE) lint
 
 types: ## vue-tsc (module and playground)
@@ -67,6 +67,14 @@ unit: ## Vitest unit tests
 	$(MODULE) test
 
 module: lint types unit ## All module checks
+
+## --- Formatting (ESLint Stylistic for TS / JS / Vue / JSON, Stylelint for CSS; PHP: make pint)
+
+format: ## Format the workspace (fixes in place)
+	pnpm format
+
+format-check: ## Check formatting and lint the whole workspace, as CI does
+	pnpm lint
 
 ## --- Tests against the stand
 
@@ -94,4 +102,4 @@ stand-all: ## The three CI stand configurations, one after another, then back to
 	BACKEND_MODE=classic DEBUG_BACKEND=clockwork demo/bin/check-stand
 	cd demo && docker compose up -d --force-recreate backend queue
 
-check: module backend-test package stand-all ## Everything CI runs, locally
+check: format-check module backend-test package stand-all ## Everything CI runs, locally
