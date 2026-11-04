@@ -79,6 +79,16 @@ make dev        # playground on :3000; replays test/fixtures/records through bot
 make module     # lint + vue-tsc + vitest
 ```
 
+Formatting and lint for the whole workspace (module, playground, demo frontend, tests, scripts):
+one root `eslint.config.mjs` (ESLint Stylistic for TS / JS / Vue, `eslint-plugin-jsonc` for JSON)
+and one root `stylelint.config.mjs` for CSS. PHP is formatted by Pint.
+
+```bash
+make format         # fix in place
+make format-check   # check, as CI does
+make pint           # PHP
+```
+
 The demo frontend loads the module from source (`../../packages/nuxt-backend-lens/src/module`), so
 runtime changes reach it by HMR. The packaged path is covered by `make package`.
 
@@ -108,7 +118,7 @@ node packages/nuxt-backend-lens/scripts/capture-fixtures.mjs --source=debugbar
 
 | Job       | Steps |
 |-----------|-------|
-| `module`  | lint, types, unit |
+| `module`  | workspace lint and formatting, module types, unit |
 | `package` | packaged consumption |
 | `stand`   | matrix `{octane, clockwork}`, `{octane, debugbar}`, `{classic, clockwork}`: `demo/bin/setup`, PHPUnit, stand up, leak test, e2e; logs and Playwright traces on failure |
 

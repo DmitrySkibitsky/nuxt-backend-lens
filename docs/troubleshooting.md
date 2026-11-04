@@ -74,5 +74,24 @@ own browser downloads do not run on NixOS; set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_P
 ## The page reloads once when the panel is first opened (dev)
 
 Vite discovered a dependency at runtime. The module pre-bundles its lazy client dependencies when
-it is installed as a package. When it is loaded from source in a workspace, the app may not
-resolve them and Vite finds them on first use; after that they stay cached.
+the app can resolve the module by name: installed as a package, or, when it is loaded from source
+in a workspace, declared as a workspace dependency of the app (the demo frontend does that).
+Otherwise Vite finds them on first use; after that they stay cached. Dependencies of the app itself
+go into `vite.optimizeDeps.include`.
+
+## Demo: `composer install` fails inside the backend image
+
+Some hosts have no working DNS inside Docker containers. `make setup` uses the host's Composer when
+there is one; install Composer on the host (or use `nix develop`). `COMPOSER_IN_CONTAINER=1` forces
+the image, as CI does.
+
+## Demo: a change to `module.ts` has no effect
+
+Runtime files reach the demo frontend by HMR, the module setup does not. Restart the frontend:
+`cd demo && docker compose restart frontend`.
+
+## Demo: data is back to the seed after a restart
+
+The backend runs `migrate:fresh --seed` whenever its container is recreated (`make restart`,
+switching the mode or the debug package). The queue worker restarts by policy when its tables are
+dropped under it.
