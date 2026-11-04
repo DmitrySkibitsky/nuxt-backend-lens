@@ -102,6 +102,16 @@ class ScenarioEndpointsTest extends TestCase
         $this->assertSame(['select ? as marker'], $queries);
     }
 
+    public function test_timing_only_endpoint_reports_its_own_server_timing(): void
+    {
+        $response = $this->getJson('/api/timing-only')->assertOk()->assertJson(['books' => 20]);
+
+        $this->assertMatchesRegularExpression(
+            '/^db;dur=\d+\.\d{2};desc="Database", total;dur=\d+\.\d{2};desc="Total"$/',
+            (string) $response->headers->get('Server-Timing'),
+        );
+    }
+
     public function test_marker_endpoint_rejects_non_uuid(): void
     {
         $this->getJson('/api/marker/not-a-uuid')->assertNotFound();

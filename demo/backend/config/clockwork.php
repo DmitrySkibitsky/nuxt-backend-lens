@@ -192,6 +192,7 @@ return [
             '/telescope/.*', // Laravel Telescope requests
             '/_tt/.*', // Laravel Telescope toolbar
             '/_debugbar/.*', // Laravel DebugBar requests
+            '/api/timing-only', // demo: stands in for a backend without a debug package
         ],
 
         // List of URIs that should be collected, any other URI will not be collected if not empty

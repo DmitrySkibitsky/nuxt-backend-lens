@@ -62,3 +62,77 @@ export function observeServerTiming(onEntry: (entry: ServerTimingEntry) => void)
 export function databaseTimeMs(metrics: readonly ServerTimingMetric[], names: readonly string[] = ['db']): number | undefined {
   return metrics.find(metric => names.includes(metric.name))?.durationMs
 }
+
+/**
+ * Parses a `Server-Timing` header value (W3C Server Timing, `metric *( OWS ";" OWS param )`).
+ * Quoted descriptions may contain commas and semicolons; unknown params are ignored.
+ */
+export function parseServerTimingHeader(value: string): ServerTimingMetric[] {
+  const metrics: ServerTimingMetric[] = []
+  let index = 0
+
+  const skipSpaces = () => {
+    while (index < value.length && /\s/.test(value[index]!)) {
+      index++
+    }
+  }
+  const readToken = () => {
+    const start = index
+    while (index < value.length && !/[\s,;=]/.test(value[index]!)) {
+      index++
+    }
+    return value.slice(start, index)
+  }
+  const readValue = () => {
+    if (value[index] !== '"') {
+      return readToken()
+    }
+    index++
+    let result = ''
+    while (index < value.length && value[index] !== '"') {
+      if (value[index] === '\\' && index + 1 < value.length) {
+        index++
+      }
+      result += value[index]
+      index++
+    }
+    index++ // closing quote
+    return result
+  }
+
+  while (index < value.length) {
+    skipSpaces()
+    const name = readToken()
+    let durationMs = 0
+    let description: string | undefined
+    skipSpaces()
+    while (value[index] === ';') {
+      index++
+      skipSpaces()
+      const param = readToken().toLowerCase()
+      skipSpaces()
+      let paramValue = ''
+      if (value[index] === '=') {
+        index++
+        skipSpaces()
+        paramValue = readValue()
+      }
+      if (param === 'dur' && Number.isFinite(Number(paramValue))) {
+        durationMs = Number(paramValue)
+      }
+      else if (param === 'desc') {
+        description = paramValue
+      }
+      skipSpaces()
+    }
+    if (name) {
+      metrics.push({ name, durationMs, description })
+    }
+    // Skip anything malformed up to the next metric.
+    while (index < value.length && value[index] !== ',') {
+      index++
+    }
+    index++
+  }
+  return metrics
+}

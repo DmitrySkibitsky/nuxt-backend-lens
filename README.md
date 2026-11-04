@@ -1,4 +1,4 @@
-# nuxt-laravel-devtools
+# nuxt-backend-lens
 
 Workspace of [`nuxt-backend-lens`](packages/nuxt-backend-lens): a Debugbar-like panel for Nuxt SPAs.
 It shows the SQL, logs, cache and timing behind every backend request, with data from Clockwork or
@@ -10,17 +10,24 @@ demo/                         Laravel 13 + Octane (FrankenPHP) + PostgreSQL, Nux
 tests/leak/                   request-isolation test for long-lived workers
 tests/e2e/                    Playwright against the demo stand
 tests/package/                packaged-consumption check (pack → install → production build)
+docs/                         documentation: getting started, features, configuration, adapters, …
 docs/upstream/                drafts of issues found in third-party packages
 ```
 
 ## Demo stand
 
-Requirements: Docker with Compose, Node 24, pnpm.
+Requirements: Docker with Compose, Node 24, pnpm 12 (pinned through `packageManager`, so
+`corepack enable` gives the right one), make.
+
+On Nix, `nix develop` (or direnv with `use flake`) provides everything except Docker: Node 24 with
+the pinned pnpm, PHP 8.5 + Composer, make, and a Chromium for Playwright. It also unsets
+`LD_LIBRARY_PATH`, which breaks Chromium on NixOS when it points at other glibc builds. Docker
+itself is a system service (`virtualisation.docker.enable` on NixOS).
 
 ```bash
-demo/bin/setup                     # .env files, app key, composer + pnpm install, module stub build
-(cd demo && docker compose up -d)  # Octane + Clockwork by default
-demo/bin/wait                      # until everything answers
+make setup     # .env files, app key, composer + pnpm install, module stub build
+make up        # Octane + Clockwork by default; waits until everything answers
+make help      # every shortcut
 ```
 
 | URL                                   | What                                                       |
@@ -34,25 +41,30 @@ Demo login: `demo@example.com` / `password`. If a port is taken, change it in `d
 
 Nuxt DevTools asks a browser for authorization once and prints the instructions to the dev
 server's terminal. On this stand that terminal is the frontend container's log. Run
-`demo/bin/devtools-auth` and open the link it prints. The token lives in `demo/.state/`, so the
+`make devtools-auth` and open the link it prints. The token lives in `demo/.state/`, so the
 authorization survives container re-creation.
 
-Switches, also in `demo/.env` or the environment:
+Switches (`MODE=` / `BACKEND=` on make targets, or `BACKEND_MODE` / `DEBUG_BACKEND` in `demo/.env`):
 
-- `DEBUG_BACKEND=clockwork|debugbar`: which package collects the data;
-- `BACKEND_MODE=octane|classic`: FrankenPHP worker mode, or a fresh bootstrap per request;
-- `CLOCKWORK_STORAGE=files|sql`: where Clockwork stores its records.
+- `BACKEND=clockwork|debugbar`: which package collects the data;
+- `MODE=octane|classic`: FrankenPHP worker mode, or a fresh bootstrap per request;
+- `CLOCKWORK_STORAGE=files|sql` (in `demo/.env`): where Clockwork stores its records.
 
-Example: `DEBUG_BACKEND=debugbar docker compose up -d --force-recreate backend`.
+Example: `make restart BACKEND=debugbar`.
 
 ## Checks
 
-```bash
-pnpm -F nuxt-backend-lens lint && pnpm -F nuxt-backend-lens test:types && pnpm -F nuxt-backend-lens test
-(cd demo && docker compose run --rm backend-tests)   # PHPUnit
-pnpm test:leak --source=clockwork                     # or --source=debugbar
-pnpm test:e2e                                         # against the running stand
-pnpm test:package                                     # packed module in a clean app
-```
+| Command                              | What                                                        |
+|--------------------------------------|-------------------------------------------------------------|
+| `make module`                        | lint, types and unit tests of the module                    |
+| `make backend-test`                  | PHPUnit, in the backend image                               |
+| `make leak`                          | worker-isolation test against the running stand             |
+| `make e2e`                           | Playwright against the running stand                        |
+| `make package`                       | packed module in a clean app, production build on and off   |
+| `make stand MODE=… BACKEND=…`        | one CI stand configuration: restart, wait, leak test, e2e   |
+| `make check`                         | everything CI runs, all three stand configurations          |
 
-`.github/workflows/ci.yml` runs all of them, and runs the stand once per `DEBUG_BACKEND`.
+Every target is a thin alias over a script (`pnpm …`, `demo/bin/*`, `docker compose`), so all of
+them also work without make. `.github/workflows/ci.yml` runs the same checks: the module job, the
+package check, and the stand as a matrix `{octane, clockwork}`, `{octane, debugbar}`,
+`{classic, clockwork}`.

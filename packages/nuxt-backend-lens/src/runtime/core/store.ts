@@ -1,3 +1,4 @@
+import type { ActionEntry } from './actions'
 import type { NavigationEntry, RequestEntry } from './types'
 
 export type StoreListener = () => void
@@ -9,6 +10,7 @@ export type StoreListener = () => void
 export class RequestStore {
   private items: RequestEntry[] = []
   private navigationItems: NavigationEntry[] = []
+  private actionItems: ActionEntry[] = []
   private readonly listeners = new Set<StoreListener>()
 
   constructor(private readonly limit: number) {}
@@ -19,6 +21,19 @@ export class RequestStore {
 
   get navigations(): readonly NavigationEntry[] {
     return this.navigationItems
+  }
+
+  get actions(): readonly ActionEntry[] {
+    return this.actionItems
+  }
+
+  addAction(action: ActionEntry): void {
+    this.actionItems = [...this.actionItems, action]
+    // Actions only matter while requests can refer to them.
+    if (this.actionItems.length > this.limit) {
+      this.actionItems = this.actionItems.slice(this.actionItems.length - this.limit)
+    }
+    this.emit()
   }
 
   /** Adds a navigation, or updates it when the id is already known. */
@@ -61,6 +76,7 @@ export class RequestStore {
 
   clear(): void {
     this.items = []
+    this.actionItems = []
     this.navigationItems = this.navigationItems.slice(-1)
     this.emit()
   }

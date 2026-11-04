@@ -79,6 +79,29 @@ class ScenarioController extends Controller
     }
 
     /**
+     * Stands in for a backend without Clockwork or Debugbar (both exclude this URI): it reports its
+     * own timing through a Server-Timing header, which the lens's server-timing adapter reads.
+     */
+    public function timingOnly(Request $request): JsonResponse
+    {
+        // Per-request start: LARAVEL_START is defined once per Octane worker, not per request.
+        $requestStarted = (float) $request->server('REQUEST_TIME_FLOAT', microtime(true));
+
+        $started = microtime(true);
+        $books = Book::query()->count();
+        $databaseMs = (microtime(true) - $started) * 1000;
+
+        $response = response()->json(['books' => $books]);
+        $totalMs = (microtime(true) - $requestStarted) * 1000;
+
+        return $response->header('Server-Timing', sprintf(
+            'db;dur=%.2f;desc="Database", total;dur=%.2f;desc="Total"',
+            $databaseMs,
+            $totalMs,
+        ));
+    }
+
+    /**
      * Runs a single query carrying the given marker. The Octane leak test checks that every Clockwork
      * record contains exactly its own marker and nothing from other requests.
      */

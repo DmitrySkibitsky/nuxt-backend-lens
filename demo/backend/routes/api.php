@@ -23,5 +23,6 @@ Route::controller(ScenarioController::class)->group(function (): void {
     Route::get('/cached', 'cached')->name('scenarios.cached');
     Route::get('/logs', 'logs')->name('scenarios.logs');
     Route::get('/boom', 'boom')->name('scenarios.boom');
+    Route::get('/timing-only', 'timingOnly')->name('scenarios.timing-only');
     Route::get('/marker/{marker}', 'marker')->whereUuid('marker')->name('scenarios.marker');
 });

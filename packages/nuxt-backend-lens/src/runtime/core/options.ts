@@ -1,6 +1,8 @@
 // Module options. They travel to the browser through runtimeConfig.public.backendLens, so they must
 // stay JSON-serializable. Every vendor-specific string (header names, paths) is an option with a default.
 
+import { createDefu } from 'defu'
+
 export interface ClockworkAdapterOptions {
   enabled: boolean
   /** Response header carrying the record id. */
@@ -38,6 +40,21 @@ export interface DebugbarAdapterOptions {
   statementTypes: string[]
 }
 
+export interface ServerTimingAdapterOptions {
+  /**
+   * Fallback for backends without a debug package (Rails, Django, Go, Node…): a response whose
+   * Server-Timing header is readable becomes a timing-only record. Last in the default order, so
+   * Clockwork / Debugbar win when present.
+   */
+  enabled: boolean
+  /** Response header to read. Cross-origin it must be listed in Access-Control-Expose-Headers. */
+  header: string
+  /** Metric names summed as database time. */
+  databaseMetrics: string[]
+  /** Metric names taken as the total server time (first match wins). */
+  totalMetrics: string[]
+}
+
 export type ToolbarPosition = 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
 
 export interface ToolbarOptions {
@@ -56,6 +73,34 @@ export interface DevtoolsTabOptions {
   icon: string
 }
 
+export interface SqlDisplayOptions {
+  /** Colour SQL keywords, strings, numbers and identifiers. */
+  highlight: boolean
+  /**
+   * Lay SQL out over several lines (sql-formatter, loaded on demand). Off by default: one-line SQL is
+   * denser and some statements may not parse.
+   */
+  format: boolean
+  /** sql-formatter language: sql, postgresql, mysql, mariadb, sqlite, tsql, … */
+  dialect: string
+}
+
+export interface VueDevtoolsOptions {
+  /** Add a "Backend requests" layer to the Vue DevTools timeline (`nuxt dev` only). */
+  enabled: boolean
+  /** Layer color, 0xRRGGBB. */
+  color: number
+}
+
+export interface ActionTrackingOptions {
+  /** Attribute requests to the user action (click, submit…) that triggered them. */
+  enabled: boolean
+  /** DOM events treated as actions. */
+  events: string[]
+  /** A request belongs to the latest action at most this long before it started. */
+  windowMs: number
+}
+
 export interface BackendLensOptions {
   /** Master switch. Prefer adding the module under `$development` so it never reaches production. */
   enabled: boolean
@@ -72,9 +117,12 @@ export interface BackendLensOptions {
   adapters: {
     clockwork: ClockworkAdapterOptions
     debugbar: DebugbarAdapterOptions
+    serverTiming: ServerTimingAdapterOptions
   }
   toolbar: ToolbarOptions
   devtools: DevtoolsTabOptions
+  vueDevtools: VueDevtoolsOptions
+  actions: ActionTrackingOptions
   /** Requests kept in memory, oldest dropped first. */
   maxRequests: number
   /** Load records in the background so the list can show query counts without opening each one. */
@@ -86,6 +134,7 @@ export interface BackendLensOptions {
   retryDelays: number[]
   /** Queries at or above this duration are highlighted. */
   slowQueryMs: number
+  sql: SqlDisplayOptions
   /** The same statement shape from one call site this many times (with different values) is N+1. */
   nPlusOneThreshold: number
 }
@@ -94,7 +143,7 @@ export const defaultOptions: BackendLensOptions = {
   enabled: true,
   include: [],
   exclude: [],
-  adapterOrder: ['debugbar', 'clockwork'],
+  adapterOrder: ['debugbar', 'clockwork', 'server-timing'],
   adapters: {
     clockwork: {
       enabled: true,
@@ -112,6 +161,12 @@ export const defaultOptions: BackendLensOptions = {
       ignoreKeys: ['clockwork'],
       statementTypes: ['query'],
     },
+    serverTiming: {
+      enabled: true,
+      header: 'server-timing',
+      databaseMetrics: ['db', 'database', 'sql'],
+      totalMetrics: ['total', 'app'],
+    },
   },
   toolbar: {
     enabled: true,
@@ -123,6 +178,15 @@ export const defaultOptions: BackendLensOptions = {
     route: '/__backend-lens/',
     icon: 'carbon:data-base',
   },
+  vueDevtools: {
+    enabled: true,
+    color: 0x2563EB,
+  },
+  actions: {
+    enabled: true,
+    events: ['click', 'submit', 'change'],
+    windowMs: 1000,
+  },
   maxRequests: 200,
   prefetch: {
     enabled: true,
@@ -130,5 +194,36 @@ export const defaultOptions: BackendLensOptions = {
   },
   retryDelays: [0, 100, 300, 1000],
   slowQueryMs: 100,
+  sql: {
+    highlight: true,
+    format: false,
+    dialect: 'sql',
+  },
   nPlusOneThreshold: 3,
+}
+
+type DeepPartial<T> = T extends readonly unknown[]
+  ? T
+  : T extends object
+    ? { [K in keyof T]?: DeepPartial<T[K]> }
+    : T
+
+export type ModuleOptions = DeepPartial<BackendLensOptions>
+
+/** Like defu, but arrays from the user replace the defaults instead of being concatenated. */
+export const mergeOptions = createDefu((target, key, value) => {
+  if (Array.isArray(value)) {
+    ;(target as Record<PropertyKey, unknown>)[key] = value
+    return true
+  }
+  return false
+})
+
+/**
+ * Full options from a partial input. Used by the module at build time and again in the browser:
+ * runtime config may be partial (NUXT_PUBLIC_BACKEND_LENS_* overrides, or a dev server started with
+ * an older module version), and missing keys must fall back to defaults instead of crashing.
+ */
+export function resolveOptions(input: ModuleOptions | undefined): BackendLensOptions {
+  return mergeOptions(input ?? {}, defaultOptions) as BackendLensOptions
 }

@@ -16,12 +16,15 @@ const row = (panel: Locator, text: string | RegExp) => panel.getByRole('listitem
  * Query count of the open request, read from the Queries tab label. Browser requests are stateful,
  * so the Sanctum session adds its own queries on top of a scenario's — never hard-code totals.
  */
+/** SQL of each visible query row; members of an open group sit inside their first query's row. */
+const querySql = (panel: Locator) => panel.locator('[data-testid="backend-lens-query"] > [data-testid="backend-lens-sql"]')
+
 async function queryTotal(panel: Locator): Promise<number> {
   const label = await panel.getByTestId('backend-lens-tab-queries').textContent()
   return Number(label?.match(/\d+/)?.[0])
 }
 
-test('N+1 is detected, grouped under one issue and focusable', async ({ page }) => {
+test('N+1 is collapsed into its first query and opens indented below it', async ({ page }) => {
   await page.goto('/books')
   await expect(page.locator('main table')).toBeVisible()
 
@@ -38,10 +41,26 @@ test('N+1 is detected, grouped under one issue and focusable', async ({ page }) 
   await expect(issue).toContainText('BookResource.php:29')
   const total = await queryTotal(panel)
   expect(total).toBeGreaterThanOrEqual(31)
+
+  // Collapsed: the 30 author queries are one row carrying the group toggle.
+  await expect(querySql(panel)).toHaveCount(total - 29)
+  const toggle = panel.getByTestId('backend-lens-group-toggle')
+  await expect(toggle).toHaveText(/N\+1 ×30 · show 29 more/)
+
+  // Clicking the issue opens the group right below its first query.
   await issue.click()
-  await expect(panel.getByTestId('backend-lens-queries').locator('li')).toHaveCount(30)
-  await panel.getByRole('button', { name: 'Show all' }).click()
-  await expect(panel.getByTestId('backend-lens-queries').locator('li')).toHaveCount(total)
+  // `has` locators are resolved inside each candidate row, so they start from the page, not the panel.
+  const lead = panel.getByTestId('backend-lens-query').filter({ has: page.getByTestId('backend-lens-group-toggle') })
+  const members = lead.getByTestId('backend-lens-group-members')
+  await expect(members.getByTestId('backend-lens-query')).toHaveCount(29)
+  await expect(querySql(panel)).toHaveCount(total)
+  await expect(toggle).toHaveText(/· hide/)
+  const indent = await members.evaluate(element => Number.parseFloat(getComputedStyle(element).marginLeft))
+  expect(indent).toBeGreaterThan(0)
+
+  await toggle.click()
+  await expect(members).toHaveCount(0)
+  await expect(querySql(panel)).toHaveCount(total - 29)
 })
 
 test('eager loading removes the N+1', async ({ page }) => {
@@ -52,7 +71,8 @@ test('eager loading removes the N+1', async ({ page }) => {
   await expect(eager).toContainText(' q')
   await expect(eager.getByTestId('backend-lens-chip-n-plus-one')).toHaveCount(0)
   await eager.click()
-  await expect(panel.getByTestId('backend-lens-queries').locator('li', { hasText: /from "authors"/i })).toHaveCount(1)
+  await expect(querySql(panel).filter({ hasText: /from "authors"/i })).toHaveCount(1)
+  await expect(panel.getByTestId('backend-lens-group-toggle')).toHaveCount(0)
 })
 
 test('duplicate queries are reported with their counts', async ({ page }) => {
@@ -65,6 +85,18 @@ test('duplicate queries are reported with their counts', async ({ page }) => {
   await expect(duplicates).toHaveCount(2)
   await expect(duplicates.filter({ hasText: '3×' })).toContainText(/count\(\*\).*"books"/i)
   await expect(duplicates.filter({ hasText: '2×' })).toContainText(/count\(\*\).*"authors"/i)
+
+  // Clicking a query's toggle shows its duplicates under that very query, from their own call sites.
+  const booksCount = panel.getByTestId('backend-lens-query').filter({
+    has: page.getByTestId('backend-lens-group-toggle').filter({ hasText: 'duplicate ×3' }),
+  })
+  await booksCount.getByTestId('backend-lens-group-toggle').click()
+  const members = booksCount.getByTestId('backend-lens-group-members').getByTestId('backend-lens-query')
+  await expect(members).toHaveCount(2)
+  for (const member of await members.all()) {
+    await expect(member).toContainText(/count\(\*\).*"books"/i)
+    await expect(member).toContainText('BookController.php:')
+  }
 })
 
 test('the slow query is flagged', async ({ page }) => {

@@ -1,7 +1,8 @@
 {
-  "name": "nuxt-laravel-devtools-monorepo",
+  "name": "nuxt-backend-lens-monorepo",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@12.9.0",
   "scripts": {
     "test:leak": "node --env-file-if-exists=demo/.env tests/leak/leak-test.mjs",
     "test:e2e": "node --env-file-if-exists=demo/.env node_modules/@playwright/test/cli.js test",

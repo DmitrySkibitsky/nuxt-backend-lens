@@ -36,5 +36,6 @@ const rows = [
   { page: '/reviews', endpoint: 'POST /api/books/{id}/reviews', expected: 'insert, event, queued job; Sanctum auth' },
   { page: '/clients', endpoint: 'GET /api/stats ×6', expected: 'same request via six different HTTP clients' },
   { page: '/everything', endpoint: 'all of the above', expected: 'parallel requests from one navigation' },
+  { page: '/timing-only', endpoint: 'GET /api/timing-only', expected: 'Server-Timing only, no debug package' },
 ]
 </script>

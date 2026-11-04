@@ -65,6 +65,10 @@ export function formatValue(value: unknown): string {
   }
 }
 
+export function formatAction(action: { type: string, label: string }): string {
+  return `${action.type} “${action.label}”`
+}
+
 export function analysisOptions(options: { nPlusOneThreshold: number, slowQueryMs: number }) {
   return { nPlusOneThreshold: options.nPlusOneThreshold, slowQueryMs: options.slowQueryMs }
 }

@@ -7,6 +7,7 @@ import type { BackendLens } from '../core/collector'
 import { LENS_GLOBAL_KEY } from '../core/global'
 import LensApp from '../ui/LensApp.vue'
 import { createUiState, LENS_UI_STATE } from '../ui/state'
+import { adoptFontFaces, DEVTOOLS_FONT_FAMILIES, documentColorMode, findColorModeDocument } from '../ui/theme'
 import styles from '../ui/styles.css?inline'
 
 const POLL_MS = 500
@@ -36,10 +37,17 @@ export function mountDevtoolsPanel(container: HTMLElement): void {
 
   let unmount: (() => void) | undefined
   let mountedLens: BackendLens | undefined
+  // Follow Nuxt DevTools' own colour mode (its client document carries `light` / `dark`), and use
+  // its fonts: the client already loaded DM Sans / DM Mono, the iframe borrows their @font-face.
+  const devtoolsDocument = findColorModeDocument()
+  const [colorMode, stopColorMode] = documentColorMode(devtoolsDocument ?? document)
+  if (devtoolsDocument && adoptFontFaces(devtoolsDocument, document, DEVTOOLS_FONT_FAMILIES)) {
+    document.documentElement.classList.add('bl-devtools-fonts')
+  }
 
   const mount = (lens: BackendLens) => {
     unmount?.()
-    const [state, unsubscribe] = createUiState(lens)
+    const [state, unsubscribe] = createUiState(lens, colorMode)
     const app = createApp({ render: () => h(LensApp, { embedded: true }) })
     app.provide(LENS_UI_STATE, state)
     app.mount(container)
@@ -77,5 +85,6 @@ export function mountDevtoolsPanel(container: HTMLElement): void {
   window.addEventListener('pagehide', () => {
     window.clearInterval(timer)
     unmount?.()
+    stopColorMode()
   })
 }

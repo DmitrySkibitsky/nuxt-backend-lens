@@ -23,5 +23,6 @@ const links = [
   { to: '/clients', label: 'HTTP clients' },
   { to: '/everything', label: 'Everything at once' },
   { to: '/cross-origin', label: 'Cross-origin API' },
+  { to: '/timing-only', label: 'Timing only' },
 ]
 </script>

@@ -17,11 +17,11 @@ jobs:
   module:
     name: Module — lint, types, unit
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+      # pnpm version comes from "packageManager" in package.json.
       - uses: pnpm/action-setup@v4
-        with:
-          version: 12
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -35,11 +35,11 @@ jobs:
   package:
     name: Packaged consumption
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+      # pnpm version comes from "packageManager" in package.json.
       - uses: pnpm/action-setup@v4
-        with:
-          version: 12
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -49,19 +49,25 @@ jobs:
       - run: pnpm test:package
 
   stand:
-    name: Demo stand — ${{ matrix.debug-backend }}
+    name: Stand — ${{ matrix.backend-mode }} / ${{ matrix.debug-backend }}
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        debug-backend: [clockwork, debugbar]
+        include:
+          # The main target: Octane (FrankenPHP worker mode) with each debug package.
+          - { backend-mode: octane, debug-backend: clockwork }
+          - { backend-mode: octane, debug-backend: debugbar }
+          # Baseline: a fresh bootstrap per request, isolates Octane-only problems.
+          - { backend-mode: classic, debug-backend: clockwork }
     env:
+      BACKEND_MODE: ${{ matrix.backend-mode }}
       DEBUG_BACKEND: ${{ matrix.debug-backend }}
     steps:
       - uses: actions/checkout@v4
+      # pnpm version comes from "packageManager" in package.json.
       - uses: pnpm/action-setup@v4
-        with:
-          version: 12
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -71,13 +77,13 @@ jobs:
         working-directory: demo
         run: docker compose run --rm backend-tests
       - run: pnpm exec playwright install --with-deps chromium
-      - name: Start the stand
+      - name: Start the stand (docker compose, BACKEND_MODE=${{ matrix.backend-mode }})
         working-directory: demo
         run: docker compose up -d
       - run: demo/bin/wait 300
-      - name: Octane isolation (leak test)
+      - name: Worker isolation (leak test)
         run: pnpm test:leak --source=${{ matrix.debug-backend }} --requests=200 --concurrency=32
-      - name: End-to-end
+      - name: End-to-end (Playwright against the stand)
         run: pnpm test:e2e
       - name: Stand logs
         if: failure()
@@ -86,6 +92,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: playwright-${{ matrix.debug-backend }}
+          name: playwright-${{ matrix.backend-mode }}-${{ matrix.debug-backend }}
           path: test-results/
           retention-days: 7

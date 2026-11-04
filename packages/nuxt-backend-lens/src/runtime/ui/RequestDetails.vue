@@ -17,6 +17,10 @@
         <span>{{ formatMs(details?.durationMs ?? entry.durationMs) }}</span>
         <span v-if="details?.memoryBytes">{{ formatBytes(details.memoryBytes) }}</span>
         <span v-if="entry.ref">via {{ entry.ref.adapter }}</span>
+        <span
+          v-if="action"
+          data-testid="backend-lens-triggered-by"
+        >triggered by {{ formatAction(action) }} (+{{ formatMs(entry.startTime - action.time) }})</span>
         <a
           v-if="entry.ref?.webUrl"
           :href="entry.ref.webUrl"
@@ -59,6 +63,13 @@
     </p>
 
     <template v-else-if="details && analysis">
+      <p
+        v-if="details.note"
+        class="bl-note"
+        data-testid="backend-lens-note"
+      >
+        {{ details.note }}
+      </p>
       <div
         v-for="(exception, index) in details.exceptions"
         :key="`exception-${index}`"
@@ -92,6 +103,7 @@
         :queries="details.queries"
         :analysis="analysis"
         :slow-query-ms="lens.options.slowQueryMs"
+        :sql-options="lens.options.sql"
       />
       <LogsTab
         v-else-if="activeTab === 'logs'"
@@ -114,7 +126,7 @@ import { computed, ref } from 'vue'
 import { analyzeDetails } from '../core/analysis'
 import type { RequestEntry } from '../core/types'
 import CacheTab from './CacheTab.vue'
-import { analysisOptions, formatBytes, formatFrame, formatMs, statusClass } from './format'
+import { analysisOptions, formatAction, formatBytes, formatFrame, formatMs, statusClass } from './format'
 import LogsTab from './LogsTab.vue'
 import QueriesTab from './QueriesTab.vue'
 import { useLensUiState } from './state'
@@ -128,7 +140,8 @@ const emit = defineEmits<{
   reload: []
 }>()
 
-const { lens } = useLensUiState()
+const { lens, actions } = useLensUiState()
+const action = computed(() => actions.value.find(item => item.id === props.entry.actionId))
 
 type TabId = 'queries' | 'logs' | 'cache' | 'timeline'
 const activeTab = ref<TabId>('queries')

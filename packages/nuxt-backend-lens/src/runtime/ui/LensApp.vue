@@ -2,6 +2,8 @@
   <div
     class="bl-root"
     :class="embedded ? 'bl-embedded' : `bl-pos-${lens.options.toolbar.position}`"
+    :data-theme="colorMode"
+    data-testid="backend-lens-root"
   >
     <button
       v-if="!embedded && !open"
@@ -34,7 +36,8 @@
       aria-label="Backend Lens"
     >
       <header class="bl-panel-header">
-        <strong>Backend Lens</strong>
+        <!-- The DevTools tab already carries the title. -->
+        <strong v-if="!embedded">Backend Lens</strong>
         <span class="bl-muted">{{ scopeLabel }}</span>
         <span class="bl-spacer" />
         <label class="bl-toggle">
@@ -132,7 +135,7 @@ const props = withDefaults(defineProps<{
   embedded?: boolean
 }>(), { embedded: false })
 
-const { lens, entries, navigations, currentNavigationId } = useLensUiState()
+const { lens, entries, navigations, currentNavigationId, colorMode } = useLensUiState()
 
 const open = ref(props.embedded || lens.options.toolbar.open)
 const showAll = ref(false)

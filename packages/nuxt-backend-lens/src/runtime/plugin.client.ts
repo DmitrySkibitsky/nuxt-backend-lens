@@ -2,14 +2,14 @@ import { defineNuxtPlugin, useRuntimeConfig } from '#app'
 import { START_LOCATION } from 'vue-router'
 import { type BackendLens, createBackendLens } from './core/collector'
 import { LENS_GLOBAL_KEY } from './core/global'
-import type { BackendLensOptions } from './core/options'
+import { type ModuleOptions, resolveOptions } from './core/options'
 
 export default defineNuxtPlugin({
   name: 'backend-lens',
   // Before every other plugin: nuxt-auth-sanctum and others fire requests during their own setup.
   enforce: 'pre',
   setup(nuxtApp) {
-    const options = useRuntimeConfig().public.backendLens as unknown as BackendLensOptions
+    const options = resolveOptions(useRuntimeConfig().public.backendLens as ModuleOptions | undefined)
     const globalScope = window as unknown as Record<string, BackendLens | undefined>
 
     // One lens per page, even across HMR reloads of the app. Published on window so the Nuxt
@@ -33,6 +33,12 @@ export default defineNuxtPlugin({
         lens.setRoute(to.fullPath)
       })
     })
+
+    if (import.meta.dev && options.vueDevtools.enabled) {
+      void import('./shells/vue-devtools').then(({ setupVueDevtoolsTimeline }) => {
+        setupVueDevtoolsTimeline(nuxtApp.vueApp, lens, options.vueDevtools.color)
+      })
+    }
 
     if (options.toolbar.enabled) {
       nuxtApp.hook('app:mounted', async () => {

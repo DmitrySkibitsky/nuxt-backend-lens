@@ -15,5 +15,8 @@
     "nuxt-auth-sanctum": "^3.1.5",
     "vue": "^3.5.44",
     "vue-router": "^5.4.0"
+  },
+  "devDependencies": {
+    "nuxt-backend-lens": "workspace:*"
   }
 }

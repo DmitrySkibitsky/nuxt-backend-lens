@@ -1,0 +1,27 @@
+#!/bin/sh
+# Runs the CI "stand" job locally for one configuration: (re)starts the stand in the requested mode,
+# waits, then runs the worker-isolation test and the Playwright suite against it.
+#
+# Usage: BACKEND_MODE=octane|classic DEBUG_BACKEND=clockwork|debugbar demo/bin/check-stand
+#        (both default to the values in demo/.env)
+set -eu
+
+DEMO_DIR=$(cd "$(dirname "$0")/.." && pwd)
+ROOT_DIR=$(cd "$DEMO_DIR/.." && pwd)
+cd "$DEMO_DIR"
+
+# Explicit environment wins over demo/.env, as in docker compose itself.
+mode=${BACKEND_MODE:-}
+backend=${DEBUG_BACKEND:-}
+[ -f .env ] && . ./.env
+BACKEND_MODE=${mode:-${BACKEND_MODE:-octane}}
+DEBUG_BACKEND=${backend:-${DEBUG_BACKEND:-clockwork}}
+export BACKEND_MODE DEBUG_BACKEND
+
+echo "== stand: BACKEND_MODE=$BACKEND_MODE DEBUG_BACKEND=$DEBUG_BACKEND"
+docker compose up -d --force-recreate backend queue
+"$DEMO_DIR/bin/wait" 300
+
+cd "$ROOT_DIR"
+pnpm -s test:leak --source="$DEBUG_BACKEND" --requests=200 --concurrency=32
+pnpm -s test:e2e

@@ -2,7 +2,15 @@
   "name": "nuxt-backend-lens",
   "version": "0.0.0",
   "description": "Debugbar-like panel for Nuxt SPAs: the SQL, logs and timing behind every backend request (Clockwork, Laravel Debugbar)",
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DmitrySkibitsky/nuxt-backend-lens.git",
+    "directory": "packages/nuxt-backend-lens"
+  },
+  "homepage": "https://github.com/DmitrySkibitsky/nuxt-backend-lens#readme",
+  "bugs": {
+    "url": "https://github.com/DmitrySkibitsky/nuxt-backend-lens/issues"
+  },
   "license": "MIT",
   "type": "module",
   "exports": {
@@ -23,7 +31,7 @@
     "dist"
   ],
   "scripts": {
-    "prepack": "nuxt-module-build build",
+    "prepack": "nuxt-module-build prepare && nuxt-module-build build",
     "dev": "pnpm dev:prepare && nuxt dev playground",
     "dev:build": "nuxt build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxt prepare playground",
@@ -35,8 +43,12 @@
   "dependencies": {
     "@nuxt/devtools-kit": "^3.4.4",
     "@nuxt/kit": "^4.6.3",
+    "@vue/devtools-api": "^8.2.1",
+    "@vue/devtools-kit": "^8.2.1",
     "defu": "^6.1.7",
+    "exsolve": "^1.2.0",
     "h3": "^1.15.11",
+    "sql-formatter": "^15.9.0",
     "ufo": "^1.6.4"
   },
   "devDependencies": {

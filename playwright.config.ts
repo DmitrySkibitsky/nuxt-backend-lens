@@ -6,11 +6,17 @@ import { defineConfig } from '@playwright/test'
 const demoPort = process.env.DEMO_PORT ?? '18080'
 const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined
 
+const ci = Boolean(process.env.CI)
+
 export default defineConfig({
   testDir: 'tests/e2e',
   timeout: 30_000,
   fullyParallel: false,
-  reporter: [['list']],
+  // On CI a single retry absorbs a cold dev server (Vite optimizing deps on first hit); the retry
+  // still keeps a trace, and a test that needs it is reported as flaky.
+  retries: ci ? 1 : 0,
+  forbidOnly: ci,
+  reporter: ci ? [['github'], ['list']] : [['list']],
   use: {
     baseURL: `http://localhost:${demoPort}`,
     browserName: 'chromium',

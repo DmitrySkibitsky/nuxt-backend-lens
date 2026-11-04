@@ -29,7 +29,8 @@ const base = args.base ?? `http://localhost:${process.env.BACKEND_PORT ?? 18000}
 const total = Number(args.requests ?? 400)
 const concurrency = Number(args.concurrency ?? 32)
 const noisePerMarker = Number(args.noise ?? 1)
-const sourceName = args.source ?? 'clockwork'
+// Defaults to the package the stand runs (DEBUG_BACKEND, from demo/.env via the test:leak script).
+const sourceName = args.source ?? process.env.DEBUG_BACKEND ?? 'clockwork'
 
 const UUID_PATTERN = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi
 

@@ -71,6 +71,8 @@ export interface DebugDetails {
   cache: DebugCacheEvent[]
   timeline: DebugTimelineEvent[]
   exceptions: DebugException[]
+  /** Adapter-supplied remark shown with the details, e.g. what the source cannot provide. */
+  note?: string
 }
 
 /** Read access to response headers, uniform for fetch and XHR. */
@@ -100,6 +102,11 @@ export interface RecordRef {
   /** Optional link to the vendor's own UI. */
   webUrl?: string
   init?: RequestInit
+  /**
+   * The raw record, when the response itself carries it (e.g. Server-Timing). The core then
+   * parses it directly instead of fetching `url`.
+   */
+  inline?: unknown
 }
 
 /**
@@ -140,6 +147,8 @@ export interface RequestEntry {
   durationMs: number
   initiator: 'fetch' | 'xhr'
   navigationId: number
+  /** The user action that triggered the request, when one is attributed. */
+  actionId?: number
   ref?: RecordRef
   serverTiming: ServerTimingMetric[]
   detailsState: DetailsState

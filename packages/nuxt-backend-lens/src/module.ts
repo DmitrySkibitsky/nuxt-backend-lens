@@ -1,30 +1,31 @@
-import { addImports, addPlugin, createResolver, defineNuxtModule } from '@nuxt/kit'
-import { createDefu } from 'defu'
+import { addImports, addPlugin, createResolver, defineNuxtModule, extendViteConfig } from '@nuxt/kit'
+import { resolveModulePath } from 'exsolve'
 import { setupDevtoolsTab } from './devtools'
-import { type BackendLensOptions, defaultOptions } from './runtime/core/options'
+import { type ModuleOptions, mergeOptions, resolveOptions } from './runtime/core/options'
 
-export type { BackendLensOptions } from './runtime/core/options'
+export type { BackendLensOptions, ModuleOptions } from './runtime/core/options'
 export type * from './runtime/core/types'
+export { resolveOptions } from './runtime/core/options'
 
-type DeepPartial<T> = T extends readonly unknown[]
-  ? T
-  : T extends object
-    ? { [K in keyof T]?: DeepPartial<T[K]> }
-    : T
+/** Dependencies the client imports lazily: unknown to Vite's initial scan unless listed. */
+const CLIENT_DEPENDENCIES = ['sql-formatter', '@vue/devtools-api', '@vue/devtools-kit']
 
-export type ModuleOptions = DeepPartial<BackendLensOptions>
-
-/** Like defu, but arrays from the user replace the defaults instead of being concatenated. */
-const mergeOptions = createDefu((target, key, value) => {
-  if (Array.isArray(value)) {
-    ;(target as Record<PropertyKey, unknown>)[key] = value
-    return true
+/**
+ * `optimizeDeps.include` entries for the lazily imported client dependencies, so Vite pre-bundles
+ * them at start instead of discovering them at runtime and reloading the page. Installed as a
+ * package, they are nested deps (`nuxt-backend-lens > sql-formatter`); loaded from source, the plain
+ * name works only if the app itself can resolve it. Unresolvable names are left out: Vite fails on them.
+ *
+ * Resolution is ESM-style (exsolve), like Vite's: CommonJS `require.resolve` would also honour
+ * NODE_PATH, which pnpm's bin shims point at the whole store, and report packages Vite cannot find.
+ */
+export function clientDependencyIncludes(rootDir: string): string[] {
+  const from = rootDir.endsWith('/') ? rootDir : `${rootDir}/`
+  const resolvable = (id: string) => Boolean(resolveModulePath(id, { from, try: true, cache: false }))
+  if (resolvable('nuxt-backend-lens')) {
+    return CLIENT_DEPENDENCIES.map(dependency => `nuxt-backend-lens > ${dependency}`)
   }
-  return false
-})
-
-export function resolveOptions(input: ModuleOptions): BackendLensOptions {
-  return mergeOptions(input, defaultOptions) as BackendLensOptions
+  return CLIENT_DEPENDENCIES.filter(resolvable)
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -50,6 +51,14 @@ export default defineNuxtModule<ModuleOptions>({
     publicConfig.backendLens = mergeOptions((publicConfig.backendLens ?? {}) as ModuleOptions, options)
 
     addPlugin({ src: resolver.resolve('./runtime/plugin.client'), mode: 'client' })
+
+    if (nuxt.options.dev) {
+      const includes = clientDependencyIncludes(nuxt.options.rootDir)
+      extendViteConfig((config) => {
+        config.optimizeDeps ??= {}
+        config.optimizeDeps.include = [...(config.optimizeDeps.include ?? []), ...includes]
+      }, { server: false })
+    }
 
     addImports([
       { name: 'useBackendLens', from: resolver.resolve('./runtime/composables') },

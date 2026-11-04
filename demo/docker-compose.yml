@@ -87,6 +87,9 @@ services:
     # `migrate` runs migrate:fresh whenever the backend is recreated, dropping tables under a
     # running worker: let it come back instead of staying dead.
     restart: unless-stopped
+    # The image's HEALTHCHECK probes FrankenPHP's web server, which a queue worker does not run.
+    healthcheck:
+      disable: true
     depends_on:
       migrate:
         condition: service_completed_successfully

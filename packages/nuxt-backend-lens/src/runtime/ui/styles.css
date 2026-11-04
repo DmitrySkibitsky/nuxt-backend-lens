@@ -3,51 +3,69 @@
   all: initial;
 }
 
+/*
+ * Palette measured on Nuxt DevTools 3.4 (computed styles of a native tab), so the DevTools tab looks
+ * native and the toolbar matches it. Colour mode comes from the shell via data-theme: DevTools' own
+ * mode for the tab, the app's (or the system's) for the toolbar.
+ */
 .bl-root {
-  --bl-bg: #ffffff;
-  --bl-fg: #1f2328;
-  --bl-muted: #6b7280;
-  --bl-border: #d8dee4;
-  --bl-accent: #2563eb;
-  --bl-hover: #f3f4f6;
-  --bl-selected: #e8f0fe;
-  --bl-ok: #15803d;
+  --bl-font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --bl-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+  --bl-bg: #fff;
+  --bl-fg: #000;
+  --bl-muted: rgb(0 0 0 / 55%);
+  --bl-border: rgb(156 163 175 / 20%);
+  --bl-accent: #099e61;
+  --bl-hover: rgb(136 136 136 / 7%);
+  --bl-selected: rgb(0 220 130 / 8%);
+  --bl-ok: #099e61;
   --bl-warn: #b45309;
-  --bl-error: #b91c1c;
-  --bl-slow: #fff7e6;
-  --bl-code: #f6f8fa;
+  --bl-error: #dc2626;
+  --bl-slow: rgb(234 110 0 / 6%);
+  --bl-code: rgb(156 163 175 / 8%);
   --bl-n-plus-one: #7c3aed;
   --bl-duplicate: #c2410c;
   --bl-repeated: #0e7490;
-  --bl-bar-event: #94a3b8;
-  --bl-bar-query: #2563eb;
+  --bl-bar-event: rgb(156 163 175 / 55%);
+  --bl-bar-query: #00dc82;
+  --bl-sql-keyword: #0b7a52;
+  --bl-sql-function: #7c3aed;
+  --bl-sql-string: #b45309;
+  --bl-sql-number: #c2410c;
+  --bl-sql-identifier: #1f2937;
 
   position: fixed;
   z-index: 2147483000;
-  font: 12px/1.45 ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font: 13px/1.5 var(--bl-font);
   color: var(--bl-fg);
 }
 
-@media (prefers-color-scheme: dark) {
-  .bl-root {
-    --bl-bg: #16181d;
-    --bl-fg: #e6e8eb;
-    --bl-muted: #9aa1ab;
-    --bl-border: #30363d;
-    --bl-accent: #6aa1ff;
-    --bl-hover: #20242b;
-    --bl-selected: #1d2a40;
-    --bl-ok: #4ade80;
-    --bl-warn: #fbbf24;
-    --bl-error: #f87171;
-    --bl-slow: #2e2510;
-    --bl-code: #1f232a;
-    --bl-n-plus-one: #c4b5fd;
-    --bl-duplicate: #fdba74;
-    --bl-repeated: #67e8f9;
-    --bl-bar-event: #64748b;
-    --bl-bar-query: #6aa1ff;
-  }
+.bl-root[data-theme='dark'] {
+  --bl-bg: #151515;
+  --bl-fg: #fff;
+  --bl-muted: rgb(255 255 255 / 55%);
+  --bl-border: rgb(156 163 175 / 20%);
+  --bl-accent: #00dc82;
+  --bl-hover: rgb(136 136 136 / 10%);
+  --bl-selected: rgb(0 220 130 / 10%);
+  --bl-ok: #00dc82;
+  --bl-warn: #fbbf24;
+  --bl-error: #f87171;
+  --bl-slow: rgb(251 191 36 / 7%);
+  --bl-code: rgb(156 163 175 / 8%);
+  --bl-n-plus-one: #c4b5fd;
+  --bl-duplicate: #fdba74;
+  --bl-repeated: #67e8f9;
+  --bl-bar-event: rgb(156 163 175 / 45%);
+  --bl-bar-query: #00dc82;
+  --bl-sql-keyword: #00dc82;
+  --bl-sql-function: #c4b5fd;
+  --bl-sql-string: #fdba74;
+  --bl-sql-number: #ff9e64;
+  --bl-sql-identifier: #e5e7eb;
+
+  color-scheme: dark;
 }
 
 .bl-pos-bottom-right { right: 12px; bottom: 12px; }
@@ -214,7 +232,7 @@ button {
   padding: 4px 6px;
   border-radius: 4px;
   background: var(--bl-code);
-  font: 11.5px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font: 12px/1.55 var(--bl-mono);
   white-space: pre-wrap;
   word-break: break-word;
 }
@@ -297,11 +315,9 @@ button {
 }
 
 .bl-issue > span:not(.bl-chip) { color: var(--bl-fg); }
-.bl-issue code { font: 11px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.bl-issue code { font: 12px var(--bl-mono); }
 .bl-issue:hover, .bl-issue-active { background: var(--bl-hover); }
 .bl-issue-time { margin-left: auto; white-space: nowrap; }
-.bl-filter-note { display: flex; gap: 8px; align-items: center; margin: 0 0 6px; }
-.bl-flagged { box-shadow: inset 3px 0 0 var(--bl-n-plus-one); padding-left: 6px; }
 
 .bl-table { width: 100%; border-collapse: collapse; }
 .bl-table th, .bl-table td { padding: 4px 6px; border-bottom: 1px solid var(--bl-border); text-align: left; }
@@ -325,7 +341,7 @@ button {
 
 .bl-waterfall-label {
   overflow: hidden;
-  font: 11px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font: 12px var(--bl-mono);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -335,3 +351,92 @@ button {
 .bl-waterfall-bar { position: absolute; top: 0; bottom: 0; border-radius: 2px; background: var(--bl-bar-query); }
 .bl-waterfall-event .bl-waterfall-bar { background: var(--bl-bar-event); }
 .bl-waterfall-time { color: var(--bl-muted); text-align: right; }
+
+.bl-note {
+  margin: 10px 0 0;
+  padding: 6px 8px;
+  border-left: 3px solid var(--bl-accent);
+  background: var(--bl-code);
+  color: var(--bl-muted);
+}
+
+.bl-action {
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--bl-border);
+  background: var(--bl-code);
+  color: var(--bl-muted);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* SQL */
+.bl-sql-formatted { white-space: pre; overflow-x: auto; word-break: normal; }
+.bl-sql-keyword { color: var(--bl-sql-keyword); font-weight: 600; }
+.bl-sql-function { color: var(--bl-sql-function); }
+.bl-sql-string { color: var(--bl-sql-string); }
+.bl-sql-number, .bl-sql-placeholder { color: var(--bl-sql-number); }
+.bl-sql-identifier { color: var(--bl-sql-identifier); }
+.bl-sql-comment { color: var(--bl-muted); font-style: italic; }
+.bl-sql-operator, .bl-sql-punctuation { color: var(--bl-muted); }
+
+/* Issue groups: the first query carries the toggle, the other members open indented below it. */
+.bl-group-toggle { cursor: pointer; background: transparent; }
+.bl-group-toggle:hover { background: var(--bl-hover); }
+
+.bl-group-members {
+  margin: 6px 0 0 18px;
+  padding: 0 0 0 10px;
+  border-left: 3px solid currentColor;
+  list-style: none;
+}
+
+.bl-group-n-plus-one { color: var(--bl-n-plus-one); }
+.bl-group-duplicate { color: var(--bl-duplicate); }
+.bl-group-members > .bl-query { color: var(--bl-fg); }
+.bl-group-members > .bl-query:last-child { border-bottom: 0; }
+
+.bl-flash { animation: bl-flash 1.2s ease-out; }
+
+@keyframes bl-flash {
+  from { background: var(--bl-selected); }
+  to { background: transparent; }
+}
+
+.bl-sql-inline {
+  display: inline;
+  padding: 0;
+  background: transparent;
+  white-space: normal;
+}
+
+/* Selected request: DevTools-like green marker. */
+.bl-selected, .bl-selected:hover { box-shadow: inset 2px 0 0 var(--bl-accent); }
+
+/* Embedded in the Nuxt DevTools tab: full size, no own frame or title, DevTools density. */
+.bl-embedded {
+  font-size: 14px;
+  background: var(--bl-bg);
+}
+
+.bl-embedded .bl-panel-header {
+  padding: 6px 12px;
+}
+
+.bl-embedded .bl-list-item,
+.bl-embedded .bl-summary {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.bl-embedded .bl-details {
+  padding: 12px 16px;
+}
+
+/* Inside DevTools, with its fonts adopted (shells/devtools.ts); system fonts remain the fallback. */
+:root.bl-devtools-fonts .bl-root {
+  --bl-font: 'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --bl-mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

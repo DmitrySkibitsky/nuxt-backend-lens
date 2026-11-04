@@ -45,9 +45,16 @@ test('the N+1 scenario shows 30 author queries pointing at BookResource', async 
   const details = panel.getByTestId('backend-lens-details')
   await expect(details).toContainText(`via ${expectedAdapter}`)
   await expect(details).toContainText('BookController@index')
-  const queries = details.getByTestId('backend-lens-queries').locator('li')
-  await expect(queries.filter({ hasText: /from "authors"/i })).toHaveCount(30)
-  await expect(queries.filter({ hasText: /from "authors"/i }).first()).toContainText('BookResource.php:29')
+  // The 30 author queries are one N+1 group: open it, then every member is listed.
+  await details.getByTestId('backend-lens-group-toggle').click()
+  const authorRows = details.getByTestId('backend-lens-query').filter({
+    // Resolved inside each row: the row's own SQL, not that of the group members nested in it.
+    has: page.locator(':scope > [data-testid="backend-lens-sql"]', { hasText: /from "authors"/i }),
+  })
+  await expect(authorRows).toHaveCount(30)
+  for (const authorRow of (await authorRows.all()).slice(0, 3)) {
+    await expect(authorRow.locator(':scope > .bl-query-head')).toContainText('BookResource.php:29')
+  }
 
   expect(errors).toEqual([])
 })

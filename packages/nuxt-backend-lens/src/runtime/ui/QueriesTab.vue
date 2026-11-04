@@ -12,76 +12,99 @@
         <button
           type="button"
           class="bl-issue"
-          :class="[`bl-issue-${issueClass(issue.kind)}`, { 'bl-issue-active': focused === index }]"
+          :class="`bl-issue-${issueClass(issue.kind)}`"
           :data-testid="`backend-lens-issue-${issueClass(issue.kind)}`"
-          @click="focused = focused === index ? undefined : index"
+          :title="issue.kind === 'slow' ? 'Scroll to the query' : 'Show the group in the list below'"
+          @click="reveal(issue.indexes[0]!, issue.kind !== 'slow')"
         >
           <span class="bl-chip">{{ ISSUE_LABELS[issue.kind] }}</span>
           <span v-if="issue.kind === 'n+1'">
-            {{ issue.indexes.length }}× <code>{{ issue.pattern }}</code>
+            {{ issue.indexes.length }}× <SqlCode
+              :sql="issue.pattern"
+              :options="sqlOptions"
+              inline
+            />
             <span
               v-if="issue.callSite"
               class="bl-muted"
             > from {{ formatFrame(issue.callSite.file, issue.callSite.line) }}</span>
           </span>
           <span v-else-if="issue.kind === 'duplicate'">
-            {{ issue.indexes.length }}× identical <code>{{ issue.sql }}</code>
+            {{ issue.indexes.length }}× identical <SqlCode
+              :sql="issue.sql"
+              :options="sqlOptions"
+              inline
+            />
           </span>
           <span v-else>
-            <code>{{ issue.sql }}</code>
+            <SqlCode
+              :sql="issue.sql"
+              :options="sqlOptions"
+              inline
+            />
           </span>
           <span class="bl-issue-time">{{ formatMs(issue.totalMs) }}</span>
         </button>
       </li>
     </ul>
 
-    <p
-      v-if="focusedIssue"
-      class="bl-muted bl-filter-note"
-    >
-      Showing {{ visibleQueries.length }} of {{ queries.length }} queries.
-      <button
-        type="button"
-        class="bl-button"
-        @click="focused = undefined"
-      >
-        Show all
-      </button>
-    </p>
-
     <ol
+      ref="list"
       class="bl-queries"
       data-testid="backend-lens-queries"
     >
-      <li
-        v-for="{ query, index } in visibleQueries"
-        :key="index"
-        class="bl-query"
-        :class="{ 'bl-slow': query.durationMs >= slowQueryMs, 'bl-flagged': flagged.has(index) }"
+      <template
+        v-for="row in rows"
+        :key="row.index"
       >
-        <div class="bl-query-head">
-          <span class="bl-muted">#{{ index + 1 }}</span>
-          <span class="bl-duration">{{ formatMs(query.durationMs) }}</span>
-          <span
-            v-for="kind in flagged.get(index) ?? []"
-            :key="kind"
-            class="bl-chip"
-            :class="`bl-issue-${issueClass(kind)}`"
-          >{{ ISSUE_LABELS[kind] }}</span>
-          <span
-            v-if="query.callSite"
-            class="bl-frame"
-            :title="formatFrame(query.callSite.file, query.callSite.line)"
-          ><bdi>{{ formatFrame(query.callSite.file, query.callSite.line) }}</bdi></span>
-        </div>
-        <code class="bl-sql">{{ query.sql }}</code>
-        <div
-          v-if="query.bindings?.length"
-          class="bl-muted bl-bindings"
+        <li
+          class="bl-query"
+          :class="{ 'bl-slow': row.query.durationMs >= slowQueryMs, 'bl-flash': flashed === row.index }"
+          :data-index="row.index"
+          data-testid="backend-lens-query"
         >
-          bindings: {{ query.bindings.map(formatValue).join(', ') }}
-        </div>
-      </li>
+          <QueryRow
+            :query="row.query"
+            :index="row.index"
+            :sql-options="sqlOptions"
+          >
+            <button
+              v-if="row.group"
+              type="button"
+              class="bl-chip bl-group-toggle"
+              :class="`bl-issue-${issueClass(row.group.kind)}`"
+              :aria-expanded="expanded.has(row.index)"
+              data-testid="backend-lens-group-toggle"
+              @click="toggle(row.index)"
+            >
+              {{ ISSUE_LABELS[row.group.kind] }} ×{{ row.group.indexes.length }}
+              · {{ expanded.has(row.index) ? 'hide' : `show ${row.group.indexes.length - 1} more` }}
+            </button>
+          </QueryRow>
+
+          <ol
+            v-if="row.group && expanded.has(row.index)"
+            class="bl-group-members"
+            :class="`bl-group-${issueClass(row.group.kind)}`"
+            data-testid="backend-lens-group-members"
+          >
+            <li
+              v-for="member in row.group.indexes.slice(1)"
+              :key="member"
+              class="bl-query bl-group-member"
+              :class="{ 'bl-slow': queries[member]!.durationMs >= slowQueryMs }"
+              :data-index="member"
+              data-testid="backend-lens-query"
+            >
+              <QueryRow
+                :query="queries[member]!"
+                :index="member"
+                :sql-options="sqlOptions"
+              />
+            </li>
+          </ol>
+        </li>
+      </template>
       <li
         v-if="!queries.length"
         class="bl-empty"
@@ -93,46 +116,76 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 import type { QueryIssue, RequestAnalysis } from '../core/analysis'
+import type { SqlDisplayOptions } from '../core/options'
 import type { DebugQuery } from '../core/types'
-import { formatFrame, formatMs, formatValue, ISSUE_LABELS } from './format'
+import { formatFrame, formatMs, ISSUE_LABELS } from './format'
+import QueryRow from './QueryRow.vue'
+import SqlCode from './SqlCode.vue'
 
 const props = defineProps<{
   queries: readonly DebugQuery[]
   analysis: RequestAnalysis
   slowQueryMs: number
+  sqlOptions: SqlDisplayOptions
 }>()
 
-const focused = ref<number>()
-watch(() => props.queries, () => {
-  focused.value = undefined
-})
+type GroupIssue = Extract<QueryIssue, { kind: 'n+1' | 'duplicate' }>
 
-const focusedIssue = computed(() => (focused.value === undefined ? undefined : props.analysis.issues[focused.value]))
-
-const visibleQueries = computed(() => {
-  const all = props.queries.map((query, index) => ({ query, index }))
-  if (!focusedIssue.value) {
-    return all
-  }
-  const indexes = new Set<number>(focusedIssue.value.indexes)
-  return all.filter(item => indexes.has(item.index))
-})
-
-/** Query index → kinds of N+1 / duplicate issues it belongs to (slow is shown by highlighting). */
-const flagged = computed(() => {
-  const map = new Map<number, QueryIssue['kind'][]>()
+/**
+ * N+1 and duplicate groups are disjoint (the analysis never puts a query in both), so each group
+ * collapses into its first query; the other members open right below it.
+ */
+const rows = computed(() => {
+  const groupByLead = new Map<number, GroupIssue>()
+  const members = new Set<number>()
   for (const issue of props.analysis.issues) {
     if (issue.kind === 'slow') {
       continue
     }
-    for (const index of issue.indexes) {
-      map.set(index, [...(map.get(index) ?? []), issue.kind])
-    }
+    groupByLead.set(issue.indexes[0]!, issue)
+    issue.indexes.slice(1).forEach(index => members.add(index))
   }
-  return map
+  return props.queries
+    .map((query, index) => ({ query, index, group: groupByLead.get(index) }))
+    .filter(row => !members.has(row.index))
 })
+
+const expanded = ref(new Set<number>())
+const flashed = ref<number>()
+const list = useTemplateRef<HTMLOListElement>('list')
+
+watch(() => props.queries, () => {
+  expanded.value = new Set()
+  flashed.value = undefined
+})
+
+function toggle(lead: number) {
+  const next = new Set(expanded.value)
+  if (next.has(lead)) {
+    next.delete(lead)
+  }
+  else {
+    next.add(lead)
+  }
+  expanded.value = next
+}
+
+/** From the issues summary: open the group (if any) and bring its first query into view. */
+async function reveal(lead: number, expand: boolean) {
+  if (expand && !expanded.value.has(lead)) {
+    toggle(lead)
+  }
+  flashed.value = lead
+  await nextTick()
+  list.value?.querySelector(`[data-index="${lead}"]`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+  setTimeout(() => {
+    if (flashed.value === lead) {
+      flashed.value = undefined
+    }
+  }, 1200)
+}
 
 function issueClass(kind: QueryIssue['kind']): string {
   return kind === 'n+1' ? 'n-plus-one' : kind

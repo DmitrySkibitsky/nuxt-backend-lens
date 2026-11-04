@@ -1,8 +1,10 @@
 // Wires the interceptor, adapters, Server-Timing and the store together. Framework-free: the Nuxt
 // plugin feeds it route changes, the UI reads the store.
 
+import { type ActionTarget, attributeToAction, trackActions } from './actions'
 import { createClockworkAdapter } from './adapters/clockwork'
 import { createDebugbarAdapter } from './adapters/debugbar'
+import { createServerTimingAdapter } from './adapters/server-timing'
 import { installInterceptor, type InterceptorHandle } from './interceptor'
 import type { BackendLensOptions } from './options'
 import { AdapterRegistry } from './registry'
@@ -17,7 +19,8 @@ const TIMING_MATCH_WINDOW_MS = 250
 const PENDING_TIMING_LIMIT = 50
 
 export interface BackendLensEnvironment {
-  window: Parameters<typeof installInterceptor>[0]
+  /** The page window; action tracking needs its `document`. */
+  window: Parameters<typeof installInterceptor>[0] & Partial<ActionTarget>
   observeServerTiming?: typeof observeServerTiming
 }
 
@@ -45,9 +48,13 @@ export function createBackendLens(options: BackendLensOptions, environment: Back
   if (options.adapters.clockwork.enabled) {
     registry.register(createClockworkAdapter(options.adapters.clockwork))
   }
+  if (options.adapters.serverTiming.enabled) {
+    registry.register(createServerTimingAdapter(options.adapters.serverTiming))
+  }
 
   const store = new RequestStore(options.maxRequests)
   let nextKey = 1
+  let nextActionId = 1
   let navigationId = 1
   let routeKnown = false
   store.upsertNavigation({ id: navigationId, route: '', startTime: environment.window.performance.now() })
@@ -86,6 +93,10 @@ export function createBackendLens(options: BackendLensOptions, environment: Back
       return
     }
 
+    const action = options.actions.enabled
+      ? attributeToAction(store.actions, response.startTime, options.actions.windowMs)
+      : undefined
+
     const entry: RequestEntry = {
       key: nextKey++,
       method: response.method,
@@ -96,6 +107,7 @@ export function createBackendLens(options: BackendLensOptions, environment: Back
       durationMs: response.endTime - response.startTime,
       initiator: response.initiator,
       navigationId,
+      actionId: action?.id,
       ref,
       serverTiming: [],
       detailsState: ref ? 'idle' : 'none',
@@ -137,6 +149,17 @@ export function createBackendLens(options: BackendLensOptions, environment: Back
     }
     store.update(key, { detailsState: 'loading', error: undefined })
 
+    // The response carried the record itself: nothing to fetch or retry.
+    if (entry.ref.inline !== undefined) {
+      try {
+        store.update(key, { detailsState: 'loaded', details: adapter.parse(entry.ref.inline, entry.ref) })
+      }
+      catch (error) {
+        store.update(key, { detailsState: 'error', error: error instanceof Error ? error.message : String(error) })
+      }
+      return
+    }
+
     let lastError = 'not found'
     for (const delay of options.retryDelays.length ? options.retryDelays : [0]) {
       if (delay) {
@@ -174,6 +197,12 @@ export function createBackendLens(options: BackendLensOptions, environment: Back
 
   interceptor = installInterceptor(environment.window, onResponse)
   const stopTiming = (environment.observeServerTiming ?? observeServerTiming)(onTiming)
+  const { document } = environment.window
+  const stopActions = options.actions.enabled && document
+    ? trackActions({ document, performance: environment.window.performance }, options.actions.events, (action) => {
+        store.addAction({ ...action, id: nextActionId++, navigationId })
+      })
+    : () => {}
 
   return {
     options,
@@ -199,6 +228,7 @@ export function createBackendLens(options: BackendLensOptions, environment: Back
       store.clear()
     },
     destroy() {
+      stopActions()
       stopTiming()
       interceptor?.restore()
       interceptor = undefined

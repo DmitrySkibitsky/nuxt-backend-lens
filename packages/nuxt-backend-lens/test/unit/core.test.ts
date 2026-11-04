@@ -54,6 +54,15 @@ describe('options', () => {
     expect(options.retryDelays).toEqual([0, 50])
   })
 
+  it('fills in keys missing from a partial or stale runtime config', () => {
+    const stale = { enabled: true, adapters: { clockwork: { enabled: true } }, toolbar: { open: true } }
+    const options = resolveOptions(stale as never)
+    expect(options.actions).toEqual(defaultOptions.actions)
+    expect(options.adapters.serverTiming).toEqual(defaultOptions.adapters.serverTiming)
+    expect(options.toolbar.open).toBe(true)
+    expect(resolveOptions(undefined)).toEqual(defaultOptions)
+  })
+
   it('does not mutate the defaults', () => {
     resolveOptions({ include: ['/x/**'] })
     expect(defaultOptions.include).toEqual([])
@@ -147,5 +156,42 @@ describe('request store', () => {
     expect(store.get(1)?.status).toBe(500)
     expect(store.update(99, { status: 1 })).toBeUndefined()
     expect(calls).toBe(2)
+  })
+})
+
+describe('clientDependencyIncludes', () => {
+  it('uses nested specifiers when the app depends on the installed package', async () => {
+    const { mkdtempSync, mkdirSync, writeFileSync } = await import('node:fs')
+    const { tmpdir } = await import('node:os')
+    const { join } = await import('node:path')
+    const { clientDependencyIncludes } = await import('../../src/module')
+    const root = mkdtempSync(join(tmpdir(), 'lens-app-'))
+    writeFileSync(join(root, 'package.json'), '{}')
+    expect(clientDependencyIncludes(root)).toEqual([])
+
+    const pkg = join(root, 'node_modules', 'nuxt-backend-lens')
+    mkdirSync(pkg, { recursive: true })
+    writeFileSync(join(pkg, 'package.json'), JSON.stringify({ name: 'nuxt-backend-lens', main: 'index.js' }))
+    writeFileSync(join(pkg, 'index.js'), '')
+    expect(clientDependencyIncludes(root)).toEqual([
+      'nuxt-backend-lens > sql-formatter',
+      'nuxt-backend-lens > @vue/devtools-api',
+      'nuxt-backend-lens > @vue/devtools-kit',
+    ])
+  })
+
+  it('falls back to plain names the app itself can resolve, and skips the rest', async () => {
+    const { mkdtempSync, mkdirSync, writeFileSync } = await import('node:fs')
+    const { tmpdir } = await import('node:os')
+    const { join } = await import('node:path')
+    const { clientDependencyIncludes } = await import('../../src/module')
+    const root = mkdtempSync(join(tmpdir(), 'lens-src-'))
+    writeFileSync(join(root, 'package.json'), '{}')
+    const dependency = join(root, 'node_modules', 'sql-formatter')
+    mkdirSync(dependency, { recursive: true })
+    writeFileSync(join(dependency, 'package.json'), JSON.stringify({ name: 'sql-formatter', main: 'index.js' }))
+    writeFileSync(join(dependency, 'index.js'), '')
+    // NODE_PATH (set by pnpm's bin shims) must not make the others look resolvable.
+    expect(clientDependencyIncludes(root)).toEqual(['sql-formatter'])
   })
 })
