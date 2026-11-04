@@ -6,29 +6,64 @@
       <code>POST</code> that inserts a review, fires an event and queues a job.
     </p>
 
-    <form v-if="!isAuthenticated" @submit.prevent="signIn">
+    <form
+      v-if="!isAuthenticated"
+      @submit.prevent="signIn"
+    >
       <p>
-        <input v-model="credentials.email" type="email" placeholder="email">
-        <input v-model="credentials.password" type="password" placeholder="password">
-        <button type="submit">Log in</button>
+        <input
+          v-model="credentials.email"
+          type="email"
+          placeholder="email"
+        >
+        <input
+          v-model="credentials.password"
+          type="password"
+          placeholder="password"
+        >
+        <button type="submit">
+          Log in
+        </button>
       </p>
-      <p v-if="authError" class="error">{{ authError }}</p>
+      <p
+        v-if="authError"
+        class="error"
+      >
+        {{ authError }}
+      </p>
     </form>
 
     <template v-else>
       <p>
         Logged in as <strong>{{ user?.name }}</strong>
-        <button @click="logout()">Log out</button>
+        <button @click="logout()">
+          Log out
+        </button>
       </p>
       <p v-if="book">
         Review for <em>{{ book.title }}</em>:
         <select v-model.number="review.stars">
-          <option v-for="stars in 5" :key="stars" :value="stars">{{ stars }}★</option>
+          <option
+            v-for="stars in 5"
+            :key="stars"
+            :value="stars"
+          >
+            {{ stars }}★
+          </option>
         </select>
-        <input v-model="review.body" placeholder="text">
-        <button @click="submitReview">Post review</button>
+        <input
+          v-model="review.body"
+          placeholder="text"
+        >
+        <button @click="submitReview">
+          Post review
+        </button>
       </p>
-      <ResultBlock :data="result" :error="submitError" :pending="submitting" />
+      <ResultBlock
+        :data="result"
+        :error="submitError"
+        :pending="submitting"
+      />
     </template>
   </div>
 </template>

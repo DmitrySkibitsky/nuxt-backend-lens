@@ -39,7 +39,7 @@ const UUID_PATTERN = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{1
 const DEBUGBAR_PSEUDO_STATEMENTS = new Set(['Connection Established'])
 
 /** Resolves a server path (absolute or relative, as servers send both) against the server root. */
-const resolveOnServer = (path) => new URL(path.replace(/^\/?/, '/'), base).toString()
+const resolveOnServer = path => new URL(path.replace(/^\/?/, '/'), base).toString()
 
 /**
  * @typedef {{ id: string, uri: string, queries: unknown[], logs: { message: string }[], memory?: number }} NormalizedRecord
@@ -60,7 +60,7 @@ const sources = {
       return {
         id: raw.id,
         uri: raw.uri ?? '',
-        queries: (raw.databaseQueries ?? []).filter((query) => !DEBUGBAR_PSEUDO_STATEMENTS.has(query.query)),
+        queries: (raw.databaseQueries ?? []).filter(query => !DEBUGBAR_PSEUDO_STATEMENTS.has(query.query)),
         logs: raw.log ?? [],
         memory: raw.memoryUsage,
       }
@@ -77,7 +77,7 @@ const sources = {
       return {
         id: raw.__meta?.id,
         uri: raw.__meta?.uri ?? '',
-        queries: (raw.queries?.statements ?? []).filter((statement) => statement.type === 'query'),
+        queries: (raw.queries?.statements ?? []).filter(statement => statement.type === 'query'),
         logs: [...(raw.messages?.messages ?? []), ...(raw.logs?.messages ?? [])],
         memory: raw.memory?.peak_usage,
       }
@@ -91,11 +91,11 @@ if (!source) {
   process.exit(1)
 }
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 /** Runs async tasks with a fixed concurrency limit, preserving result order. */
 async function pool(tasks, limit) {
-  const results = new Array(tasks.length)
+  const results = Array.from({ length: tasks.length })
   let next = 0
   const workers = Array.from({ length: Math.min(limit, tasks.length) }, async () => {
     while (next < tasks.length) {
@@ -134,24 +134,27 @@ async function noiseRequest() {
   return { kind: 'noise', status: response.status, ref: source.detect(response.headers) }
 }
 
-/** @param {NormalizedRecord} record */
+/**
+ * @param {{ marker: string, ref: RecordRef }} sent the marker request as sent
+ * @param {NormalizedRecord} record its debug record
+ */
 function checkRecord(sent, record) {
   const problems = []
-  const mentionsMarker = (value) => JSON.stringify(value).includes(sent.marker)
+  const mentionsMarker = value => JSON.stringify(value).includes(sent.marker)
 
   if (record.id !== sent.ref.id) problems.push(`record id ${record.id} != header ${sent.ref.id}`)
   if (!record.uri.includes(sent.marker)) problems.push(`uri ${record.uri} lacks marker`)
   if (record.queries.length !== 1) problems.push(`${record.queries.length} queries instead of 1`)
-  const foreignQuery = record.queries.find((query) => !mentionsMarker(query))
+  const foreignQuery = record.queries.find(query => !mentionsMarker(query))
   if (foreignQuery) problems.push(`foreign query: ${JSON.stringify(foreignQuery).slice(0, 120)}`)
 
   // Clockwork keeps the bare message ("marker"); Debugbar formats it ("[20:02:32] LOG.info: marker {…}").
-  const markerLogs = record.logs.filter((entry) => /(^|: )marker\b/.test(String(entry.message)))
+  const markerLogs = record.logs.filter(entry => /(?:^|: )marker\b/.test(String(entry.message)))
   if (markerLogs.length !== 1) problems.push(`${markerLogs.length} marker log entries instead of 1`)
 
   // The strongest, format-agnostic check: the only UUID anywhere in the record is our own.
   const foreignUuids = new Set(
-    (JSON.stringify(record).match(UUID_PATTERN) ?? []).filter((uuid) => uuid.toLowerCase() !== sent.marker),
+    (JSON.stringify(record).match(UUID_PATTERN) ?? []).filter(uuid => uuid.toLowerCase() !== sent.marker),
   )
   if (foreignUuids.size) problems.push(`foreign UUIDs in record: ${[...foreignUuids].slice(0, 3).join(', ')}`)
   return problems
@@ -171,30 +174,30 @@ async function main() {
   console.log(`sent ${sent.length} requests in ${Math.round(performance.now() - started)} ms`)
 
   const failures = []
-  const withRef = sent.filter((entry) => entry.ref)
-  const ids = withRef.map((entry) => entry.ref.id)
+  const withRef = sent.filter(entry => entry.ref)
+  const ids = withRef.map(entry => entry.ref.id)
 
-  if (sent.some((entry) => entry.status !== 200)) failures.push('non-200 responses present')
+  if (sent.some(entry => entry.status !== 200)) failures.push('non-200 responses present')
   if (withRef.length !== sent.length) failures.push(`${sent.length - withRef.length} of ${sent.length} responses carry no ${sourceName} debug id`)
   if (new Set(ids).size !== ids.length) failures.push('duplicate debug ids across requests')
-  for (const entry of sent.filter((candidate) => candidate.kind === 'marker')) {
+  for (const entry of sent.filter(candidate => candidate.kind === 'marker')) {
     if (entry.echoed !== entry.marker) failures.push(`response body marker mismatch for ${entry.marker}`)
   }
 
-  const markers = withRef.filter((entry) => entry.kind === 'marker')
-  const records = await pool(markers.map((entry) => () => fetchRecord(entry.ref)), 8)
+  const markers = withRef.filter(entry => entry.kind === 'marker')
+  const records = await pool(markers.map(entry => () => fetchRecord(entry.ref)), 8)
   markers.forEach((entry, index) => {
     for (const problem of checkRecord(entry, records[index])) failures.push(`${entry.ref.id}: ${problem}`)
   })
 
-  const memory = records.map((record) => record.memory).filter(Number.isFinite)
+  const memory = records.map(record => record.memory).filter(Number.isFinite)
   if (memory.length) {
-    const mb = (bytes) => (bytes / 1024 / 1024).toFixed(1)
+    const mb = bytes => (bytes / 1024 / 1024).toFixed(1)
     const tenth = Math.ceil(memory.length / 10)
-    const avg = (values) => values.reduce((sum, value) => sum + value, 0) / values.length
+    const avg = values => values.reduce((sum, value) => sum + value, 0) / values.length
     console.log(
-      `memory per request (peak, MB): min=${mb(Math.min(...memory))} max=${mb(Math.max(...memory))} ` +
-        `first10%avg=${mb(avg(memory.slice(0, tenth)))} last10%avg=${mb(avg(memory.slice(-tenth)))}`,
+      `memory per request (peak, MB): min=${mb(Math.min(...memory))} max=${mb(Math.max(...memory))} `
+      + `first10%avg=${mb(avg(memory.slice(0, tenth)))} last10%avg=${mb(avg(memory.slice(-tenth)))}`,
     )
   }
 

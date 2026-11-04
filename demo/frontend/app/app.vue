@@ -2,7 +2,11 @@
   <div class="layout">
     <nav>
       <strong>nuxt-backend-lens demo</strong>
-      <NuxtLink v-for="link in links" :key="link.to" :to="link.to">{{ link.label }}</NuxtLink>
+      <NuxtLink
+        v-for="link in links"
+        :key="link.to"
+        :to="link.to"
+      >{{ link.label }}</NuxtLink>
     </nav>
     <main>
       <NuxtPage />

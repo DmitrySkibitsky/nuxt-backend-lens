@@ -9,9 +9,8 @@
  * mode for the tab, the app's (or the system's) for the toolbar.
  */
 .bl-root {
-  --bl-font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --bl-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-
+  --bl-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bl-mono: ui-monospace, sfmono-regular, menlo, monaco, consolas, "Liberation Mono", "Courier New", monospace;
   --bl-bg: #fff;
   --bl-fg: #000;
   --bl-muted: rgb(0 0 0 / 55%);
@@ -41,7 +40,7 @@
   color: var(--bl-fg);
 }
 
-.bl-root[data-theme='dark'] {
+.bl-root[data-theme="dark"] {
   --bl-bg: #151515;
   --bl-fg: #fff;
   --bl-muted: rgb(255 255 255 / 55%);
@@ -68,10 +67,25 @@
   color-scheme: dark;
 }
 
-.bl-pos-bottom-right { right: 12px; bottom: 12px; }
-.bl-pos-bottom-left { left: 12px; bottom: 12px; }
-.bl-pos-top-right { right: 12px; top: 12px; }
-.bl-pos-top-left { left: 12px; top: 12px; }
+.bl-pos-bottom-right {
+  right: 12px;
+  bottom: 12px;
+}
+
+.bl-pos-bottom-left {
+  left: 12px;
+  bottom: 12px;
+}
+
+.bl-pos-top-right {
+  right: 12px;
+  top: 12px;
+}
+
+.bl-pos-top-left {
+  left: 12px;
+  top: 12px;
+}
 
 button {
   font: inherit;
@@ -93,7 +107,11 @@ button {
 .bl-badge:hover { background: var(--bl-hover); }
 .bl-badge-title { font-weight: 600; }
 .bl-badge-problem { border-color: var(--bl-error); }
-.bl-badge-alert { color: var(--bl-error); font-weight: 600; }
+
+.bl-badge-alert {
+  color: var(--bl-error);
+  font-weight: 600;
+}
 
 .bl-panel {
   display: flex;
@@ -116,7 +134,13 @@ button {
 }
 
 .bl-spacer { flex: 1; }
-.bl-toggle { display: flex; gap: 4px; align-items: center; cursor: pointer; }
+
+.bl-toggle {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  cursor: pointer;
+}
 
 .bl-button {
   padding: 2px 8px;
@@ -144,8 +168,8 @@ button {
   display: grid;
   grid-template-columns: 52px 1fr auto;
   grid-template-areas:
-    'method path status'
-    'metrics metrics nav';
+    "method path status"
+    "metrics metrics nav";
   gap: 2px 8px;
   width: 100%;
   padding: 6px 10px;
@@ -157,11 +181,37 @@ button {
 }
 
 .bl-list-item:hover { background: var(--bl-hover); }
-.bl-selected, .bl-selected:hover { background: var(--bl-selected); }
-.bl-method { grid-area: method; font-weight: 600; }
-.bl-path { grid-area: path; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.bl-status { grid-area: status; font-weight: 600; }
-.bl-metrics { grid-area: metrics; display: flex; gap: 10px; color: var(--bl-muted); }
+
+/* Selected request: DevTools-like green marker. */
+.bl-selected,
+.bl-selected:hover {
+  background: var(--bl-selected);
+  box-shadow: inset 2px 0 0 var(--bl-accent);
+}
+
+.bl-method {
+  grid-area: method;
+  font-weight: 600;
+}
+
+.bl-path {
+  grid-area: path;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bl-status {
+  grid-area: status;
+  font-weight: 600;
+}
+
+.bl-metrics {
+  grid-area: metrics;
+  display: flex;
+  gap: 10px;
+  color: var(--bl-muted);
+}
 .bl-nav { grid-area: nav; }
 
 .bl-status-ok { color: var(--bl-ok); }
@@ -174,8 +224,19 @@ button {
   padding: 10px 12px;
 }
 
-.bl-details-title { display: flex; gap: 8px; font-size: 13px; }
-.bl-details-meta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; color: var(--bl-muted); }
+.bl-details-title {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.bl-details-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+  color: var(--bl-muted);
+}
 .bl-details-meta a { color: var(--bl-accent); }
 
 .bl-exception {
@@ -200,22 +261,36 @@ button {
   cursor: pointer;
 }
 
-.bl-tab-active { border-bottom-color: var(--bl-accent); font-weight: 600; }
+.bl-tab-active {
+  border-bottom-color: var(--bl-accent);
+  font-weight: 600;
+}
 
-.bl-queries, .bl-logs {
+.bl-queries,
+.bl-logs {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.bl-query, .bl-log {
+.bl-query,
+.bl-log {
   padding: 6px 0;
   border-bottom: 1px solid var(--bl-border);
 }
 
 .bl-slow { background: var(--bl-slow); }
-.bl-query-head { display: flex; gap: 10px; margin-bottom: 2px; }
-.bl-duration { font-weight: 600; min-width: 56px; }
+
+.bl-query-head {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+.bl-duration {
+  font-weight: 600;
+  min-width: 56px;
+}
 
 /* rtl makes the ellipsis cut the start of long paths; <bdi> keeps the text itself left-to-right. */
 .bl-frame {
@@ -227,21 +302,37 @@ button {
   text-align: left;
 }
 
-.bl-sql, .bl-context {
+.bl-sql,
+.bl-context {
   display: block;
   padding: 4px 6px;
   border-radius: 4px;
   background: var(--bl-code);
   font: 12px/1.55 var(--bl-mono);
   white-space: pre-wrap;
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
-.bl-bindings, .bl-context { margin-top: 2px; }
-.bl-log { display: grid; grid-template-columns: 64px 1fr; gap: 2px 8px; }
-.bl-level { font-weight: 600; text-transform: uppercase; font-size: 10.5px; }
+.bl-bindings,
+.bl-context { margin-top: 2px; }
+
+.bl-log {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 2px 8px;
+}
+
+.bl-level {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 10.5px;
+}
 .bl-context { grid-column: 2; }
-.bl-level-error .bl-level, .bl-level-critical .bl-level, .bl-level-alert .bl-level, .bl-level-emergency .bl-level { color: var(--bl-error); }
+
+.bl-level-error .bl-level,
+.bl-level-critical .bl-level,
+.bl-level-alert .bl-level,
+.bl-level-emergency .bl-level { color: var(--bl-error); }
 .bl-level-warning .bl-level { color: var(--bl-warn); }
 
 .bl-empty {
@@ -249,10 +340,12 @@ button {
   color: var(--bl-muted);
 }
 
-/* Embedded (Nuxt DevTools tab): the panel fills the iframe. */
+/* Embedded in the Nuxt DevTools tab: full size, no own frame or title, DevTools density. */
 .bl-embedded {
   position: static;
   height: 100vh;
+  background: var(--bl-bg);
+  font-size: 14px;
 }
 
 .bl-embedded .bl-panel {
@@ -263,7 +356,10 @@ button {
   box-shadow: none;
 }
 
-.bl-badge-warn { color: var(--bl-warn); font-weight: 600; }
+.bl-badge-warn {
+  color: var(--bl-warn);
+  font-weight: 600;
+}
 
 .bl-summary {
   display: flex;
@@ -278,7 +374,7 @@ button {
 .bl-chip {
   display: inline-block;
   padding: 0 6px;
-  border: 1px solid currentColor;
+  border: 1px solid currentcolor;
   border-radius: 999px;
   font-size: 10.5px;
   font-weight: 600;
@@ -307,7 +403,7 @@ button {
   width: 100%;
   padding: 4px 8px;
   border: 1px solid var(--bl-border);
-  border-left: 3px solid currentColor;
+  border-left: 3px solid currentcolor;
   border-radius: 4px;
   background: transparent;
   text-align: left;
@@ -316,20 +412,47 @@ button {
 
 .bl-issue > span:not(.bl-chip) { color: var(--bl-fg); }
 .bl-issue code { font: 12px var(--bl-mono); }
-.bl-issue:hover, .bl-issue-active { background: var(--bl-hover); }
-.bl-issue-time { margin-left: auto; white-space: nowrap; }
 
-.bl-table { width: 100%; border-collapse: collapse; }
-.bl-table th, .bl-table td { padding: 4px 6px; border-bottom: 1px solid var(--bl-border); text-align: left; }
-.bl-table th { color: var(--bl-muted); font-weight: 600; }
+.bl-issue:hover,
+.bl-issue-active { background: var(--bl-hover); }
+
+.bl-issue-time {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.bl-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bl-table th,
+.bl-table td {
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--bl-border);
+  text-align: left;
+}
+
+.bl-table th {
+  color: var(--bl-muted);
+  font-weight: 600;
+}
 .bl-cache-count { margin-right: 12px; }
 .bl-cache-type { font-weight: 600; }
 .bl-cache-hit .bl-cache-type { color: var(--bl-ok); }
 .bl-cache-miss .bl-cache-type { color: var(--bl-warn); }
 
-.bl-axis { display: flex; justify-content: space-between; margin: 0 72px 4px 34%; }
+.bl-axis {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 72px 4px 34%;
+}
 
-.bl-waterfall { margin: 0; padding: 0; list-style: none; }
+.bl-waterfall {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 
 .bl-waterfall-row {
   display: grid;
@@ -346,11 +469,31 @@ button {
   white-space: nowrap;
 }
 
-.bl-waterfall-event .bl-waterfall-label { font-family: inherit; font-weight: 600; }
-.bl-waterfall-track { position: relative; height: 10px; background: var(--bl-code); border-radius: 2px; }
-.bl-waterfall-bar { position: absolute; top: 0; bottom: 0; border-radius: 2px; background: var(--bl-bar-query); }
+.bl-waterfall-event .bl-waterfall-label {
+  font-family: inherit;
+  font-weight: 600;
+}
+
+.bl-waterfall-track {
+  position: relative;
+  height: 10px;
+  background: var(--bl-code);
+  border-radius: 2px;
+}
+
+.bl-waterfall-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 2px;
+  background: var(--bl-bar-query);
+}
 .bl-waterfall-event .bl-waterfall-bar { background: var(--bl-bar-event); }
-.bl-waterfall-time { color: var(--bl-muted); text-align: right; }
+
+.bl-waterfall-time {
+  color: var(--bl-muted);
+  text-align: right;
+}
 
 .bl-note {
   margin: 10px 0 0;
@@ -373,23 +516,42 @@ button {
 }
 
 /* SQL */
-.bl-sql-formatted { white-space: pre; overflow-x: auto; word-break: normal; }
-.bl-sql-keyword { color: var(--bl-sql-keyword); font-weight: 600; }
+.bl-sql-formatted {
+  white-space: pre;
+  overflow-x: auto;
+  word-break: normal;
+}
+
+.bl-sql-keyword {
+  color: var(--bl-sql-keyword);
+  font-weight: 600;
+}
 .bl-sql-function { color: var(--bl-sql-function); }
 .bl-sql-string { color: var(--bl-sql-string); }
-.bl-sql-number, .bl-sql-placeholder { color: var(--bl-sql-number); }
+
+.bl-sql-number,
+.bl-sql-placeholder { color: var(--bl-sql-number); }
 .bl-sql-identifier { color: var(--bl-sql-identifier); }
-.bl-sql-comment { color: var(--bl-muted); font-style: italic; }
-.bl-sql-operator, .bl-sql-punctuation { color: var(--bl-muted); }
+
+.bl-sql-comment {
+  color: var(--bl-muted);
+  font-style: italic;
+}
+
+.bl-sql-operator,
+.bl-sql-punctuation { color: var(--bl-muted); }
 
 /* Issue groups: the first query carries the toggle, the other members open indented below it. */
-.bl-group-toggle { cursor: pointer; background: transparent; }
+.bl-group-toggle {
+  cursor: pointer;
+  background: transparent;
+}
 .bl-group-toggle:hover { background: var(--bl-hover); }
 
 .bl-group-members {
   margin: 6px 0 0 18px;
   padding: 0 0 0 10px;
-  border-left: 3px solid currentColor;
+  border-left: 3px solid currentcolor;
   list-style: none;
 }
 
@@ -412,15 +574,6 @@ button {
   white-space: normal;
 }
 
-/* Selected request: DevTools-like green marker. */
-.bl-selected, .bl-selected:hover { box-shadow: inset 2px 0 0 var(--bl-accent); }
-
-/* Embedded in the Nuxt DevTools tab: full size, no own frame or title, DevTools density. */
-.bl-embedded {
-  font-size: 14px;
-  background: var(--bl-bg);
-}
-
 .bl-embedded .bl-panel-header {
   padding: 6px 12px;
 }
@@ -437,6 +590,6 @@ button {
 
 /* Inside DevTools, with its fonts adopted (shells/devtools.ts); system fonts remain the fallback. */
 :root.bl-devtools-fonts .bl-root {
-  --bl-font: 'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --bl-mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --bl-font: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bl-mono: "DM Mono", ui-monospace, sfmono-regular, menlo, monaco, consolas, monospace;
 }

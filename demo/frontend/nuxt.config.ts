@@ -3,19 +3,20 @@
 const demoPort = Number(process.env.DEMO_PORT ?? 18080)
 
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
-  ssr: false,
-  devtools: { enabled: true },
 
   // The module is loaded from source (a relative path works inside the frontend container and
   // gives HMR on module changes). It is also a workspace devDependency, so the module can resolve
   // itself from here and have Vite pre-bundle its lazy client dependencies. Packaged consumption is
   // checked separately (make package).
   modules: ['../../packages/nuxt-backend-lens/src/module', 'nuxt-auth-sanctum'],
+  ssr: false,
+  devtools: { enabled: true },
 
-  backendLens: {
-    include: ['/api/**', '/sanctum/**'],
+  app: {
+    head: { title: 'nuxt-backend-lens demo' },
   },
+
+  css: ['~/assets/main.css'],
 
   runtimeConfig: {
     public: {
@@ -23,11 +24,22 @@ export default defineNuxtConfig({
       crossOriginApi: '',
     },
   },
+  compatibilityDate: '2025-07-15',
 
-  css: ['~/assets/main.css'],
+  vite: {
+    // axios is imported by a page only; without this, Vite finds it on first visit and reloads.
+    // The module's own lazy dependencies are pre-bundled by the module itself.
+    optimizeDeps: {
+      include: ['axios'],
+    },
+    server: {
+      // The dev server is reached through the proxy; let HMR connect back through it.
+      ws: { clientPort: demoPort },
+    },
+  },
 
-  app: {
-    head: { title: 'nuxt-backend-lens demo' },
+  backendLens: {
+    include: ['/api/**', '/sanctum/**'],
   },
 
   sanctum: {
@@ -45,18 +57,6 @@ export default defineNuxtConfig({
       onLogout: '/',
       onAuthOnly: '/reviews',
       onGuestOnly: '/reviews',
-    },
-  },
-
-  vite: {
-    // axios is imported by a page only; without this, Vite finds it on first visit and reloads.
-    // The module's own lazy dependencies are pre-bundled by the module itself.
-    optimizeDeps: {
-      include: ['axios'],
-    },
-    server: {
-      // The dev server is reached through the proxy; let HMR connect back through it.
-      ws: { clientPort: demoPort },
     },
   },
 })

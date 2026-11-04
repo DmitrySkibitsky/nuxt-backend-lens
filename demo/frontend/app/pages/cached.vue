@@ -1,10 +1,20 @@
 <template>
   <div>
     <h1>Cache</h1>
-    <p class="hint">"Fresh" clears the key (miss + write); "Cached" reads it again (hit).</p>
-    <button @click="load(true)">Fresh (miss)</button>
-    <button @click="load(false)">Cached (hit)</button>
-    <ResultBlock :data="data" :error="error" :pending="pending" />
+    <p class="hint">
+      "Fresh" clears the key (miss + write); "Cached" reads it again (hit).
+    </p>
+    <button @click="load(true)">
+      Fresh (miss)
+    </button>
+    <button @click="load(false)">
+      Cached (hit)
+    </button>
+    <ResultBlock
+      :data="data"
+      :error="error"
+      :pending="pending"
+    />
   </div>
 </template>
 

@@ -5,13 +5,20 @@
       The same <code>GET /api/stats</code> through six different clients. The module must capture every
       one of them, because it patches <code>fetch</code> and <code>XMLHttpRequest</code> underneath.
     </p>
-    <button @click="runAll">Run all</button>
+    <button @click="runAll">
+      Run all
+    </button>
     <table>
       <thead><tr><th>Client</th><th>Status</th></tr></thead>
       <tbody>
-        <tr v-for="client in clients" :key="client.name">
+        <tr
+          v-for="client in clients"
+          :key="client.name"
+        >
           <td><code>{{ client.name }}</code></td>
-          <td :class="{ error: results[client.name]?.startsWith('error') }">{{ results[client.name] ?? '—' }}</td>
+          <td :class="{ error: results[client.name]?.startsWith('error') }">
+            {{ results[client.name] ?? '—' }}
+          </td>
         </tr>
       </tbody>
     </table>

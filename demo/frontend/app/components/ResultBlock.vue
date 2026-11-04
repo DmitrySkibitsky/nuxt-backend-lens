@@ -1,7 +1,17 @@
 <template>
   <section>
-    <p v-if="pending" class="hint">Loading…</p>
-    <p v-else-if="error" class="error">Error: {{ errorMessage }}</p>
+    <p
+      v-if="pending"
+      class="hint"
+    >
+      Loading…
+    </p>
+    <p
+      v-else-if="error"
+      class="error"
+    >
+      Error: {{ errorMessage }}
+    </p>
     <pre v-else-if="data !== undefined && data !== null">{{ data }}</pre>
   </section>
 </template>

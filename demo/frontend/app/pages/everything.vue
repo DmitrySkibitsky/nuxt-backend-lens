@@ -1,14 +1,23 @@
 <template>
   <div>
     <h1>Everything at once</h1>
-    <p class="hint">One navigation, many parallel backend requests — the grouping-by-navigation case.</p>
-    <button @click="runAll">Run again</button>
+    <p class="hint">
+      One navigation, many parallel backend requests — the grouping-by-navigation case.
+    </p>
+    <button @click="runAll">
+      Run again
+    </button>
     <table>
       <thead><tr><th>Endpoint</th><th>Result</th></tr></thead>
       <tbody>
-        <tr v-for="endpoint in endpoints" :key="endpoint">
+        <tr
+          v-for="endpoint in endpoints"
+          :key="endpoint"
+        >
           <td><code>{{ endpoint }}</code></td>
-          <td :class="{ error: results[endpoint]?.startsWith('error') }">{{ results[endpoint] ?? '—' }}</td>
+          <td :class="{ error: results[endpoint]?.startsWith('error') }">
+            {{ results[endpoint] ?? '—' }}
+          </td>
         </tr>
       </tbody>
     </table>

@@ -15,7 +15,7 @@ body {
 }
 
 .layout nav {
-  border-right: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  border-right: 1px solid color-mix(in srgb, currentcolor 15%, transparent);
   padding: 1rem;
 }
 
@@ -42,7 +42,7 @@ button {
 }
 
 pre {
-  background: color-mix(in srgb, currentColor 6%, transparent);
+  background: color-mix(in srgb, currentcolor 6%, transparent);
   padding: 0.75rem;
   overflow: auto;
   max-height: 24rem;
@@ -58,7 +58,7 @@ td,
 th {
   text-align: left;
   padding: 0.25rem 0.5rem;
-  border-bottom: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, currentcolor 10%, transparent);
 }
 
 .error {

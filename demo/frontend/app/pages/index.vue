@@ -11,7 +11,10 @@
         <tr><th>Page</th><th>Endpoint</th><th>Expected debug data</th></tr>
       </thead>
       <tbody>
-        <tr v-for="row in rows" :key="row.page">
+        <tr
+          v-for="row in rows"
+          :key="row.page"
+        >
           <td><NuxtLink :to="row.page">{{ row.page }}</NuxtLink></td>
           <td><code>{{ row.endpoint }}</code></td>
           <td>{{ row.expected }}</td>
@@ -19,7 +22,10 @@
       </tbody>
     </table>
     <p class="hint">
-      Raw Clockwork UI: <a href="/clockwork/app" target="_blank">/clockwork/app</a>.
+      Raw Clockwork UI: <a
+        href="/clockwork/app"
+        target="_blank"
+      >/clockwork/app</a>.
       Demo login: <code>demo@example.com</code> / <code>password</code>.
     </p>
   </div>

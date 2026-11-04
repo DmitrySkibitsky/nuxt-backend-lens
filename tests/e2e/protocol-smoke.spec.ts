@@ -12,7 +12,7 @@ async function probeFromPage(page: Page, url: string) {
     // asynchronously, after fetch() has resolved. The module has to correlate the same way.
     const entryPromise = new Promise<PerformanceResourceTiming | undefined>((resolve) => {
       const observer = new PerformanceObserver((list) => {
-        const match = (list.getEntries() as PerformanceResourceTiming[]).find((candidate) => candidate.name.endsWith(target))
+        const match = (list.getEntries() as PerformanceResourceTiming[]).find(candidate => candidate.name.endsWith(target))
         if (match) {
           observer.disconnect()
           resolve(match)
@@ -35,7 +35,7 @@ async function probeFromPage(page: Page, url: string) {
       status: response.status,
       id,
       path,
-      serverTiming: entry?.serverTiming.map((timing) => ({ name: timing.name, duration: timing.duration })) ?? [],
+      serverTiming: entry?.serverTiming.map(timing => ({ name: timing.name, duration: timing.duration })) ?? [],
     }
   }, url)
 }
@@ -44,7 +44,7 @@ async function fetchRecord(page: Page, id: string, path: string | null) {
   return page.evaluate(async ({ id, path }) => {
     const base = (path ?? '/__clockwork/').replace(/\/?$/, '/')
     for (const delay of [0, 100, 300, 1000]) {
-      await new Promise((resolve) => setTimeout(resolve, delay))
+      await new Promise(resolve => setTimeout(resolve, delay))
       const response = await fetch(`${base}${id}`)
       if (response.ok) return response.json()
     }
@@ -66,7 +66,7 @@ test('debug id, record and Server-Timing are readable from page JS', async ({ pa
 
   expect(probe.status).toBe(200)
   expect(probe.id).toBeTruthy()
-  expect(probe.serverTiming.map((timing) => timing.name)).toContain('db')
+  expect(probe.serverTiming.map(timing => timing.name)).toContain('db')
 
   const record = await fetchRecord(page, probe.id!, probe.path)
   expect(record.id).toBe(probe.id)
@@ -104,7 +104,7 @@ test('sanctum login and a write request go through with debug ids', async ({ pag
   await page.getByRole('button', { name: 'Log in' }).click()
   await expect(page.getByText('Logged in as')).toBeVisible()
 
-  const responsePromise = page.waitForResponse((response) =>
+  const responsePromise = page.waitForResponse(response =>
     /\/api\/books\/\d+\/reviews$/.test(new URL(response.url()).pathname),
   )
   await page.getByRole('button', { name: 'Post review' }).click()
