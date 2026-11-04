@@ -64,3 +64,13 @@ export function formatValue(value: unknown): string {
     return String(value)
   }
 }
+
+export function analysisOptions(options: { nPlusOneThreshold: number, slowQueryMs: number }) {
+  return { nPlusOneThreshold: options.nPlusOneThreshold, slowQueryMs: options.slowQueryMs }
+}
+
+export const ISSUE_LABELS = {
+  'n+1': 'N+1',
+  'duplicate': 'duplicate',
+  'slow': 'slow',
+} as const

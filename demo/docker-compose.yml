@@ -7,6 +7,8 @@
 # Host ports come from .env (see .env.example): DEMO_PORT for the same-origin proxy (SPA, /api,
 # /sanctum, /__clockwork, /clockwork), BACKEND_PORT for direct backend access. Ports inside the
 # containers are fixed (proxy 8080, backend 8000, frontend 3000); only the host side is configurable.
+# CROSS_ORIGIN_PORT serves the same SPA without the backend paths: its /cross-origin page calls the
+# backend on BACKEND_PORT directly, which exercises the documented CORS setup.
 
 name: nuxt-backend-lens-demo
 
@@ -15,7 +17,7 @@ x-backend: &backend
     context: ./docker
     dockerfile: backend.Dockerfile
   image: nuxt-backend-lens-demo/backend
-  user: "${UID:-1000}:${GID:-1000}"
+  user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
   volumes:
     - ./backend:/app
   environment: &backend-env
@@ -33,6 +35,8 @@ x-backend: &backend
     QUEUE_CONNECTION: database
     LOG_CHANNEL: stderr
     SANCTUM_STATEFUL_DOMAINS: localhost:${DEMO_PORT:-18080}
+    # The SPA's second, cross-origin entry calls the backend directly (see backend/config/cors.php).
+    CORS_ALLOWED_ORIGINS: http://localhost:${CROSS_ORIGIN_PORT:-18081}
     OCTANE_SERVER: frankenphp
     # clockwork | debugbar — the entrypoint turns this into the packages' own env switches.
     DEBUG_BACKEND: ${DEBUG_BACKEND:-clockwork}
@@ -80,6 +84,9 @@ services:
   queue:
     <<: *backend
     command: ["php", "artisan", "queue:work", "--sleep=1", "--tries=1"]
+    # `migrate` runs migrate:fresh whenever the backend is recreated, dropping tables under a
+    # running worker: let it come back instead of staying dead.
+    restart: unless-stopped
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -89,14 +96,14 @@ services:
   backend-tests:
     image: nuxt-backend-lens-demo/backend
     profiles: ["tools"]
-    user: "${UID:-1000}:${GID:-1000}"
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     volumes:
       - ./backend:/app
     command: ["php", "artisan", "test", "--compact"]
 
   frontend:
     image: node:24
-    user: "${UID:-1000}:${GID:-1000}"
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     # The whole pnpm workspace is mounted: node_modules symlinks point into the root store and the
     # module under packages/ is linked into the demo app.
     working_dir: /repo/demo/frontend
@@ -105,6 +112,8 @@ services:
     environment:
       HOME: /tmp
       NUXT_PUBLIC_SANCTUM_BASE_URL: http://localhost:${DEMO_PORT:-18080}
+      # Used by the /cross-origin page when the SPA is opened on CROSS_ORIGIN_PORT.
+      NUXT_PUBLIC_CROSS_ORIGIN_API: http://localhost:${BACKEND_PORT:-18000}
       DEMO_PORT: ${DEMO_PORT:-18080}
     # Dependencies are installed on the host (pnpm install), the container only runs the dev server.
     command: ["node_modules/.bin/nuxt", "dev", "--host", "0.0.0.0", "--port", "3000"]
@@ -115,6 +124,7 @@ services:
       - ./proxy/Caddyfile:/etc/caddy/Caddyfile:ro
     ports:
       - "127.0.0.1:${DEMO_PORT:-18080}:8080"
+      - "127.0.0.1:${CROSS_ORIGIN_PORT:-18081}:8081"
     depends_on:
       - backend
       - frontend

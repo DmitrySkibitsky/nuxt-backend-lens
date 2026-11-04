@@ -1,0 +1,45 @@
+#!/bin/sh
+# Prepares a fresh clone for the demo stand. Idempotent: safe to run again.
+#   - demo/.env from .env.example (ports, modes)
+#   - backend .env with an application key
+#   - PHP dependencies (inside the backend image, so no local PHP is needed)
+#   - JS dependencies of the workspace (host pnpm; the frontend container runs from them)
+#   - the module's stub build and types
+#
+# Usage: demo/bin/setup            then: (cd demo && docker compose up -d)
+set -eu
+
+DEMO_DIR=$(cd "$(dirname "$0")/.." && pwd)
+ROOT_DIR=$(cd "$DEMO_DIR/.." && pwd)
+cd "$DEMO_DIR"
+
+[ -f .env ] || cp .env.example .env
+[ -f backend/.env ] || cp backend/.env.example backend/.env
+
+# Containers run as the host user so files they write (vendor/, storage/) stay owned by you.
+grep -q '^HOST_UID=' .env || printf '\n# Host user the containers run as (written by bin/setup)\nHOST_UID=%s\nHOST_GID=%s\n' "$(id -u)" "$(id -g)" >> .env
+
+docker compose build backend
+
+# Composer and artisan run in a throw-away container with the clean (test) environment.
+run_backend() {
+    docker compose run --rm --no-deps -e HOME=/tmp backend-tests "$@"
+}
+
+# Host Composer when available (it only needs to download; extensions are checked against the
+# lock file), else the one in the image. COMPOSER_IN_CONTAINER=1 forces the image.
+if [ "${COMPOSER_IN_CONTAINER:-0}" != 1 ] && command -v composer >/dev/null 2>&1; then
+    (cd backend && composer install --no-interaction --prefer-dist)
+else
+    run_backend composer install --no-interaction --prefer-dist
+fi
+if ! grep -q '^APP_KEY=base64:' backend/.env; then
+    run_backend php artisan key:generate --no-interaction
+fi
+
+cd "$ROOT_DIR"
+pnpm install --frozen-lockfile
+pnpm -F nuxt-backend-lens dev:prepare
+
+echo
+echo "Ready. Start the stand with: (cd demo && docker compose up -d)"

@@ -1,25 +1,30 @@
 <template>
   <div
     class="bl-root"
-    :class="`bl-pos-${lens.options.toolbar.position}`"
+    :class="embedded ? 'bl-embedded' : `bl-pos-${lens.options.toolbar.position}`"
   >
     <button
-      v-if="!open"
+      v-if="!embedded && !open"
       type="button"
       class="bl-badge"
-      :class="{ 'bl-badge-problem': problems > 0 }"
+      :class="{ 'bl-badge-problem': summary.errors > 0 }"
       data-testid="backend-lens-badge"
       title="Backend Lens"
       @click="open = true"
     >
       <span class="bl-badge-title">Backend</span>
-      <span data-testid="backend-lens-badge-requests">{{ visible.length }} req</span>
-      <span data-testid="backend-lens-badge-queries">{{ totals.queries }} q</span>
-      <span>{{ formatMs(totals.databaseMs) }} DB</span>
+      <span data-testid="backend-lens-badge-requests">{{ summary.requests }} req</span>
+      <span data-testid="backend-lens-badge-queries">{{ summary.queries }} q</span>
+      <span>{{ formatMs(summary.databaseMs) }} DB</span>
       <span
-        v-if="problems > 0"
+        v-if="issueCount > 0"
+        class="bl-badge-warn"
+        data-testid="backend-lens-badge-issues"
+      >{{ issueCount }} ⚠</span>
+      <span
+        v-if="summary.errors > 0"
         class="bl-badge-alert"
-      >{{ problems }} ✕</span>
+      >{{ summary.errors }} ✕</span>
     </button>
 
     <section
@@ -47,6 +52,7 @@
           Clear
         </button>
         <button
+          v-if="!embedded"
           type="button"
           class="bl-button"
           aria-label="Close"
@@ -55,6 +61,41 @@
           ✕
         </button>
       </header>
+      <div
+        class="bl-summary"
+        data-testid="backend-lens-summary"
+      >
+        <span>{{ summary.requests }} requests</span>
+        <span>{{ summary.queries }} queries</span>
+        <span>{{ formatMs(summary.databaseMs) }} DB</span>
+        <span
+          v-if="summary.nPlusOne"
+          class="bl-chip bl-issue-n-plus-one"
+        >{{ summary.nPlusOne }} N+1</span>
+        <span
+          v-if="summary.duplicates"
+          class="bl-chip bl-issue-duplicate"
+        >{{ summary.duplicates }} duplicate</span>
+        <span
+          v-if="summary.slow"
+          class="bl-chip bl-issue-slow"
+        >{{ summary.slow }} slow</span>
+        <span
+          v-if="summary.errors"
+          class="bl-chip bl-status-error"
+        >{{ summary.errors }} failed</span>
+        <span
+          v-for="repeated in summary.repeatedRequests"
+          :key="`${repeated.method} ${repeated.path}`"
+          class="bl-chip bl-issue-repeated"
+          data-testid="backend-lens-repeated"
+          :title="`${repeated.method} ${repeated.path} was requested ${repeated.count} times`"
+        >{{ repeated.count }}× {{ repeated.method }} {{ repeated.path }}</span>
+        <span
+          v-if="summary.loaded < summary.requests"
+          class="bl-muted"
+        >({{ summary.requests - summary.loaded }} not loaded)</span>
+      </div>
       <div class="bl-panel-body">
         <RequestList
           :entries="visible"
@@ -80,14 +121,20 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { formatMs, hasProblem } from './format'
+import { summarizeNavigation } from '../core/analysis'
+import { analysisOptions, formatMs } from './format'
 import RequestDetails from './RequestDetails.vue'
 import RequestList from './RequestList.vue'
 import { useLensUiState } from './state'
 
+const props = withDefaults(defineProps<{
+  /** Full-size panel without badge or close button (Nuxt DevTools tab). */
+  embedded?: boolean
+}>(), { embedded: false })
+
 const { lens, entries, navigations, currentNavigationId } = useLensUiState()
 
-const open = ref(lens.options.toolbar.open)
+const open = ref(props.embedded || lens.options.toolbar.open)
 const showAll = ref(false)
 const selectedKey = ref<number>()
 
@@ -97,19 +144,14 @@ const visible = computed(() => (showAll.value
 
 const selected = computed(() => entries.value.find(entry => entry.key === selectedKey.value))
 
-const totals = computed(() => visible.value.reduce(
-  (sum, entry) => ({
-    queries: sum.queries + (entry.details?.queries.length ?? 0),
-    databaseMs: sum.databaseMs + (entry.details?.queriesDurationMs ?? 0),
-  }),
-  { queries: 0, databaseMs: 0 },
-))
+const summary = computed(() => summarizeNavigation(visible.value, analysisOptions(lens.options)))
 
-const problems = computed(() => visible.value.filter(hasProblem).length)
+const issueCount = computed(() => summary.value.nPlusOne + summary.value.duplicates + summary.value.slow
+  + summary.value.repeatedRequests.length)
 
 const scopeLabel = computed(() => {
   if (showAll.value) {
-    return `${entries.value.length} requests`
+    return 'all navigations'
   }
   const route = navigations.value.find(item => item.id === currentNavigationId.value)?.route
   return route ? `on ${route}` : ''

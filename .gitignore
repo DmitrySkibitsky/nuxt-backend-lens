@@ -6,3 +6,4 @@ node_modules
 .vscode
 test-results
 playwright-report
+tests/package/.work

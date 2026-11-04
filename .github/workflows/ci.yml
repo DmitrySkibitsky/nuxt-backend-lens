@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The lock file needs PHP >= 8.4.1 (Symfony 8); runners ship an older PHP, the image has 8.5.
+  COMPOSER_IN_CONTAINER: '1'
+
+jobs:
+  module:
+    name: Module — lint, types, unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm -F nuxt-backend-lens dev:prepare
+      - run: pnpm -F nuxt-backend-lens lint
+      - run: pnpm -F nuxt-backend-lens test:types
+      - run: pnpm -F nuxt-backend-lens test
+
+  package:
+    name: Packaged consumption
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:package
+
+  stand:
+    name: Demo stand — ${{ matrix.debug-backend }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        debug-backend: [clockwork, debugbar]
+    env:
+      DEBUG_BACKEND: ${{ matrix.debug-backend }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: demo/bin/setup
+      - name: Backend tests (PHPUnit)
+        working-directory: demo
+        run: docker compose run --rm backend-tests
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Start the stand
+        working-directory: demo
+        run: docker compose up -d
+      - run: demo/bin/wait 300
+      - name: Octane isolation (leak test)
+        run: pnpm test:leak --source=${{ matrix.debug-backend }} --requests=200 --concurrency=32
+      - name: End-to-end
+        run: pnpm test:e2e
+      - name: Stand logs
+        if: failure()
+        working-directory: demo
+        run: docker compose logs --tail 200
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-${{ matrix.debug-backend }}
+          path: test-results/
+          retention-days: 7

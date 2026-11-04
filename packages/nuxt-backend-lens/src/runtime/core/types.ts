@@ -61,6 +61,8 @@ export interface DebugDetails {
   uri?: string
   status?: number
   controller?: string
+  /** Epoch seconds of the request start on the server, when known. */
+  startedAt?: number
   durationMs?: number
   memoryBytes?: number
   queries: DebugQuery[]

@@ -22,5 +22,6 @@ const links = [
   { to: '/reviews', label: 'Write + auth' },
   { to: '/clients', label: 'HTTP clients' },
   { to: '/everything', label: 'Everything at once' },
+  { to: '/cross-origin', label: 'Cross-origin API' },
 ]
 </script>

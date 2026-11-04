@@ -1,0 +1,28 @@
+#!/bin/sh
+# Waits until the demo stand answers: backend health, the SPA through the proxy and the
+# cross-origin entry. Ports come from demo/.env (or the environment).
+#
+# Usage: demo/bin/wait [timeout-seconds]
+set -eu
+
+DEMO_DIR=$(cd "$(dirname "$0")/.." && pwd)
+[ -f "$DEMO_DIR/.env" ] && . "$DEMO_DIR/.env"
+
+TIMEOUT=${1:-180}
+deadline=$(( $(date +%s) + TIMEOUT ))
+
+wait_for() {
+    url=$1
+    until [ "$(curl -s -o /dev/null -w '%{http_code}' "$url")" = 200 ]; do
+        if [ "$(date +%s)" -ge "$deadline" ]; then
+            echo "Timed out waiting for $url" >&2
+            exit 1
+        fi
+        sleep 2
+    done
+    echo "up: $url"
+}
+
+wait_for "http://localhost:${BACKEND_PORT:-18000}/up"
+wait_for "http://localhost:${DEMO_PORT:-18080}/"
+wait_for "http://localhost:${CROSS_ORIGIN_PORT:-18081}/cross-origin"

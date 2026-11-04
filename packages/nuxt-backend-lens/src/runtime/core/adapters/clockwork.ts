@@ -63,6 +63,7 @@ export function createClockworkAdapter(options: ClockworkAdapterOptions): Backen
         uri: asString(record.uri),
         status: toNumber(record.responseStatus),
         controller: asString(record.controller),
+        startedAt: requestStart,
         durationMs: toNumber(record.responseDuration),
         memoryBytes: toNumber(record.memoryUsage),
         queries,

@@ -47,6 +47,15 @@ export interface ToolbarOptions {
   open: boolean
 }
 
+export interface DevtoolsTabOptions {
+  /** Add a "Backend Lens" tab to Nuxt DevTools (`nuxt dev` only). */
+  enabled: boolean
+  /** Dev-server route of the tab's page. */
+  route: string
+  /** Any Iconify icon name. */
+  icon: string
+}
+
 export interface BackendLensOptions {
   /** Master switch. Prefer adding the module under `$development` so it never reaches production. */
   enabled: boolean
@@ -65,6 +74,7 @@ export interface BackendLensOptions {
     debugbar: DebugbarAdapterOptions
   }
   toolbar: ToolbarOptions
+  devtools: DevtoolsTabOptions
   /** Requests kept in memory, oldest dropped first. */
   maxRequests: number
   /** Load records in the background so the list can show query counts without opening each one. */
@@ -76,6 +86,8 @@ export interface BackendLensOptions {
   retryDelays: number[]
   /** Queries at or above this duration are highlighted. */
   slowQueryMs: number
+  /** The same statement shape from one call site this many times (with different values) is N+1. */
+  nPlusOneThreshold: number
 }
 
 export const defaultOptions: BackendLensOptions = {
@@ -106,6 +118,11 @@ export const defaultOptions: BackendLensOptions = {
     position: 'bottom-right',
     open: false,
   },
+  devtools: {
+    enabled: true,
+    route: '/__backend-lens/',
+    icon: 'carbon:data-base',
+  },
   maxRequests: 200,
   prefetch: {
     enabled: true,
@@ -113,4 +130,5 @@ export const defaultOptions: BackendLensOptions = {
   },
   retryDelays: [0, 100, 300, 1000],
   slowQueryMs: 100,
+  nPlusOneThreshold: 3,
 }

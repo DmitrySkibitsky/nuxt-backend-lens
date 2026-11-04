@@ -16,6 +16,11 @@
   --bl-error: #b91c1c;
   --bl-slow: #fff7e6;
   --bl-code: #f6f8fa;
+  --bl-n-plus-one: #7c3aed;
+  --bl-duplicate: #c2410c;
+  --bl-repeated: #0e7490;
+  --bl-bar-event: #94a3b8;
+  --bl-bar-query: #2563eb;
 
   position: fixed;
   z-index: 2147483000;
@@ -37,6 +42,11 @@
     --bl-error: #f87171;
     --bl-slow: #2e2510;
     --bl-code: #1f232a;
+    --bl-n-plus-one: #c4b5fd;
+    --bl-duplicate: #fdba74;
+    --bl-repeated: #67e8f9;
+    --bl-bar-event: #64748b;
+    --bl-bar-query: #6aa1ff;
   }
 }
 
@@ -220,3 +230,108 @@ button {
   padding: 16px;
   color: var(--bl-muted);
 }
+
+/* Embedded (Nuxt DevTools tab): the panel fills the iframe. */
+.bl-embedded {
+  position: static;
+  height: 100vh;
+}
+
+.bl-embedded .bl-panel {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.bl-badge-warn { color: var(--bl-warn); font-weight: 600; }
+
+.bl-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  align-items: center;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--bl-border);
+  color: var(--bl-muted);
+}
+
+.bl-chip {
+  display: inline-block;
+  padding: 0 6px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.bl-issue-n-plus-one { color: var(--bl-n-plus-one); }
+.bl-issue-duplicate { color: var(--bl-duplicate); }
+.bl-issue-slow { color: var(--bl-warn); }
+.bl-issue-repeated { color: var(--bl-repeated); }
+
+.bl-issues {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.bl-issue {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--bl-border);
+  border-left: 3px solid currentColor;
+  border-radius: 4px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.bl-issue > span:not(.bl-chip) { color: var(--bl-fg); }
+.bl-issue code { font: 11px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.bl-issue:hover, .bl-issue-active { background: var(--bl-hover); }
+.bl-issue-time { margin-left: auto; white-space: nowrap; }
+.bl-filter-note { display: flex; gap: 8px; align-items: center; margin: 0 0 6px; }
+.bl-flagged { box-shadow: inset 3px 0 0 var(--bl-n-plus-one); padding-left: 6px; }
+
+.bl-table { width: 100%; border-collapse: collapse; }
+.bl-table th, .bl-table td { padding: 4px 6px; border-bottom: 1px solid var(--bl-border); text-align: left; }
+.bl-table th { color: var(--bl-muted); font-weight: 600; }
+.bl-cache-count { margin-right: 12px; }
+.bl-cache-type { font-weight: 600; }
+.bl-cache-hit .bl-cache-type { color: var(--bl-ok); }
+.bl-cache-miss .bl-cache-type { color: var(--bl-warn); }
+
+.bl-axis { display: flex; justify-content: space-between; margin: 0 72px 4px 34%; }
+
+.bl-waterfall { margin: 0; padding: 0; list-style: none; }
+
+.bl-waterfall-row {
+  display: grid;
+  grid-template-columns: 34% 1fr 64px;
+  gap: 8px;
+  align-items: center;
+  padding: 1px 0;
+}
+
+.bl-waterfall-label {
+  overflow: hidden;
+  font: 11px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bl-waterfall-event .bl-waterfall-label { font-family: inherit; font-weight: 600; }
+.bl-waterfall-track { position: relative; height: 10px; background: var(--bl-code); border-radius: 2px; }
+.bl-waterfall-bar { position: absolute; top: 0; bottom: 0; border-radius: 2px; background: var(--bl-bar-query); }
+.bl-waterfall-event .bl-waterfall-bar { background: var(--bl-bar-event); }
+.bl-waterfall-time { color: var(--bl-muted); text-align: right; }

@@ -67,16 +67,22 @@ handle @backend {
 }
 ```
 
-When the API is cross-origin, the backend must expose the headers and allow credentialed reads of
-the record endpoints:
+When the API is cross-origin, the browser hides the debug headers and blocks the record requests
+unless the backend allows them. In Laravel (`php artisan config:publish cors`):
 
-```text
-Access-Control-Expose-Headers: X-Clockwork-Id, X-Clockwork-Path, phpdebugbar-id
-Timing-Allow-Origin: https://your-spa.example   # for Server-Timing
+```php
+// config/cors.php
+'paths' => ['api/*', 'sanctum/csrf-cookie', '__clockwork/*', '_debugbar/*'],
+'allowed_origins' => ['https://your-spa.example'],   // explicit: credentials rule out '*'
+'exposed_headers' => ['X-Clockwork-Id', 'X-Clockwork-Path', 'X-Clockwork-Version', 'phpdebugbar-id'],
+'supports_credentials' => true,
 ```
 
-Record URLs resolve against the **response's** origin, so a cross-origin API works without extra
-configuration once CORS allows it.
+`Server-Timing` additionally needs `Timing-Allow-Origin: https://your-spa.example` on API responses.
+A small middleware can add it; the demo stand has one (`app/Http/Middleware/TimingAllowOrigin.php`).
+
+Record URLs resolve against the **response's** origin, so no module option changes. The demo
+stand's cross-origin entry checks this setup end to end.
 
 ### 3. Nuxt
 
@@ -94,8 +100,26 @@ export default defineNuxtConfig({
 })
 ```
 
-A Backend badge appears in the bottom-right corner. It shows the number of requests, queries and the
-DB time of the current navigation. Click it to open the panel.
+A Backend badge appears in the bottom-right corner with the current navigation's requests, queries,
+DB time and the number of issues. Click it to open the panel. In `nuxt dev` the same panel is also a
+**Backend Lens** tab in Nuxt DevTools.
+
+### Staging builds
+
+The module only adds code when it is enabled at **build** time. To ship it in a staging build but
+never in production, put it in `modules` and switch it with an environment variable:
+
+```ts
+export default defineNuxtConfig({
+  modules: ['nuxt-backend-lens'],
+  backendLens: {
+    enabled: process.env.BACKEND_LENS === '1',   // BACKEND_LENS=1 nuxt build
+  },
+})
+```
+
+With `enabled: false` the client bundle contains no trace of the module. The workspace's package
+check verifies this on every run.
 
 ## What it captures
 
@@ -105,16 +129,27 @@ DB time of the current navigation. Click it to open the panel.
 - Requests are grouped by client-side navigation. The panel shows the current page and has a toggle
   for all navigations.
 - Per request:
-  - queries with duration and call site (`app/Http/Resources/BookResource.php:29`), slow ones
-    highlighted;
-  - log entries with level and context;
-  - exceptions;
-  - controller, duration, memory.
+  - **Queries** with duration and call site (`app/Http/Resources/BookResource.php:29`), plus detected
+    issues. Click an issue to show only its queries:
+    - **N+1**: the same statement shape (literals → `?`) from one call site with different values,
+      at least `nPlusOneThreshold` times;
+    - **duplicate**: byte-identical statements, bindings included, unless already explained by an
+      N+1;
+    - **slow**: at or above `slowQueryMs`.
+  - **Logs** with level and context.
+  - **Cache** events: hit, miss, write, delete.
+  - **Timeline**: server timeline events and every query on one time axis.
+  - Exceptions, controller, duration, memory.
+- Per navigation, a summary:
+  - requests, queries and DB time;
+  - issue counts and failed requests;
+  - **repeated requests**: the same method and URL fetched more than once.
 - Records are loaded in the background with a small concurrency limit (`prefetch`). A 404 right
   after the response is retried, because servers may persist the record after responding.
 
 The toolbar is a separate Vue app inside a Shadow DOM: the app's CSS does not reach it and its CSS
-does not reach the app.
+does not reach the app. The DevTools tab is a separate page in an iframe that reads the app's running
+lens, so both views always show the same data.
 
 ## Options
 
@@ -151,10 +186,16 @@ export default defineNuxtConfig({
       position: 'bottom-right',             // bottom-left | top-right | top-left
       open: false,
     },
+    devtools: {
+      enabled: true,                        // Nuxt DevTools tab, `nuxt dev` only
+      route: '/__backend-lens/',
+      icon: 'carbon:data-base',
+    },
     maxRequests: 200,
     prefetch: { enabled: true, concurrency: 2 },
     retryDelays: [0, 100, 300, 1000],
     slowQueryMs: 100,
+    nPlusOneThreshold: 3,
   },
 })
 ```
@@ -220,4 +261,6 @@ The playground needs no PHP: a Nitro middleware replays the records in `test/fix
 through both wire formats. Refresh them from the demo stand with
 `node scripts/capture-fixtures.mjs --source=clockwork|debugbar`.
 
-End-to-end tests against the real Laravel stand live at the workspace root (`pnpm test:e2e`).
+End-to-end tests against the real Laravel stand live at the workspace root (`pnpm test:e2e`). The
+packaged check (`pnpm test:package`) does the rest: it packs the module, installs it into a clean
+app, and tests a production build with the module on and off.

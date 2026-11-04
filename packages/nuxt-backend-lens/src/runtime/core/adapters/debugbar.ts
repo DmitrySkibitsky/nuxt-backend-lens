@@ -70,6 +70,7 @@ export function createDebugbarAdapter(options: DebugbarAdapterOptions): BackendL
         uri: asString(meta.uri),
         status: toNumber(request.status_code),
         controller: controllerOf(request.controller),
+        startedAt: requestStart ?? toNumber(meta.utime),
         durationMs: secondsToMs(time.duration),
         memoryBytes: isRecord(record.memory) ? toNumber(record.memory.peak_usage) : undefined,
         queries,

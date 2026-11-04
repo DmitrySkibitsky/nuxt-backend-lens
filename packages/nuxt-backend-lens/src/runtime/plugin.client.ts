@@ -1,9 +1,8 @@
 import { defineNuxtPlugin, useRuntimeConfig } from '#app'
 import { START_LOCATION } from 'vue-router'
 import { type BackendLens, createBackendLens } from './core/collector'
+import { LENS_GLOBAL_KEY } from './core/global'
 import type { BackendLensOptions } from './core/options'
-
-const LENS_KEY = Symbol.for('backend-lens.instance')
 
 export default defineNuxtPlugin({
   name: 'backend-lens',
@@ -11,12 +10,13 @@ export default defineNuxtPlugin({
   enforce: 'pre',
   setup(nuxtApp) {
     const options = useRuntimeConfig().public.backendLens as unknown as BackendLensOptions
-    const globalScope = window as unknown as Record<symbol, BackendLens | undefined>
+    const globalScope = window as unknown as Record<string, BackendLens | undefined>
 
-    // One lens per page, even across HMR reloads of the app.
-    globalScope[LENS_KEY]?.destroy()
+    // One lens per page, even across HMR reloads of the app. Published on window so the Nuxt
+    // DevTools tab (another realm) can find it.
+    globalScope[LENS_GLOBAL_KEY]?.destroy()
     const lens = createBackendLens(options, { window })
-    globalScope[LENS_KEY] = lens
+    globalScope[LENS_GLOBAL_KEY] = lens
 
     // Plugins (the router's included) have run by now. The first setRoute() names the initial
     // navigation, every later one starts a new navigation.

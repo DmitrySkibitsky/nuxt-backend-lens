@@ -58,7 +58,7 @@
       </button>
     </p>
 
-    <template v-else-if="details">
+    <template v-else-if="details && analysis">
       <div
         v-for="(exception, index) in details.exceptions"
         :key="`exception-${index}`"
@@ -87,76 +87,38 @@
         </button>
       </nav>
 
-      <ol
+      <QueriesTab
         v-if="activeTab === 'queries'"
-        class="bl-queries"
-        data-testid="backend-lens-queries"
-      >
-        <li
-          v-for="(query, index) in details.queries"
-          :key="index"
-          class="bl-query"
-          :class="{ 'bl-slow': query.durationMs >= slowQueryMs }"
-        >
-          <div class="bl-query-head">
-            <span class="bl-muted">#{{ index + 1 }}</span>
-            <span class="bl-duration">{{ formatMs(query.durationMs) }}</span>
-            <span
-              v-if="query.callSite"
-              class="bl-frame"
-              :title="formatFrame(query.callSite.file, query.callSite.line)"
-            ><bdi>{{ formatFrame(query.callSite.file, query.callSite.line) }}</bdi></span>
-          </div>
-          <code class="bl-sql">{{ query.sql }}</code>
-          <div
-            v-if="query.bindings?.length"
-            class="bl-muted bl-bindings"
-          >
-            bindings: {{ query.bindings.map(formatValue).join(', ') }}
-          </div>
-        </li>
-        <li
-          v-if="!details.queries.length"
-          class="bl-empty"
-        >
-          No queries.
-        </li>
-      </ol>
-
-      <ol
+        :queries="details.queries"
+        :analysis="analysis"
+        :slow-query-ms="lens.options.slowQueryMs"
+      />
+      <LogsTab
         v-else-if="activeTab === 'logs'"
-        class="bl-logs"
-        data-testid="backend-lens-logs"
-      >
-        <li
-          v-for="(entryLog, index) in details.logs"
-          :key="index"
-          class="bl-log"
-          :class="`bl-level-${entryLog.level}`"
-        >
-          <span class="bl-level">{{ entryLog.level }}</span>
-          <span class="bl-log-message">{{ entryLog.message }}</span>
-          <code
-            v-if="entryLog.context !== undefined"
-            class="bl-muted bl-context"
-          >{{ formatValue(entryLog.context) }}</code>
-        </li>
-        <li
-          v-if="!details.logs.length"
-          class="bl-empty"
-        >
-          No log entries.
-        </li>
-      </ol>
+        :logs="details.logs"
+      />
+      <CacheTab
+        v-else-if="activeTab === 'cache'"
+        :cache="details.cache"
+      />
+      <TimelineTab
+        v-else
+        :details="details"
+      />
     </template>
   </article>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { analyzeDetails } from '../core/analysis'
 import type { RequestEntry } from '../core/types'
-import { formatBytes, formatFrame, formatMs, formatValue, statusClass } from './format'
+import CacheTab from './CacheTab.vue'
+import { analysisOptions, formatBytes, formatFrame, formatMs, statusClass } from './format'
+import LogsTab from './LogsTab.vue'
+import QueriesTab from './QueriesTab.vue'
 import { useLensUiState } from './state'
+import TimelineTab from './TimelineTab.vue'
 
 const props = defineProps<{
   entry: RequestEntry
@@ -167,15 +129,17 @@ const emit = defineEmits<{
 }>()
 
 const { lens } = useLensUiState()
-const slowQueryMs = lens.options.slowQueryMs
 
-type TabId = 'queries' | 'logs'
+type TabId = 'queries' | 'logs' | 'cache' | 'timeline'
 const activeTab = ref<TabId>('queries')
 
 const details = computed(() => props.entry.details)
+const analysis = computed(() => (details.value ? analyzeDetails(details.value, analysisOptions(lens.options)) : undefined))
 
 const tabs = computed(() => [
   { id: 'queries' as const, label: 'Queries', count: details.value?.queries.length ?? 0 },
   { id: 'logs' as const, label: 'Logs', count: details.value?.logs.length ?? 0 },
+  { id: 'cache' as const, label: 'Cache', count: details.value?.cache.length ?? 0 },
+  { id: 'timeline' as const, label: 'Timeline', count: details.value?.timeline.length ?? 0 },
 ])
 </script>

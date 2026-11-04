@@ -16,3 +16,9 @@
 		reverse_proxy frontend:3000
 	}
 }
+
+# Cross-origin entry: the SPA only. Backend paths are deliberately not proxied here, so the
+# /cross-origin page has to call the API on another origin (BACKEND_PORT).
+:8081 {
+	reverse_proxy frontend:3000
+}

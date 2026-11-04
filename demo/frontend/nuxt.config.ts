@@ -15,6 +15,13 @@ export default defineNuxtConfig({
     include: ['/api/**', '/sanctum/**'],
   },
 
+  runtimeConfig: {
+    public: {
+      // Backend origin for the /cross-origin page (NUXT_PUBLIC_CROSS_ORIGIN_API).
+      crossOriginApi: '',
+    },
+  },
+
   css: ['~/assets/main.css'],
 
   app: {

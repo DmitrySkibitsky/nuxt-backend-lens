@@ -1,5 +1,6 @@
 import { addImports, addPlugin, createResolver, defineNuxtModule } from '@nuxt/kit'
 import { createDefu } from 'defu'
+import { setupDevtoolsTab } from './devtools'
 import { type BackendLensOptions, defaultOptions } from './runtime/core/options'
 
 export type { BackendLensOptions } from './runtime/core/options'
@@ -35,7 +36,7 @@ export default defineNuxtModule<ModuleOptions>({
     },
   },
   // No `defaults` on purpose: Nuxt merges them with defu, which concatenates arrays.
-  setup(input, nuxt) {
+  async setup(input, nuxt) {
     const options = resolveOptions(input)
     if (!options.enabled) {
       return
@@ -54,5 +55,9 @@ export default defineNuxtModule<ModuleOptions>({
       { name: 'useBackendLens', from: resolver.resolve('./runtime/composables') },
       { name: 'defineBackendLensAdapter', from: resolver.resolve('./runtime/composables') },
     ])
+
+    if (nuxt.options.dev && options.devtools.enabled) {
+      await setupDevtoolsTab(options.devtools, nuxt, resolver)
+    }
   },
 })

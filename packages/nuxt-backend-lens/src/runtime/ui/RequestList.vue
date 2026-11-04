@@ -36,6 +36,13 @@
           class="bl-status-error"
         >!</span>
         <span v-if="databaseMs(entry) !== undefined">{{ formatMs(databaseMs(entry)) }} DB</span>
+        <span
+          v-for="chip in chips(entry)"
+          :key="chip.kind"
+          class="bl-chip"
+          :class="`bl-issue-${chip.kind}`"
+          :data-testid="`backend-lens-chip-${chip.kind}`"
+        >{{ chip.label }}</span>
       </span>
       <span
         v-if="showNavigation"
@@ -46,8 +53,10 @@
 </template>
 
 <script setup lang="ts">
+import { analyzeDetails } from '../core/analysis'
 import type { RequestEntry } from '../core/types'
-import { databaseMs, formatMs, queryCount, statusClass } from './format'
+import { analysisOptions, databaseMs, formatMs, queryCount, statusClass } from './format'
+import { useLensUiState } from './state'
 
 defineProps<{
   entries: readonly RequestEntry[]
@@ -58,4 +67,18 @@ defineProps<{
 const emit = defineEmits<{
   select: [key: number]
 }>()
+
+const { lens } = useLensUiState()
+
+function chips(entry: RequestEntry): { kind: string, label: string }[] {
+  if (!entry.details) {
+    return []
+  }
+  const analysis = analyzeDetails(entry.details, analysisOptions(lens.options))
+  return [
+    analysis.nPlusOne && { kind: 'n-plus-one', label: 'N+1' },
+    analysis.duplicates && { kind: 'duplicate', label: `${analysis.duplicates} dup` },
+    analysis.slow && { kind: 'slow', label: 'slow' },
+  ].filter((chip): chip is { kind: string, label: string } => Boolean(chip))
+}
 </script>
