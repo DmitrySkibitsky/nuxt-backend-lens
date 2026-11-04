@@ -8,7 +8,8 @@
     "format": "eslint . --fix && stylelint \"**/*.css\" --fix",
     "test:leak": "node --env-file-if-exists=demo/.env tests/leak/leak-test.mjs",
     "test:e2e": "node --env-file-if-exists=demo/.env node_modules/@playwright/test/cli.js test",
-    "test:package": "node tests/package/check.mjs"
+    "test:package": "node tests/package/check.mjs",
+    "demo:gif": "node --env-file-if-exists=demo/.env scripts/record-demo.mjs"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^1.17.0",

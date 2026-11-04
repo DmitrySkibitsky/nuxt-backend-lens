@@ -18,6 +18,7 @@ tests/
   leak/                       request isolation under long-lived workers
   e2e/                        Playwright against the demo stand
   package/                    packaged-consumption check
+scripts/record-demo.mjs       records docs/assets/demo.gif on the stand
 ```
 
 pnpm workspace with pnpm pinned in `package.json` (`packageManager`); `corepack enable` provides it.
@@ -99,6 +100,14 @@ node packages/nuxt-backend-lens/scripts/capture-fixtures.mjs --source=clockwork
 make restart BACKEND=debugbar
 node packages/nuxt-backend-lens/scripts/capture-fixtures.mjs --source=debugbar
 ```
+
+Re-record the demo GIF (`docs/assets/demo.gif`, shown in the READMEs) after a visible UI change:
+
+```bash
+make demo-gif   # running stand on Clockwork, ffmpeg and a Chromium (both in nix develop)
+```
+
+The tour is scripted in `scripts/record-demo.mjs`; frames come from Chromium's screencast.
 
 ## Tests
 

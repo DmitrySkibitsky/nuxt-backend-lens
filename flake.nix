@@ -27,6 +27,7 @@
               pkgs.php85 # host Composer for demo/bin/setup; same PHP as the backend image
               pkgs.php85Packages.composer
               pkgs.gnumake
+              pkgs.ffmpeg
               pkgs.curl
               pkgs.git
             ] ++ chromium;

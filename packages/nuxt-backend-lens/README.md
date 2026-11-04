@@ -5,6 +5,8 @@ SQL, logs, cache events and timing the backend recorded, flags N+1 queries and d
 links each request to the click that caused it. All of it right on the page, in Nuxt DevTools, and
 on the Vue DevTools timeline.
 
+![nuxt-backend-lens panel: N+1 detection, timeline, logs, resizing, action grouping](https://raw.githubusercontent.com/DmitrySkibitsky/nuxt-backend-lens/main/docs/assets/demo.gif)
+
 When Nuxt serves the HTML, Laravel Debugbar cannot inject its panel, and the browser's Network tab
 has no SQL. `nuxt-backend-lens` reads the debug id the backend puts on each response and loads that
 request's record from the backend's own debug package.

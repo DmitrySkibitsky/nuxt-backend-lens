@@ -19,7 +19,7 @@ COMPOSE := cd demo && $(STAND_ENV) docker compose
 
 .PHONY: help setup up down restart ps logs devtools-auth \
 	dev prepare lint types unit module format format-check \
-	backend-test pint leak e2e package stand stand-all check
+	backend-test pint leak e2e package stand stand-all check demo-gif
 
 help: ## List targets
 	@awk 'BEGIN { FS = ":.*## " } /^[a-zA-Z_-]+:.*## / { printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
@@ -92,6 +92,9 @@ e2e: ## Playwright suite against the running stand
 
 package: ## Packaged consumption: pack, install into a clean app, production builds on/off
 	pnpm test:package
+
+demo-gif: ## Re-record docs/assets/demo.gif on the running stand (needs ffmpeg)
+	pnpm demo:gif
 
 stand: ## One CI stand configuration (MODE=, BACKEND=): restart, wait, leak test, e2e
 	$(STAND_ENV) demo/bin/check-stand

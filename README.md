@@ -4,12 +4,15 @@ Workspace of [`nuxt-backend-lens`](packages/nuxt-backend-lens): a Debugbar-like 
 It shows the SQL, logs, cache and timing behind every backend request, with data from Clockwork or
 Laravel Debugbar. It also holds the demo stand the module is developed and tested against.
 
+![The panel on the demo stand: N+1 detection, timeline, logs, resizing, action grouping](docs/assets/demo.gif)
+
 ```
 packages/nuxt-backend-lens/   the module (npm package) + playground (no PHP needed)
 demo/                         Laravel 13 + Octane (FrankenPHP) + PostgreSQL, Nuxt 4 SPA, Caddy
 tests/leak/                   request-isolation test for long-lived workers
 tests/e2e/                    Playwright against the demo stand
 tests/package/                packaged-consumption check (pack → install → production build)
+scripts/record-demo.mjs       records docs/assets/demo.gif on the demo stand (make demo-gif)
 docs/                         documentation: getting started, features, configuration, adapters, …
 docs/upstream/                drafts of issues found in third-party packages
 ```
