@@ -87,8 +87,19 @@ and one root `stylelint.config.mjs` for CSS. PHP is formatted by Pint.
 ```bash
 make format         # fix in place
 make format-check   # check, as CI does
-make pint           # PHP
+make pint           # PHP (make pint-check: check only)
 ```
+
+**Git hooks** (`simple-git-hooks`, installed by `pnpm install`):
+
+| Hook       | Runs                                                                                  |
+|------------|---------------------------------------------------------------------------------------|
+| pre-commit | `lint-staged` on the staged files: ESLint and Stylelint with `--fix`, Pint (host PHP when available, else the backend image). Fixes are staged; an error that cannot be fixed stops the commit |
+| pre-push   | `pnpm check:push`: workspace lint, module types and unit tests (about 15 s)            |
+
+Hooks can be bypassed (`git commit --no-verify`, `SKIP_SIMPLE_GIT_HOOKS=1`), so CI stays the
+gate. After changing the `simple-git-hooks` section of `package.json`, run `pnpm prepare` to
+reinstall them.
 
 The demo frontend loads the module from source (`../../packages/nuxt-backend-lens/src/module`), so
 runtime changes reach it by HMR. The packaged path is covered by `make package`.

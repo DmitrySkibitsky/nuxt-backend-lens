@@ -19,7 +19,7 @@ COMPOSE := cd demo && $(STAND_ENV) docker compose
 
 .PHONY: help setup up down restart ps logs devtools-auth \
 	dev prepare lint types unit module format format-check \
-	backend-test pint leak e2e package stand stand-all check demo-gif
+	backend-test pint pint-check leak e2e package stand stand-all check demo-gif
 
 help: ## List targets
 	@awk 'BEGIN { FS = ":.*## " } /^[a-zA-Z_-]+:.*## / { printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
@@ -81,8 +81,13 @@ format-check: ## Check formatting and lint the whole workspace, as CI does
 backend-test: ## PHPUnit (clean environment, in the backend image)
 	$(COMPOSE) run --rm backend-tests
 
-pint: ## Laravel Pint on the demo backend
-	$(COMPOSE) run --rm --no-deps backend-tests vendor/bin/pint app config tests routes database bootstrap/app.php
+PINT_PATHS := app config tests routes database bootstrap/app.php
+
+pint: ## Laravel Pint on the demo backend (fixes in place)
+	$(COMPOSE) run --rm --no-deps backend-tests vendor/bin/pint $(PINT_PATHS)
+
+pint-check: ## Laravel Pint check only, as CI does
+	$(COMPOSE) run --rm --no-deps backend-tests vendor/bin/pint --test $(PINT_PATHS)
 
 leak: ## Worker-isolation test against the running stand (source follows DEBUG_BACKEND)
 	pnpm test:leak $(if $(BACKEND),--source=$(BACKEND))
@@ -105,4 +110,4 @@ stand-all: ## The three CI stand configurations, one after another, then back to
 	BACKEND_MODE=classic DEBUG_BACKEND=clockwork demo/bin/check-stand
 	cd demo && docker compose up -d --force-recreate backend queue
 
-check: format-check module backend-test package stand-all ## Everything CI runs, locally
+check: format-check pint-check module backend-test package stand-all ## Everything CI runs, locally

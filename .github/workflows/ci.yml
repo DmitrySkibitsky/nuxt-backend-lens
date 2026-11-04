@@ -74,6 +74,10 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: demo/bin/setup
+      # PHP formatting is the same in every configuration: checked once.
+      - name: PHP formatting (Pint)
+        if: matrix.backend-mode == 'octane' && matrix.debug-backend == 'clockwork'
+        run: make pint-check
       - name: Backend tests (PHPUnit)
         working-directory: demo
         run: docker compose run --rm backend-tests

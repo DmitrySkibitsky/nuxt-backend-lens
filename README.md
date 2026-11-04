@@ -59,6 +59,7 @@ Example: `make restart BACKEND=debugbar`.
 
 | Command                              | What                                                        |
 |--------------------------------------|-------------------------------------------------------------|
+| `make format-check`, `make pint-check` | lint and formatting of the workspace, PHP formatting      |
 | `make module`                        | lint, types and unit tests of the module                    |
 | `make backend-test`                  | PHPUnit, in the backend image                               |
 | `make leak`                          | worker-isolation test against the running stand             |

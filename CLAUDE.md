@@ -21,6 +21,8 @@ commands and the stand: `docs/development.md` and `make help`. Known problems:
 **Done means**: `make format-check`, `make module`, `make e2e` on the running stand; plus
 `make stand-all` when the wire or the backend changes, `make package` when module setup or
 dependencies change. Changing `module.ts` needs `docker compose restart frontend` first.
+Git hooks run lint-staged on commit and `pnpm check:push` on push: never bypass them with
+`--no-verify`; fix the cause.
 
 ## Testing conventions
 
