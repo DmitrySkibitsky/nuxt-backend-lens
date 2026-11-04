@@ -1,0 +1,12 @@
+{
+  "name": "nuxt-laravel-devtools-monorepo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:leak": "node --env-file-if-exists=demo/.env tests/leak/leak-test.mjs",
+    "test:e2e": "node --env-file-if-exists=demo/.env node_modules/@playwright/test/cli.js test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1"
+  }
+}

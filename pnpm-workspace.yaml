@@ -1,0 +1,8 @@
+packages:
+  - packages/*
+  - packages/*/playground
+  - demo/frontend
+
+allowBuilds:
+  esbuild: true
+  '@parcel/watcher': true

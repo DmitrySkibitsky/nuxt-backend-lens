@@ -1,0 +1,123 @@
+# Demo stand for nuxt-backend-lens.
+#
+#   docker compose up -d                       # Octane / FrankenPHP worker mode (default)
+#   BACKEND_MODE=classic docker compose up -d  # FrankenPHP classic mode (per-request bootstrap)
+#   DEBUG_BACKEND=debugbar docker compose up -d # Laravel Debugbar's Clockwork emulation instead of Clockwork
+#
+# Host ports come from .env (see .env.example): DEMO_PORT for the same-origin proxy (SPA, /api,
+# /sanctum, /__clockwork, /clockwork), BACKEND_PORT for direct backend access. Ports inside the
+# containers are fixed (proxy 8080, backend 8000, frontend 3000); only the host side is configurable.
+
+name: nuxt-backend-lens-demo
+
+x-backend: &backend
+  build:
+    context: ./docker
+    dockerfile: backend.Dockerfile
+  image: nuxt-backend-lens-demo/backend
+  user: "${UID:-1000}:${GID:-1000}"
+  volumes:
+    - ./backend:/app
+  environment: &backend-env
+    APP_ENV: local
+    APP_DEBUG: "true"
+    APP_URL: http://localhost:${DEMO_PORT:-18080}
+    DB_CONNECTION: pgsql
+    DB_HOST: db
+    DB_PORT: "5432"
+    DB_DATABASE: demo
+    DB_USERNAME: demo
+    DB_PASSWORD: demo
+    SESSION_DRIVER: database
+    CACHE_STORE: database
+    QUEUE_CONNECTION: database
+    LOG_CHANNEL: stderr
+    SANCTUM_STATEFUL_DOMAINS: localhost:${DEMO_PORT:-18080}
+    OCTANE_SERVER: frankenphp
+    # clockwork | debugbar — the entrypoint turns this into the packages' own env switches.
+    DEBUG_BACKEND: ${DEBUG_BACKEND:-clockwork}
+    CLOCKWORK_STORAGE: ${CLOCKWORK_STORAGE:-files}
+    CLOCKWORK_STORAGE_EXPIRATION: "60"
+  depends_on:
+    db:
+      condition: service_healthy
+
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: demo
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U demo -d demo"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  migrate:
+    <<: *backend
+    command: ["php", "artisan", "migrate:fresh", "--seed", "--force", "--no-interaction"]
+    restart: "no"
+
+  backend:
+    <<: *backend
+    environment:
+      <<: *backend-env
+      BACKEND_MODE: ${BACKEND_MODE:-octane}
+      OCTANE_WORKERS: ${OCTANE_WORKERS:-4}
+      OCTANE_MAX_REQUESTS: ${OCTANE_MAX_REQUESTS:-500}
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-18000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  queue:
+    <<: *backend
+    command: ["php", "artisan", "queue:work", "--sleep=1", "--tries=1"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  # Backend test suite with a clean environment (phpunit.xml decides everything):
+  #   docker compose run --rm backend-tests
+  backend-tests:
+    image: nuxt-backend-lens-demo/backend
+    profiles: ["tools"]
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ./backend:/app
+    command: ["php", "artisan", "test", "--compact"]
+
+  frontend:
+    image: node:24
+    user: "${UID:-1000}:${GID:-1000}"
+    # The whole pnpm workspace is mounted: node_modules symlinks point into the root store and the
+    # module under packages/ is linked into the demo app.
+    working_dir: /repo/demo/frontend
+    volumes:
+      - ..:/repo
+    environment:
+      HOME: /tmp
+      NUXT_PUBLIC_SANCTUM_BASE_URL: http://localhost:${DEMO_PORT:-18080}
+      DEMO_PORT: ${DEMO_PORT:-18080}
+    # Dependencies are installed on the host (pnpm install), the container only runs the dev server.
+    command: ["node_modules/.bin/nuxt", "dev", "--host", "0.0.0.0", "--port", "3000"]
+
+  proxy:
+    image: caddy:2-alpine
+    volumes:
+      - ./proxy/Caddyfile:/etc/caddy/Caddyfile:ro
+    ports:
+      - "127.0.0.1:${DEMO_PORT:-18080}:8080"
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  db-data:

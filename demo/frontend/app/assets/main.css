@@ -1,0 +1,70 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+body {
+  margin: 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+}
+
+.layout nav {
+  border-right: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  padding: 1rem;
+}
+
+.layout nav a {
+  display: block;
+  padding: 0.25rem 0;
+  color: inherit;
+}
+
+.layout nav a.router-link-exact-active {
+  font-weight: 600;
+}
+
+.layout main {
+  padding: 1.5rem 2rem;
+  max-width: 960px;
+}
+
+button {
+  font: inherit;
+  padding: 0.35rem 0.8rem;
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+pre {
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  padding: 0.75rem;
+  overflow: auto;
+  max-height: 24rem;
+  font-size: 0.85rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,
+th {
+  text-align: left;
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.error {
+  color: #c0392b;
+}
+
+.hint {
+  opacity: 0.7;
+}

@@ -1,0 +1,18 @@
+# Same-origin entry point for the demo (container port 8080, host port DEMO_PORT): the SPA and every
+# backend path share it, exactly like a real deployment would proxy /api and /sanctum. The debug
+# paths ride along: Clockwork (/__clockwork, /clockwork) and Debugbar (/_debugbar).
+{
+	auto_https off
+	admin off
+}
+
+:8080 {
+	@backend path /api/* /sanctum/* /__clockwork/* /clockwork /clockwork/* /_debugbar/*
+	handle @backend {
+		reverse_proxy backend:8000
+	}
+
+	handle {
+		reverse_proxy frontend:3000
+	}
+}
