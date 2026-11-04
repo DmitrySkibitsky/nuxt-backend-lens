@@ -134,8 +134,13 @@ The tour is scripted in `scripts/record-demo.mjs`; frames come from Chromium's s
 
 ## CI
 
-Changes go through a branch and a pull request; `main` is protected (no direct pushes, no force
-pushes, linear history) and accepts a pull request only when the **CI result** check passed.
+Changes go through a branch and a pull request. Two rulesets protect `main`:
+
+- **main**: no direct pushes, no force pushes, no deletion, linear history, and a pull request is
+  merged only when the **CI result** check passed. Nobody can bypass it, the owner included.
+- **main: only the owner merges**: nobody may update `main` except the repository admin (the
+  owner), and only through a pull request. Collaborators can open pull requests but cannot merge
+  them.
 `.github/workflows/ci.yml` runs on every pull request and again on `main` after the merge.
 
 A `changes` job looks at the changed files first. When they are all documentation (`docs/**`,

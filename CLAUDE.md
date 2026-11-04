@@ -31,7 +31,8 @@ Git hooks run lint-staged on commit and `pnpm check:push` on push: never bypass 
 
 - Every change goes through a branch and a pull request; never commit or push to `main` directly.
   Branch names follow the commit type (`feat/…`, `fix/…`, `ci/…`, `docs/…`).
-- `main` is protected: the only way in is a pull request whose **CI result** check passed.
+- `main` is protected: the only way in is a pull request whose **CI result** check passed, and only
+  the owner merges. Open the pull request and report; merge only when the user asks.
   Documentation-only changes skip the heavy jobs; CI result still reports.
 - PR titles follow Conventional Commits, like the commits.
 
