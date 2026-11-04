@@ -5,8 +5,7 @@
 
 /*
  * Palette measured on Nuxt DevTools 3.4 (computed styles of a native tab), so the DevTools tab looks
- * native and the toolbar matches it. Colour mode comes from the shell via data-theme: DevTools' own
- * mode for the tab, the app's (or the system's) for the toolbar.
+ * native and the toolbar matches it. The shell sets the colour mode through data-theme.
  */
 .bl-root {
   --bl-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;

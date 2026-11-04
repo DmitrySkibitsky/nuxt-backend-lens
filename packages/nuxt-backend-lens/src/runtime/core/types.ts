@@ -1,6 +1,5 @@
 // Normalized, vendor-neutral model. Nothing outside an adapter may depend on a vendor's record format.
 
-/** One frame of a backend stack trace. */
 export interface StackFrame {
   file: string
   line: number | null
@@ -135,7 +134,6 @@ export interface NavigationEntry {
   startTime: number
 }
 
-/** One request in the panel. */
 export interface RequestEntry {
   key: number
   method: string

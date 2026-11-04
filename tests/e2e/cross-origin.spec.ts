@@ -1,8 +1,7 @@
 import { expect, test } from '@playwright/test'
 
-// The SPA on CROSS_ORIGIN_PORT calls the backend on BACKEND_PORT directly. With the CORS setup the
-// README documents (exposed debug headers, CORS on the record endpoints, credentials, and
-// Timing-Allow-Origin), the lens reads ids, records and Server-Timing across origins.
+// The SPA on CROSS_ORIGIN_PORT calls the backend on BACKEND_PORT directly. With the CORS setup from
+// docs/getting-started.md#cross-origin, the lens reads ids, records and Server-Timing across origins.
 
 const crossOrigin = `http://localhost:${process.env.CROSS_ORIGIN_PORT ?? '18081'}`
 const backendOrigin = `http://localhost:${process.env.BACKEND_PORT ?? '18000'}`

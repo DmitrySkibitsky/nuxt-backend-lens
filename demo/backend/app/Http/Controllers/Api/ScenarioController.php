@@ -102,7 +102,7 @@ class ScenarioController extends Controller
     }
 
     /**
-     * Runs a single query carrying the given marker. The Octane leak test checks that every Clockwork
+     * Runs a single query carrying the given marker. The Octane leak test checks that every debug
      * record contains exactly its own marker and nothing from other requests.
      */
     public function marker(Request $request, string $marker): JsonResponse

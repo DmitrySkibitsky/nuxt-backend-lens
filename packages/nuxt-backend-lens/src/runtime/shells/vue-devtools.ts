@@ -1,11 +1,6 @@
-// Vue DevTools shell: a "Backend requests" layer in the Timeline (Nuxt DevTools → Timeline, or the
-// browser extension), next to Vue's own events. Dev only.
-//
-// devtools-kit drops timeline events while no DevTools client is connected (high-performance mode)
-// and may run the plugin setup either at once or only when a client connects. The emitter therefore
-// sends nothing until devtools-kit accepts events, then catches up from the request list: requests
-// made before DevTools was opened show up, and none is sent twice. devtools-kit can also run the
-// same setup twice (early, then again when a client connects), so the setup is idempotent.
+// Vue DevTools shell: a "Backend requests" layer in the Timeline (Nuxt DevTools or the browser
+// extension). Dev only. devtools-kit drops events while no client is connected and may run the setup
+// twice, hence the `canEmit` gate and the idempotent setup (docs/architecture.md).
 
 import { onDevToolsClientConnected, setupDevtoolsPlugin } from '@vue/devtools-api'
 import { devtoolsState } from '@vue/devtools-kit'

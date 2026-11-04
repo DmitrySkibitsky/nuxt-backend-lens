@@ -10,7 +10,7 @@ export interface LensUiState {
   navigations: Ref<readonly NavigationEntry[]>
   actions: Ref<readonly ActionEntry[]>
   currentNavigationId: Ref<number>
-  /** Decided by the shell: DevTools' mode in the tab, the app's or the system's in the toolbar. */
+  /** Decided by the shell. */
   colorMode: Ref<ColorMode>
 }
 

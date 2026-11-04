@@ -26,7 +26,7 @@ export default createConfigForNuxt({
   features: {
     // Explicit: auto-detection looks for `typescript` in the workspace root only.
     typescript: true,
-    // The module's rules for module authors apply to its sources.
+    // Rules for tooling code (jsdoc, regexp, unicorn), here for the whole workspace.
     tooling: true,
     stylistic: true,
   },

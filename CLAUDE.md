@@ -53,6 +53,21 @@ dependencies change. Changing `module.ts` needs `docker compose restart frontend
   shims point at the whole store.
 - Debugbar's Clockwork emulation leaks data between requests under Octane: use its native format.
 
+## Comments
+
+- A comment says **why**: a constraint, a workaround, a non-obvious invariant, a link to a bug or
+  spec. If the name and the type already say it, write no comment.
+- No history: no "stage N", "previously", "now", "fixed", "new". Git keeps history.
+- One explanation, one place. Design lives in `docs/architecture.md`; code points there in a line
+  instead of repeating it. A decision is explained where it is made (e.g. the shell that picks the
+  colour mode), not in every file it touches.
+- File headers: one to three lines, only when the file's role is not obvious from its name.
+- Public API and module options keep their JSDoc (users see it in the IDE), with units.
+- Tests: the test name says what is checked. Comment only non-obvious setup or why an assertion is
+  loose.
+- A change that makes a comment wrong updates or deletes it in the same commit.
+- PHP: the Boost rules in `demo/backend/CLAUDE.md` (PHPDoc over inline comments).
+
 ## Lint and format
 
 One root `eslint.config.mjs` and one `stylelint.config.mjs`; no per-package configs. TypeScript is

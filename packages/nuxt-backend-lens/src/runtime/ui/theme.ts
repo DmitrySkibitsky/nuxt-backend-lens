@@ -1,8 +1,4 @@
-// Colour mode of the lens UI. The shells decide where it comes from:
-//   - toolbar: the app page's own mode when it sets a `light` / `dark` class (e.g. @nuxtjs/color-mode),
-//     otherwise the OS / browser preference;
-//   - DevTools tab: Nuxt DevTools' own colour mode, which the user can set independently of the OS.
-//     DevTools marks it with a `light` / `dark` class on its document element.
+// Colour mode sources and DevTools fonts for the lens UI. Each shell picks its source.
 
 import { type Ref, ref, watch } from 'vue'
 

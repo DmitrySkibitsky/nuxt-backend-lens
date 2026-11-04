@@ -1,11 +1,7 @@
 import { expect, test } from '@playwright/test'
 
-// The "Backend requests" layer of the Vue DevTools timeline (`nuxt dev` only).
-//
-// devtools-kit (8.x) drops every timeline event while no Vue DevTools client is connected
-// (`highPerfModeEnabled`), and runs a plugin's setup either at once or only when a client connects
-// (depending on whether an app record is active yet). The shell holds events back until devtools-kit
-// accepts them, then catches up. The test plays the connecting client's part — high-perf mode off,
+// The "Backend requests" layer of the Vue DevTools timeline (devtools-kit behaviour:
+// docs/architecture.md). The test plays the connecting client's part — high-perf mode off,
 // `toggleApp` on the Nuxt app (which runs buffered plugin setups), `clientConnected` — and reads
 // events from the `timelineEventAdded` context hook every plugin event passes through.
 

@@ -1,15 +1,13 @@
 import { expect, test, type Page } from '@playwright/test'
 
-// Stage 0 browser checks: everything the module will rely on must be observable from page JS
-// through the same-origin proxy — the debug id header, the record JSON and Server-Timing.
+// Everything the module relies on must be observable from page JS through the same-origin proxy:
+// the debug id header, the record JSON and Server-Timing.
 
 /** Runs fetch() inside the page and reports what page JS can see. */
 async function probeFromPage(page: Page, url: string) {
   return page.evaluate(async (target) => {
-    // Use a PerformanceObserver, not performance.getEntriesByType(): in `nuxt dev` Vite loads
-    // hundreds of modules, the resource timing buffer (250 entries by default) fills up and later
-    // entries never reach it — observers still receive them. The entry is also delivered
-    // asynchronously, after fetch() has resolved. The module has to correlate the same way.
+    // An observer, as in the module: the resource timing buffer overflows in `nuxt dev`, and the
+    // entry arrives after fetch() has resolved (docs/architecture.md).
     const entryPromise = new Promise<PerformanceResourceTiming | undefined>((resolve) => {
       const observer = new PerformanceObserver((list) => {
         const match = (list.getEntries() as PerformanceResourceTiming[]).find(candidate => candidate.name.endsWith(target))

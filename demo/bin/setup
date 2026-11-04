@@ -2,7 +2,7 @@
 # Prepares a fresh clone for the demo stand. Idempotent: safe to run again.
 #   - demo/.env from .env.example (ports, modes)
 #   - backend .env with an application key
-#   - PHP dependencies (inside the backend image, so no local PHP is needed)
+#   - PHP dependencies (host Composer when available, otherwise the backend image)
 #   - JS dependencies of the workspace (host pnpm; the frontend container runs from them)
 #   - the module's stub build and types
 #
@@ -24,7 +24,7 @@ mkdir -p .state/frontend-config
 
 docker compose build backend
 
-# Composer and artisan run in a throw-away container with the clean (test) environment.
+# Throw-away container with the clean (test) environment, for artisan and the image's Composer.
 run_backend() {
     docker compose run --rm --no-deps -e HOME=/tmp backend-tests "$@"
 }

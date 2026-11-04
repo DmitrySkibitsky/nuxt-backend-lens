@@ -1,8 +1,6 @@
-// Server-Timing comes from resource timing entries. They must be taken from a PerformanceObserver:
-// in `nuxt dev` Vite loads hundreds of modules, the resource timing buffer (250 entries by default)
-// fills up and later entries never reach performance.getEntriesByType(). Entries also arrive
-// asynchronously — usually after fetch() has resolved — so they are matched to requests by URL and
-// start time.
+// Server-Timing from resource timing entries, through a PerformanceObserver: the 250-entry buffer
+// behind getEntriesByType() overflows in `nuxt dev`. Entries arrive after fetch() has resolved, so
+// they are matched to requests by URL and start time.
 
 import type { ServerTimingMetric } from './types'
 

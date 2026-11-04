@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page, test } from '@playwright/test'
 
-// Stage 2 on the demo stand: query analysis, navigation summary, cache and timeline tabs, and the
-// Nuxt DevTools shell. Runs against either backend package (DEBUG_BACKEND=clockwork|debugbar).
+// Query analysis, navigation summary, cache and timeline tabs, and the Nuxt DevTools shell, against
+// either backend package (DEBUG_BACKEND=clockwork|debugbar).
 
 async function openPanel(page: Page): Promise<Locator> {
   await page.getByTestId('backend-lens-badge').click()
@@ -12,13 +12,13 @@ async function openPanel(page: Page): Promise<Locator> {
 
 const row = (panel: Locator, text: string | RegExp) => panel.getByRole('listitem').filter({ hasText: text })
 
-/**
- * Query count of the open request, read from the Queries tab label. Browser requests are stateful,
- * so the Sanctum session adds its own queries on top of a scenario's — never hard-code totals.
- */
 /** SQL of each visible query row; members of an open group sit inside their first query's row. */
 const querySql = (panel: Locator) => panel.locator('[data-testid="backend-lens-query"] > [data-testid="backend-lens-sql"]')
 
+/**
+ * Query count of the open request, read from the Queries tab label. The Sanctum session adds its own
+ * queries on top of a scenario's, so totals are never hard-coded.
+ */
 async function queryTotal(panel: Locator): Promise<number> {
   const label = await panel.getByTestId('backend-lens-tab-queries').textContent()
   return Number(label?.match(/\d+/)?.[0])
