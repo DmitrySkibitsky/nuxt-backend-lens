@@ -115,8 +115,7 @@ button {
 .bl-panel {
   display: flex;
   flex-direction: column;
-  width: min(1100px, calc(100vw - 24px));
-  height: min(560px, calc(100vh - 24px));
+  position: relative;
   border: 1px solid var(--bl-border);
   border-radius: 8px;
   background: var(--bl-bg);
@@ -152,10 +151,51 @@ button {
 .bl-button:hover { background: var(--bl-hover); }
 
 .bl-panel-body {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(280px, 38%) 1fr;
+  grid-template-columns: var(--bl-list-column) 1fr;
   min-height: 0;
   flex: 1;
+}
+
+/* Resize handles: thin hit areas over the panel's edges and the list/details border. */
+.bl-resize {
+  position: absolute;
+  z-index: 1;
+  touch-action: none;
+}
+
+.bl-resize:hover,
+.bl-resize:focus-visible {
+  outline: none;
+  background: var(--bl-accent);
+  opacity: 0.5;
+}
+
+.bl-resize-left,
+.bl-resize-right {
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.bl-resize-top,
+.bl-resize-bottom {
+  left: 0;
+  right: 0;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.bl-resize-left { left: 0; }
+.bl-resize-right { right: 0; }
+.bl-resize-top { top: 0; }
+.bl-resize-bottom { bottom: 0; }
+
+.bl-splitter.bl-resize-right {
+  right: auto;
+  left: calc(var(--bl-list-column) - 3px);
 }
 
 .bl-list {

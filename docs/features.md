@@ -46,6 +46,16 @@ the source's own UI and to the raw record. Four tabs:
 Exceptions are shown above the tabs. A "timing only" note marks records from the Server-Timing
 fallback.
 
+**Size.**
+- The toolbar panel resizes by the two edges that face the page: with the default `bottom-right`
+  position, the top edge sets the height and the left edge the width.
+- The border between the request list and the details is a splitter.
+- In the Nuxt DevTools tab the panel fills the tab, so only the splitter is there.
+- Handles also work from the keyboard (focus, then the arrow keys), and a double-click resets one
+  to its default.
+- The panel never grows past the viewport. Sizes are kept in `localStorage`, separately for the
+  toolbar and the tab.
+
 ### SQL display
 
 - **Syntax highlighting**: keywords, functions, strings, numbers, identifiers, placeholders, comments.
