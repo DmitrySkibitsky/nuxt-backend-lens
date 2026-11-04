@@ -1,0 +1,17 @@
+#!/bin/sh
+# Prints the link that authorizes this browser in Nuxt DevTools for the demo frontend.
+# DevTools prints it to the dev server's terminal, which is the container's log, not yours.
+set -eu
+
+DEMO_DIR=$(cd "$(dirname "$0")/.." && pwd)
+cd "$DEMO_DIR"
+[ -f .env ] && . ./.env
+
+token=$(docker compose exec -T frontend sh -c 'cat "${XDG_CONFIG_HOME:-$HOME}/.nuxt/devtools/dev-auth-token.txt" 2>/dev/null' || true)
+if [ -z "$token" ]; then
+    echo "No token yet: open Nuxt DevTools once (it creates the token), then run this again." >&2
+    exit 1
+fi
+
+echo "Open in the browser you use for the demo:"
+echo "  http://localhost:${DEMO_PORT:-18080}/__nuxt_devtools__/auth?token=${token}"

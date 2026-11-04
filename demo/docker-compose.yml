@@ -109,8 +109,13 @@ services:
     working_dir: /repo/demo/frontend
     volumes:
       - ..:/repo
+      # Nuxt DevTools keeps its browser-authorization token under XDG_CONFIG_HOME. A host directory
+      # (created by bin/setup, owned by you) keeps it across container re-creation, so a browser
+      # authorized once stays authorized. demo/bin/devtools-auth prints the link.
+      - ./.state/frontend-config:/config
     environment:
       HOME: /tmp
+      XDG_CONFIG_HOME: /config
       NUXT_PUBLIC_SANCTUM_BASE_URL: http://localhost:${DEMO_PORT:-18080}
       # Used by the /cross-origin page when the SPA is opened on CROSS_ORIGIN_PORT.
       NUXT_PUBLIC_CROSS_ORIGIN_API: http://localhost:${BACKEND_PORT:-18000}

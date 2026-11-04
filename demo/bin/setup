@@ -19,6 +19,9 @@ cd "$DEMO_DIR"
 # Containers run as the host user so files they write (vendor/, storage/) stay owned by you.
 grep -q '^HOST_UID=' .env || printf '\n# Host user the containers run as (written by bin/setup)\nHOST_UID=%s\nHOST_GID=%s\n' "$(id -u)" "$(id -g)" >> .env
 
+# Host-owned state dirs for bind mounts (Docker would create missing ones as root).
+mkdir -p .state/frontend-config
+
 docker compose build backend
 
 # Composer and artisan run in a throw-away container with the clean (test) environment.

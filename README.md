@@ -32,6 +32,11 @@ demo/bin/wait                      # until everything answers
 
 Demo login: `demo@example.com` / `password`. If a port is taken, change it in `demo/.env`.
 
+Nuxt DevTools asks a browser for authorization once and prints the instructions to the dev
+server's terminal. On this stand that terminal is the frontend container's log. Run
+`demo/bin/devtools-auth` and open the link it prints. The token lives in `demo/.state/`, so the
+authorization survives container re-creation.
+
 Switches, also in `demo/.env` or the environment:
 
 - `DEBUG_BACKEND=clockwork|debugbar`: which package collects the data;
