@@ -7,7 +7,13 @@ export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: true },
 
-  modules: ['nuxt-auth-sanctum'],
+  // The module is loaded from source (a relative path works inside the frontend container and
+  // gives HMR on module changes). Packaged consumption is checked separately in CI.
+  modules: ['../../packages/nuxt-backend-lens/src/module', 'nuxt-auth-sanctum'],
+
+  backendLens: {
+    include: ['/api/**', '/sanctum/**'],
+  },
 
   css: ['~/assets/main.css'],
 
@@ -36,7 +42,7 @@ export default defineNuxtConfig({
   vite: {
     server: {
       // The dev server is reached through the proxy; let HMR connect back through it.
-      hmr: { clientPort: demoPort },
+      ws: { clientPort: demoPort },
     },
   },
 })

@@ -1,0 +1,549 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/logs"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "phpdebugbar-id": "01M6M4MX51WEA5HT4V5SPP54DT"
+    }
+  },
+  "record": {
+    "__meta": {
+      "id": "01M6M4MX51WEA5HT4V5SPP54DT",
+      "datetime": "2026-11-04 20:40:14",
+      "utime": 1793824814.241492,
+      "method": "GET",
+      "uri": "/api/logs",
+      "ip": "172.27.0.1"
+    },
+    "request": {
+      "data": {
+        "uri": "GET api/logs",
+        "middleware": [
+          "api"
+        ],
+        "controller": {
+          "value": "App\\Http\\Controllers\\Api\\ScenarioController@logs",
+          "xdebug_link": {
+            "url": "phpstorm://open?file=%2Fapp%2Fapp%2FHttp%2FControllers%2FApi%2FScenarioController.php&line=61",
+            "ajax": false,
+            "filename": "ScenarioController.php",
+            "line": "61",
+            "path": "/app/Http/Controllers/Api/ScenarioController.php"
+          }
+        },
+        "prefix": "api",
+        "file": {
+          "value": "app/Http/Controllers/Api/ScenarioController.php:61-69",
+          "xdebug_link": {
+            "url": "phpstorm://open?file=%2Fapp%2Fapp%2FHttp%2FControllers%2FApi%2FScenarioController.php&line=61",
+            "ajax": false,
+            "filename": "ScenarioController.php",
+            "line": "61",
+            "path": "/app/Http/Controllers/Api/ScenarioController.php"
+          }
+        },
+        "method": "GET",
+        "format": "html",
+        "content_type": "application/json",
+        "status_text": "OK",
+        "status_code": 200,
+        "request_query": [],
+        "request_request": [],
+        "request_files": [],
+        "request_headers": {
+          "host": [
+            "localhost:18000"
+          ],
+          "accept": [
+            "application/json"
+          ],
+          "accept-language": [
+            "*"
+          ],
+          "sec-fetch-mode": [
+            "cors"
+          ],
+          "user-agent": [
+            "node"
+          ],
+          "accept-encoding": [
+            "gzip, deflate"
+          ],
+          "connection": [
+            "keep-alive"
+          ]
+        },
+        "request_server": {
+          "APP_ENV": "local",
+          "APP_BASE_PATH": "/app",
+          "APP_PUBLIC_PATH": "/app/public",
+          "LARAVEL_OCTANE": "1",
+          "MAX_REQUESTS": "500",
+          "REQUEST_MAX_EXECUTION_TIME": "30",
+          "CADDY_GLOBAL_OPTIONS": "auto_https disable_redirects",
+          "CADDY_SERVER_ADMIN_PORT": "2019",
+          "CADDY_SERVER_ADMIN_HOST": "localhost",
+          "CADDY_SERVER_LOG_LEVEL": "info",
+          "CADDY_SERVER_LOGGER": "json",
+          "CADDY_SERVER_SERVER_NAME": "http://:8000",
+          "CADDY_SERVER_WORKER_COUNT": "4",
+          "CADDY_SERVER_WORKER_DIRECTIVE": "num 4",
+          "CADDY_SERVER_EXTRA_DIRECTIVES": "",
+          "CADDY_SERVER_WATCH_DIRECTIVES": "",
+          "DEBUG_BACKEND": "debugbar",
+          "DB_CONNECTION": "pgsql",
+          "APP_DEBUG": "true",
+          "HOSTNAME": "f6706e20a28a",
+          "APP_URL": "http://localhost:18080",
+          "DB_PORT": "5432",
+          "PHP_INI_DIR": "/usr/local/etc/php",
+          "HOME": "/",
+          "GODEBUG": "cgocheck=0",
+          "CLOCKWORK_STORAGE": "files",
+          "DB_DATABASE": "demo",
+          "OCTANE_SERVER": "frankenphp",
+          "PHP_LDFLAGS": "-Wl,-O1 -pie",
+          "PHP_CFLAGS": "-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64",
+          "PHP_VERSION": "8.5.12",
+          "SESSION_DRIVER": "database",
+          "DB_USERNAME": "demo",
+          "LOG_CHANNEL": "stderr",
+          "GPG_KEYS": "[redacted]",
+          "PHP_CPPFLAGS": "-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64",
+          "PHP_ASC_URL": "https://www.php.net/distributions/php-8.5.12.tar.xz.asc",
+          "CLOCKWORK_ENABLE": "false",
+          "CLOCKWORK_STORAGE_EXPIRATION": "60",
+          "PHP_URL": "https://www.php.net/distributions/php-8.5.12.tar.xz",
+          "OCTANE_WORKERS": "4",
+          "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "BACKEND_MODE": "octane",
+          "DEBUGBAR_ENABLED": "true",
+          "DEBUGBAR_CLOCKWORK": "true",
+          "XDG_CONFIG_HOME": "/tmp/caddy/config",
+          "XDG_DATA_HOME": "/tmp/caddy/data",
+          "CACHE_STORE": "database",
+          "OCTANE_MAX_REQUESTS": "500",
+          "DB_PASSWORD": "[redacted]",
+          "PHPIZE_DEPS": "autoconf \t\tdpkg-dev \t\tfile \t\tg++ \t\tgcc \t\tlibc-dev \t\tmake \t\tpkg-config \t\tre2c",
+          "PWD": "/app",
+          "PHP_SHA256": "08bc2eba2a588654ade1357174aa646b761556c862dda0678345ee29ed481209",
+          "DB_HOST": "db",
+          "QUEUE_CONNECTION": "database",
+          "SANCTUM_STATEFUL_DOMAINS": "localhost:18080",
+          "DEBUGBAR_OPEN_STORAGE": "true",
+          "APP_KEY": "[redacted]",
+          "APP_LOCALE": "en",
+          "APP_FALLBACK_LOCALE": "en",
+          "APP_FAKER_LOCALE": "en_US",
+          "APP_MAINTENANCE_DRIVER": "file",
+          "BCRYPT_ROUNDS": "12",
+          "LOG_STACK": "single",
+          "LOG_DEPRECATIONS_CHANNEL": "null",
+          "LOG_LEVEL": "debug",
+          "SESSION_LIFETIME": "120",
+          "SESSION_ENCRYPT": "false",
+          "SESSION_PATH": "/",
+          "SESSION_DOMAIN": "null",
+          "BROADCAST_CONNECTION": "log",
+          "FILESYSTEM_DISK": "local",
+          "MEMCACHED_HOST": "127.0.0.1",
+          "REDIS_CLIENT": "phpredis",
+          "REDIS_HOST": "127.0.0.1",
+          "REDIS_PASSWORD": "[redacted]",
+          "REDIS_PORT": "6379",
+          "MAIL_MAILER": "log",
+          "MAIL_SCHEME": "null",
+          "MAIL_HOST": "127.0.0.1",
+          "MAIL_PORT": "2525",
+          "MAIL_USERNAME": "null",
+          "MAIL_PASSWORD": "[redacted]",
+          "MAIL_FROM_ADDRESS": "hello@example.com",
+          "MAIL_FROM_NAME": "Laravel",
+          "AWS_ACCESS_KEY_ID": "[redacted]",
+          "AWS_SECRET_ACCESS_KEY": "[redacted]",
+          "AWS_DEFAULT_REGION": "us-east-1",
+          "AWS_BUCKET": "",
+          "AWS_USE_PATH_STYLE_ENDPOINT": "false",
+          "VITE_APP_NAME": "Laravel",
+          "SHELL_VERBOSITY": "0",
+          "GOTRACEBACK": "none",
+          "REMOTE_ADDR": "172.27.0.1",
+          "REMOTE_HOST": "172.27.0.1",
+          "REMOTE_PORT": "45736",
+          "DOCUMENT_ROOT": "/app/public",
+          "PATH_INFO": "",
+          "PHP_SELF": "/frankenphp-worker.php",
+          "DOCUMENT_URI": "/frankenphp-worker.php",
+          "SCRIPT_FILENAME": "/app/public/frankenphp-worker.php",
+          "SCRIPT_NAME": "/frankenphp-worker.php",
+          "SSL_CIPHER": "",
+          "SERVER_NAME": "localhost",
+          "SERVER_PORT": "18000",
+          "CONTENT_LENGTH": "",
+          "SERVER_PROTOCOL": "HTTP/1.1",
+          "HTTP_HOST": "localhost:18000",
+          "REQUEST_URI": "/api/logs",
+          "GATEWAY_INTERFACE": "CGI/1.1",
+          "SERVER_SOFTWARE": "FrankenPHP",
+          "REQUEST_SCHEME": "http",
+          "SSL_PROTOCOL": "",
+          "HTTPS": "",
+          "AUTH_TYPE": "",
+          "REMOTE_IDENT": "",
+          "HTTP_ACCEPT": "application/json",
+          "HTTP_ACCEPT_LANGUAGE": "*",
+          "HTTP_SEC_FETCH_MODE": "cors",
+          "HTTP_USER_AGENT": "node",
+          "HTTP_ACCEPT_ENCODING": "gzip, deflate",
+          "HTTP_CONNECTION": "keep-alive",
+          "CONTENT_TYPE": "",
+          "QUERY_STRING": "",
+          "REQUEST_METHOD": "GET",
+          "REQUEST_TIME_FLOAT": 1793824814.233126,
+          "REQUEST_TIME": 1793824814
+        },
+        "request_cookies": "[redacted]",
+        "request_attributes": [],
+        "route": "",
+        "response_headers": {
+          "cache-control": [
+            "no-cache, private"
+          ],
+          "date": [
+            "Wed, 04 Nov 2026 20:40:14 GMT"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "access-control-allow-origin": [
+            "*"
+          ]
+        },
+        "response_cookies": "[redacted]",
+        "session_metadata": [],
+        "session_attributes": "[redacted]",
+        "flashes": [],
+        "path_info": "/api/logs",
+        "locale": "en"
+      },
+      "tooltip": {
+        "status": "200 OK",
+        "full_url": "http://localhost:18000/api/logs",
+        "action_name": "scenarios.logs",
+        "controller_action": "App\\Http\\Controllers\\Api\\ScenarioController@logs"
+      },
+      "badge": null
+    },
+    "exceptions": {
+      "count": 0,
+      "exceptions": []
+    },
+    "messages": {
+      "count": 4,
+      "messages": [
+        {
+          "message": "[20:40:14] LOG.debug: Demo debug message {\n    \"scenario\": \"logs\"\n}",
+          "message_html": null,
+          "message_json": null,
+          "is_string": true,
+          "context": {
+            "scenario": null
+          },
+          "context_json": {
+            "scenario": "logs"
+          },
+          "label": "debug",
+          "time": 1793824814.237982,
+          "xdebug_link": null,
+          "collector": "log"
+        },
+        {
+          "message": "[20:40:14] LOG.info: Demo info message {\n    \"books\": 88\n}",
+          "message_html": null,
+          "message_json": null,
+          "is_string": true,
+          "context": {
+            "books": null
+          },
+          "context_json": {
+            "books": 88
+          },
+          "label": "info",
+          "time": 1793824814.240945,
+          "xdebug_link": null,
+          "collector": "log"
+        },
+        {
+          "message": "[20:40:14] LOG.warning: Demo warning message",
+          "message_html": null,
+          "message_json": null,
+          "is_string": true,
+          "context": null,
+          "context_json": null,
+          "label": "warning",
+          "time": 1793824814.241065,
+          "xdebug_link": null,
+          "collector": "log"
+        },
+        {
+          "message": "[20:40:14] LOG.error: Demo error message {\n    \"reason\": \"just a demo\"\n}",
+          "message_html": null,
+          "message_json": null,
+          "is_string": true,
+          "context": {
+            "reason": null
+          },
+          "context_json": {
+            "reason": "just a demo"
+          },
+          "label": "error",
+          "time": 1793824814.241167,
+          "xdebug_link": null,
+          "collector": "log"
+        }
+      ]
+    },
+    "memory": {
+      "peak_usage": 8457888,
+      "peak_usage_str": "8MB"
+    },
+    "laravel": {
+      "version": "13.x",
+      "tooltip": {
+        "Laravel Version": "13.40.0",
+        "PHP Version": "8.5.12",
+        "Environment": "local",
+        "Debug Mode": "Enabled",
+        "URL": "localhost:18080",
+        "Timezone": "UTC",
+        "Locale": "en"
+      }
+    },
+    "views": {
+      "count": 0,
+      "nb_templates": 0,
+      "templates": []
+    },
+    "queries": {
+      "count": 1,
+      "nb_statements": 1,
+      "nb_visible_statements": 1,
+      "nb_excluded_statements": 0,
+      "nb_failed_statements": 0,
+      "accumulated_duration": 0.00103,
+      "accumulated_duration_str": "1.03ms",
+      "memory_usage": 0,
+      "memory_usage_str": null,
+      "statements": [
+        {
+          "sql": "select count(*) as \"aggregate\" from \"books\"",
+          "type": "query",
+          "params": [],
+          "backtrace": [
+            {
+              "index": 14,
+              "namespace": null,
+              "name": "app/Http/Controllers/Api/ScenarioController.php",
+              "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+              "line": 64
+            },
+            {
+              "index": 15,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+              "line": 46
+            },
+            {
+              "index": 16,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+              "line": 276
+            },
+            {
+              "index": 17,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+              "line": 216
+            },
+            {
+              "index": 18,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+              "line": 835
+            }
+          ],
+          "start": 1793824814.2392101,
+          "duration": 0.00103,
+          "duration_str": "1.03ms",
+          "slow": false,
+          "filename": "ScenarioController.php:64",
+          "source": {
+            "index": 14,
+            "namespace": null,
+            "name": "app/Http/Controllers/Api/ScenarioController.php",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 64
+          },
+          "xdebug_link": {
+            "url": "phpstorm://open?file=%2Fapp%2Fapp%2FHttp%2FControllers%2FApi%2FScenarioController.php&line=64",
+            "ajax": false,
+            "filename": "ScenarioController.php",
+            "line": "64",
+            "path": "/app/Http/Controllers/Api/ScenarioController.php"
+          },
+          "connection": "demo",
+          "explain": {
+            "url": "http://localhost:18000/_debugbar/queries/explain",
+            "driver": "pgsql",
+            "connection": "pgsql",
+            "query": "select count(*) as \"aggregate\" from \"books\"",
+            "modes": [
+              "explain"
+            ],
+            "hash": "4c47ce486a643a7625de230ad95198fb64e34c8a0b2c2d377445debd0efcc5df"
+          },
+          "start_percent": 0,
+          "width_percent": 100
+        }
+      ]
+    },
+    "models": {
+      "data": [],
+      "count": 0,
+      "key_map": {
+        "retrieved": "Retrieved",
+        "created": "Created",
+        "updated": "Updated",
+        "deleted": "Deleted"
+      },
+      "is_counter": true,
+      "badges": {
+        "retrieved": 107
+      }
+    },
+    "symfonymailer_mails": {
+      "count": 0,
+      "mails": []
+    },
+    "gate": {
+      "count": 0,
+      "messages": []
+    },
+    "jobs": {
+      "data": [],
+      "count": 0,
+      "key_map": {
+        "value": "Count"
+      },
+      "is_counter": true
+    },
+    "http_client": {
+      "nb_requests": 0,
+      "requests": []
+    },
+    "clockwork": {
+      "getData": [],
+      "postData": [],
+      "headers": {
+        "host": [
+          "localhost:18000"
+        ],
+        "user-agent": [
+          "curl/8.23.0"
+        ],
+        "accept": [
+          "*/*"
+        ]
+      },
+      "cookies": "[redacted]",
+      "uri": "/up",
+      "method": "GET",
+      "responseStatus": 200
+    },
+    "time": {
+      "count": 4,
+      "start": 1793824814.233126,
+      "end": 1793824814.242161,
+      "duration": 0.009035110473632812,
+      "duration_str": "9.04ms",
+      "measures": [
+        {
+          "label": "Application",
+          "start": 1793824814.233417,
+          "relative_start": 0.0002911090850830078,
+          "end": 1793824814.242163,
+          "relative_end": 0.009037017822265625,
+          "duration": 0.008745908737182617,
+          "duration_str": "8.75ms",
+          "memory": 0,
+          "memory_str": "0B",
+          "params": [],
+          "params_html": false,
+          "collector": "time",
+          "group": null
+        },
+        {
+          "label": "Routing",
+          "start": 1793824814.234262,
+          "relative_start": 0.0011360645294189453,
+          "end": 1793824814.234321,
+          "relative_end": 0.0011951923370361328,
+          "duration": 0.0000591278076171875,
+          "duration_str": "59μs",
+          "memory": 0,
+          "memory_str": "0B",
+          "params": [],
+          "params_html": false,
+          "collector": "time",
+          "group": null
+        },
+        {
+          "label": "Preparing Response",
+          "start": 1793824814.241293,
+          "relative_start": 0.008167028427124023,
+          "end": 1793824814.241326,
+          "relative_end": 0.00820016860961914,
+          "duration": 0.00003314018249511719,
+          "duration_str": "33μs",
+          "memory": 0,
+          "memory_str": "0B",
+          "params": [],
+          "params_html": false,
+          "collector": "time",
+          "group": null
+        },
+        {
+          "label": "Preparing Response",
+          "start": 1793824814.241347,
+          "relative_start": 0.008221149444580078,
+          "end": 1793824814.241362,
+          "relative_end": 0.008236169815063477,
+          "duration": 0.000015020370483398438,
+          "duration_str": "15μs",
+          "memory": 0,
+          "memory_str": "0B",
+          "params": [],
+          "params_html": false,
+          "collector": "time",
+          "group": null
+        }
+      ]
+    },
+    "cache": {
+      "count": 0,
+      "start": 1793824814.233308,
+      "end": 1793824814.242177,
+      "duration": 0.008868932723999023,
+      "duration_str": "8.87ms",
+      "measures": [],
+      "nb_measures": 0
+    }
+  }
+}

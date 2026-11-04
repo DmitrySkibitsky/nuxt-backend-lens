@@ -1,0 +1,826 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/cached?fresh=1"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "server-timing": "app; dur=23.704051971436; desc=\"Application\", db; dur=11.99; desc=\"Database\", timeline-event-0; dur=22.52721786499; desc=\"Controller\"",
+      "x-clockwork-id": "1793824809-4910-973716273",
+      "x-clockwork-version": "5.3.5"
+    }
+  },
+  "record": {
+    "id": "1793824809-4910-973716273",
+    "version": 1,
+    "type": "request",
+    "time": 1793824809.490668,
+    "method": "GET",
+    "url": "http://localhost:18000/api/cached?fresh=1",
+    "uri": "/api/cached?fresh=1",
+    "headers": {
+      "host": [
+        "localhost:18000"
+      ],
+      "connection": [
+        "keep-alive"
+      ],
+      "accept": [
+        "application/json"
+      ],
+      "accept-language": [
+        "*"
+      ],
+      "sec-fetch-mode": [
+        "cors"
+      ],
+      "user-agent": [
+        "node"
+      ],
+      "accept-encoding": [
+        "gzip, deflate"
+      ]
+    },
+    "controller": "App\\Http\\Controllers\\Api\\ScenarioController@cached",
+    "getData": {
+      "fresh": "1"
+    },
+    "postData": [],
+    "requestData": "",
+    "sessionData": "[redacted]",
+    "authenticatedUser": null,
+    "cookies": "[redacted]",
+    "responseTime": 1793824809.514372,
+    "responseStatus": 200,
+    "responseDuration": 23.704051971435547,
+    "memoryUsage": 10485760,
+    "middleware": [
+      "api"
+    ],
+    "databaseQueries": [
+      {
+        "query": "DELETE FROM \"cache\" WHERE \"key\" in ('laravel-cache-demo:top-books', 'laravel-cache-illuminate:cache:flexible:created:demo:top-books')",
+        "duration": 4.93,
+        "connection": "pgsql",
+        "time": 1793824809.493131,
+        "trace": [
+          {
+            "call": "Illuminate\\Support\\Facades\\Facade::__callStatic()",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 42,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\ScenarioController->cached()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ],
+        "model": null,
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"cache\" WHERE \"key\" in ('laravel-cache-demo:top-books')",
+        "duration": 0.73,
+        "connection": "pgsql",
+        "time": 1793824809.4991488,
+        "trace": [
+          {
+            "call": "Illuminate\\Support\\Facades\\Facade::__callStatic()",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 45,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\ScenarioController->cached()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ],
+        "model": null,
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"cache\" WHERE \"key\" in ('laravel-cache-demo:top-books')",
+        "duration": 0.67,
+        "connection": "pgsql",
+        "time": 1793824809.50219,
+        "trace": [
+          {
+            "call": "Illuminate\\Support\\Facades\\Facade::__callStatic()",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 47,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\ScenarioController->cached()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ],
+        "model": null,
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"books\" ORDER BY \"rating\" DESC LIMIT 5",
+        "duration": 1.84,
+        "connection": "pgsql",
+        "time": 1793824809.503708,
+        "trace": [
+          {
+            "call": "Illuminate\\Database\\Eloquent\\Builder->get()",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 51,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\ScenarioController->{closure:App\\Http\\Controllers\\Api\\ScenarioController::cached():50}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+            "line": 594,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Cache\\Repository->rememberWithWarmth()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+            "line": 570,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Cache\\Repository->remember()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/CacheManager.php",
+            "line": 600,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Cache\\CacheManager->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php",
+            "line": 364,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Facades\\Facade::__callStatic()",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 47,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\ScenarioController->cached()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Book",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" in (2, 3, 12, 15, 19)",
+        "duration": 0.86,
+        "connection": "pgsql",
+        "time": 1793824809.506695,
+        "trace": [
+          {
+            "call": "Illuminate\\Database\\Eloquent\\Builder->get()",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 51,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\ScenarioController->{closure:App\\Http\\Controllers\\Api\\ScenarioController::cached():50}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+            "line": 594,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Cache\\Repository->rememberWithWarmth()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+            "line": 570,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Cache\\Repository->remember()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/CacheManager.php",
+            "line": 600,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Cache\\CacheManager->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php",
+            "line": 364,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Facades\\Facade::__callStatic()",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 47,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\ScenarioController->cached()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "INSERT INTO \"cache\" (\"expiration\", \"key\", \"value\") VALUES (1793825109, 'laravel-cache-demo:top-books', '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') on conflict (\"key\") do UPDATE SET \"expiration\" = \"excluded\".\"expiration\", \"key\" = \"excluded\".\"key\", \"value\" = \"excluded\".\"value\"",
+        "duration": 2.96,
+        "connection": "pgsql",
+        "time": 1793824809.509951,
+        "trace": [
+          {
+            "call": "Illuminate\\Support\\Facades\\Facade::__callStatic()",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 47,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\ScenarioController->cached()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ],
+        "model": null,
+        "tags": []
+      }
+    ],
+    "databaseQueriesCount": 6,
+    "databaseSlowQueries": 0,
+    "databaseSelects": 4,
+    "databaseInserts": 1,
+    "databaseUpdates": 0,
+    "databaseDeletes": 1,
+    "databaseOthers": 0,
+    "databaseDuration": 11.989999999999998,
+    "cacheQueries": [
+      {
+        "type": "delete",
+        "key": "demo:top-books",
+        "expiration": null,
+        "time": 1793824809.498547,
+        "connection": null,
+        "trace": [
+          {
+            "call": "Illuminate\\Support\\Facades\\Facade::__callStatic()",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 42,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\ScenarioController->cached()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ]
+      },
+      {
+        "type": "miss",
+        "key": "demo:top-books",
+        "expiration": null,
+        "time": 1793824809.500356,
+        "connection": null,
+        "trace": [
+          {
+            "call": "Illuminate\\Support\\Facades\\Facade::__callStatic()",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 45,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\ScenarioController->cached()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ]
+      },
+      {
+        "type": "miss",
+        "key": "demo:top-books",
+        "expiration": null,
+        "time": 1793824809.503124,
+        "connection": null,
+        "trace": [
+          {
+            "call": "Illuminate\\Support\\Facades\\Facade::__callStatic()",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 47,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\ScenarioController->cached()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ]
+      },
+      {
+        "type": "write",
+        "key": "demo:top-books",
+        "expiration": 300,
+        "time": 1793824809.513528,
+        "connection": null,
+        "trace": [
+          {
+            "call": "Illuminate\\Support\\Facades\\Facade::__callStatic()",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 47,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\ScenarioController->cached()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ]
+      }
+    ],
+    "cacheReads": 2,
+    "cacheHits": 0,
+    "cacheWrites": 1,
+    "cacheDeletes": 1,
+    "cacheTime": 0,
+    "modelsActions": [],
+    "modelsRetrieved": {
+      "App\\Models\\Book": 5,
+      "App\\Models\\Author": 5
+    },
+    "modelsCreated": [],
+    "modelsUpdated": [],
+    "modelsDeleted": [],
+    "redisCommands": [],
+    "queueJobs": [],
+    "timelineData": [
+      {
+        "description": "Controller",
+        "start": 1793824809.491567,
+        "end": 1793824809.514094,
+        "duration": 22.527217864990234,
+        "color": null,
+        "data": null
+      }
+    ],
+    "log": [],
+    "events": [],
+    "routes": [],
+    "notifications": [],
+    "emailsData": [],
+    "viewsData": [],
+    "userData": [],
+    "httpRequests": [],
+    "subrequests": [],
+    "xdebug": [],
+    "commandName": null,
+    "commandArguments": [],
+    "commandArgumentsDefaults": [],
+    "commandOptions": [],
+    "commandOptionsDefaults": [],
+    "commandExitCode": null,
+    "commandOutput": null,
+    "jobName": null,
+    "jobDescription": null,
+    "jobStatus": null,
+    "jobPayload": [],
+    "jobQueue": null,
+    "jobConnection": null,
+    "jobOptions": [],
+    "testName": null,
+    "testStatus": null,
+    "testStatusMessage": null,
+    "testAsserts": [],
+    "clientMetrics": [],
+    "webVitals": [],
+    "parent": null
+  }
+}

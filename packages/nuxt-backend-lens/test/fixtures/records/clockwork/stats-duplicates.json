@@ -1,0 +1,544 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/stats"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "server-timing": "app; dur=5.6228637695312; desc=\"Application\", db; dur=2.18; desc=\"Database\", timeline-event-0; dur=4.878044128418; desc=\"Controller\"",
+      "x-clockwork-id": "1793824809-1579-1976402873",
+      "x-clockwork-version": "5.3.5"
+    }
+  },
+  "record": {
+    "id": "1793824809-1579-1976402873",
+    "version": 1,
+    "type": "request",
+    "time": 1793824809.157674,
+    "method": "GET",
+    "url": "http://localhost:18000/api/stats",
+    "uri": "/api/stats",
+    "headers": {
+      "host": [
+        "localhost:18000"
+      ],
+      "user-agent": [
+        "node"
+      ],
+      "accept-encoding": [
+        "gzip, deflate"
+      ],
+      "connection": [
+        "keep-alive"
+      ],
+      "accept": [
+        "application/json"
+      ],
+      "accept-language": [
+        "*"
+      ],
+      "sec-fetch-mode": [
+        "cors"
+      ]
+    },
+    "controller": "App\\Http\\Controllers\\Api\\BookController@stats",
+    "getData": [],
+    "postData": [],
+    "requestData": "",
+    "sessionData": "[redacted]",
+    "authenticatedUser": null,
+    "cookies": "[redacted]",
+    "responseTime": 1793824809.163297,
+    "responseStatus": 200,
+    "responseDuration": 5.62286376953125,
+    "memoryUsage": 8388608,
+    "middleware": [
+      "api"
+    ],
+    "databaseQueries": [
+      {
+        "query": "SELECT count(*) as \"aggregate\" FROM \"books\"",
+        "duration": 0.76,
+        "connection": "pgsql",
+        "time": 1793824809.1593308,
+        "trace": [
+          {
+            "call": "Illuminate\\Database\\Eloquent\\Builder->__call()",
+            "file": "/app/app/Http/Controllers/Api/BookController.php",
+            "line": 35,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\BookController->stats()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Book",
+        "tags": []
+      },
+      {
+        "query": "SELECT count(*) as \"aggregate\" FROM \"authors\"",
+        "duration": 0.25,
+        "connection": "pgsql",
+        "time": 1793824809.1604438,
+        "trace": [
+          {
+            "call": "Illuminate\\Database\\Eloquent\\Builder->__call()",
+            "file": "/app/app/Http/Controllers/Api/BookController.php",
+            "line": 36,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\BookController->stats()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT count(*) as \"aggregate\" FROM \"books\"",
+        "duration": 0.22,
+        "connection": "pgsql",
+        "time": 1793824809.160964,
+        "trace": [
+          {
+            "call": "Illuminate\\Database\\Eloquent\\Builder->__call()",
+            "file": "/app/app/Http/Controllers/Api/BookController.php",
+            "line": 37,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\BookController->stats()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Book",
+        "tags": []
+      },
+      {
+        "query": "SELECT count(*) as \"aggregate\" FROM \"authors\"",
+        "duration": 0.2,
+        "connection": "pgsql",
+        "time": 1793824809.161438,
+        "trace": [
+          {
+            "call": "Illuminate\\Database\\Eloquent\\Builder->__call()",
+            "file": "/app/app/Http/Controllers/Api/BookController.php",
+            "line": 37,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\BookController->stats()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT count(*) as \"aggregate\" FROM \"books\" WHERE \"rating\" > 0",
+        "duration": 0.51,
+        "connection": "pgsql",
+        "time": 1793824809.161968,
+        "trace": [
+          {
+            "call": "Illuminate\\Database\\Eloquent\\Builder->__call()",
+            "file": "/app/app/Http/Controllers/Api/BookController.php",
+            "line": 38,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\BookController->stats()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Book",
+        "tags": []
+      },
+      {
+        "query": "SELECT count(*) as \"aggregate\" FROM \"books\"",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.162736,
+        "trace": [
+          {
+            "call": "Illuminate\\Database\\Eloquent\\Builder->__call()",
+            "file": "/app/app/Http/Controllers/Api/BookController.php",
+            "line": 38,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\BookController->stats()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Book",
+        "tags": []
+      }
+    ],
+    "databaseQueriesCount": 6,
+    "databaseSlowQueries": 0,
+    "databaseSelects": 6,
+    "databaseInserts": 0,
+    "databaseUpdates": 0,
+    "databaseDeletes": 0,
+    "databaseOthers": 0,
+    "databaseDuration": 2.1799999999999997,
+    "cacheQueries": [],
+    "cacheReads": 0,
+    "cacheHits": 0,
+    "cacheWrites": 0,
+    "cacheDeletes": 0,
+    "cacheTime": 0,
+    "modelsActions": [],
+    "modelsRetrieved": [],
+    "modelsCreated": [],
+    "modelsUpdated": [],
+    "modelsDeleted": [],
+    "redisCommands": [],
+    "queueJobs": [],
+    "timelineData": [
+      {
+        "description": "Controller",
+        "start": 1793824809.158324,
+        "end": 1793824809.163202,
+        "duration": 4.878044128417969,
+        "color": null,
+        "data": null
+      }
+    ],
+    "log": [],
+    "events": [],
+    "routes": [],
+    "notifications": [],
+    "emailsData": [],
+    "viewsData": [],
+    "userData": [],
+    "httpRequests": [],
+    "subrequests": [],
+    "xdebug": [],
+    "commandName": null,
+    "commandArguments": [],
+    "commandArgumentsDefaults": [],
+    "commandOptions": [],
+    "commandOptionsDefaults": [],
+    "commandExitCode": null,
+    "commandOutput": null,
+    "jobName": null,
+    "jobDescription": null,
+    "jobStatus": null,
+    "jobPayload": [],
+    "jobQueue": null,
+    "jobConnection": null,
+    "jobOptions": [],
+    "testName": null,
+    "testStatus": null,
+    "testStatusMessage": null,
+    "testAsserts": [],
+    "clientMetrics": [],
+    "webVitals": [],
+    "parent": null
+  }
+}

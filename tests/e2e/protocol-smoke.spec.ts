@@ -52,6 +52,10 @@ async function fetchRecord(page: Page, id: string, path: string | null) {
   }, { id, path })
 }
 
+// These checks are about the Clockwork wire protocol. Debugbar's Clockwork emulation is broken under
+// Octane (docs/upstream/laravel-debugbar-octane-clockwork.md), so they only run on a Clockwork stand.
+test.skip(process.env.DEBUG_BACKEND === 'debugbar', 'Clockwork protocol checks need DEBUG_BACKEND=clockwork')
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'nuxt-backend-lens demo' })).toBeVisible()

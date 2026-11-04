@@ -1,0 +1,1498 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/cached?fresh=1"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "phpdebugbar-id": "01M6M4MX3HVA9A4CTF3630PRMZ"
+    }
+  },
+  "record": {
+    "__meta": {
+      "id": "01M6M4MX3HVA9A4CTF3630PRMZ",
+      "datetime": "2026-11-04 20:40:14",
+      "utime": 1793824814.193205,
+      "method": "GET",
+      "uri": "/api/cached?fresh=1",
+      "ip": "172.27.0.1"
+    },
+    "request": {
+      "data": {
+        "uri": "GET api/cached",
+        "middleware": [
+          "api"
+        ],
+        "controller": {
+          "value": "App\\Http\\Controllers\\Api\\ScenarioController@cached",
+          "xdebug_link": {
+            "url": "phpstorm://open?file=%2Fapp%2Fapp%2FHttp%2FControllers%2FApi%2FScenarioController.php&line=39",
+            "ajax": false,
+            "filename": "ScenarioController.php",
+            "line": "39",
+            "path": "/app/Http/Controllers/Api/ScenarioController.php"
+          }
+        },
+        "prefix": "api",
+        "file": {
+          "value": "app/Http/Controllers/Api/ScenarioController.php:39-56",
+          "xdebug_link": {
+            "url": "phpstorm://open?file=%2Fapp%2Fapp%2FHttp%2FControllers%2FApi%2FScenarioController.php&line=39",
+            "ajax": false,
+            "filename": "ScenarioController.php",
+            "line": "39",
+            "path": "/app/Http/Controllers/Api/ScenarioController.php"
+          }
+        },
+        "method": "GET",
+        "format": "html",
+        "content_type": "application/json",
+        "status_text": "OK",
+        "status_code": 200,
+        "request_query": {
+          "fresh": "1"
+        },
+        "request_request": [],
+        "request_files": [],
+        "request_headers": {
+          "host": [
+            "localhost:18000"
+          ],
+          "connection": [
+            "keep-alive"
+          ],
+          "accept": [
+            "application/json"
+          ],
+          "accept-language": [
+            "*"
+          ],
+          "sec-fetch-mode": [
+            "cors"
+          ],
+          "user-agent": [
+            "node"
+          ],
+          "accept-encoding": [
+            "gzip, deflate"
+          ]
+        },
+        "request_server": {
+          "APP_ENV": "local",
+          "APP_BASE_PATH": "/app",
+          "APP_PUBLIC_PATH": "/app/public",
+          "LARAVEL_OCTANE": "1",
+          "MAX_REQUESTS": "500",
+          "REQUEST_MAX_EXECUTION_TIME": "30",
+          "CADDY_GLOBAL_OPTIONS": "auto_https disable_redirects",
+          "CADDY_SERVER_ADMIN_PORT": "2019",
+          "CADDY_SERVER_ADMIN_HOST": "localhost",
+          "CADDY_SERVER_LOG_LEVEL": "info",
+          "CADDY_SERVER_LOGGER": "json",
+          "CADDY_SERVER_SERVER_NAME": "http://:8000",
+          "CADDY_SERVER_WORKER_COUNT": "4",
+          "CADDY_SERVER_WORKER_DIRECTIVE": "num 4",
+          "CADDY_SERVER_EXTRA_DIRECTIVES": "",
+          "CADDY_SERVER_WATCH_DIRECTIVES": "",
+          "DEBUG_BACKEND": "debugbar",
+          "DB_CONNECTION": "pgsql",
+          "APP_DEBUG": "true",
+          "HOSTNAME": "f6706e20a28a",
+          "APP_URL": "http://localhost:18080",
+          "DB_PORT": "5432",
+          "PHP_INI_DIR": "/usr/local/etc/php",
+          "HOME": "/",
+          "GODEBUG": "cgocheck=0",
+          "CLOCKWORK_STORAGE": "files",
+          "DB_DATABASE": "demo",
+          "OCTANE_SERVER": "frankenphp",
+          "PHP_LDFLAGS": "-Wl,-O1 -pie",
+          "PHP_CFLAGS": "-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64",
+          "PHP_VERSION": "8.5.12",
+          "SESSION_DRIVER": "database",
+          "DB_USERNAME": "demo",
+          "LOG_CHANNEL": "stderr",
+          "GPG_KEYS": "[redacted]",
+          "PHP_CPPFLAGS": "-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64",
+          "PHP_ASC_URL": "https://www.php.net/distributions/php-8.5.12.tar.xz.asc",
+          "CLOCKWORK_ENABLE": "false",
+          "CLOCKWORK_STORAGE_EXPIRATION": "60",
+          "PHP_URL": "https://www.php.net/distributions/php-8.5.12.tar.xz",
+          "OCTANE_WORKERS": "4",
+          "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "BACKEND_MODE": "octane",
+          "DEBUGBAR_ENABLED": "true",
+          "DEBUGBAR_CLOCKWORK": "true",
+          "XDG_CONFIG_HOME": "/tmp/caddy/config",
+          "XDG_DATA_HOME": "/tmp/caddy/data",
+          "CACHE_STORE": "database",
+          "OCTANE_MAX_REQUESTS": "500",
+          "DB_PASSWORD": "[redacted]",
+          "PHPIZE_DEPS": "autoconf \t\tdpkg-dev \t\tfile \t\tg++ \t\tgcc \t\tlibc-dev \t\tmake \t\tpkg-config \t\tre2c",
+          "PWD": "/app",
+          "PHP_SHA256": "08bc2eba2a588654ade1357174aa646b761556c862dda0678345ee29ed481209",
+          "DB_HOST": "db",
+          "QUEUE_CONNECTION": "database",
+          "SANCTUM_STATEFUL_DOMAINS": "localhost:18080",
+          "DEBUGBAR_OPEN_STORAGE": "true",
+          "APP_KEY": "[redacted]",
+          "APP_LOCALE": "en",
+          "APP_FALLBACK_LOCALE": "en",
+          "APP_FAKER_LOCALE": "en_US",
+          "APP_MAINTENANCE_DRIVER": "file",
+          "BCRYPT_ROUNDS": "12",
+          "LOG_STACK": "single",
+          "LOG_DEPRECATIONS_CHANNEL": "null",
+          "LOG_LEVEL": "debug",
+          "SESSION_LIFETIME": "120",
+          "SESSION_ENCRYPT": "false",
+          "SESSION_PATH": "/",
+          "SESSION_DOMAIN": "null",
+          "BROADCAST_CONNECTION": "log",
+          "FILESYSTEM_DISK": "local",
+          "MEMCACHED_HOST": "127.0.0.1",
+          "REDIS_CLIENT": "phpredis",
+          "REDIS_HOST": "127.0.0.1",
+          "REDIS_PASSWORD": "[redacted]",
+          "REDIS_PORT": "6379",
+          "MAIL_MAILER": "log",
+          "MAIL_SCHEME": "null",
+          "MAIL_HOST": "127.0.0.1",
+          "MAIL_PORT": "2525",
+          "MAIL_USERNAME": "null",
+          "MAIL_PASSWORD": "[redacted]",
+          "MAIL_FROM_ADDRESS": "hello@example.com",
+          "MAIL_FROM_NAME": "Laravel",
+          "AWS_ACCESS_KEY_ID": "[redacted]",
+          "AWS_SECRET_ACCESS_KEY": "[redacted]",
+          "AWS_DEFAULT_REGION": "us-east-1",
+          "AWS_BUCKET": "",
+          "AWS_USE_PATH_STYLE_ENDPOINT": "false",
+          "VITE_APP_NAME": "Laravel",
+          "SHELL_VERBOSITY": "0",
+          "GOTRACEBACK": "none",
+          "REMOTE_ADDR": "172.27.0.1",
+          "REMOTE_HOST": "172.27.0.1",
+          "REMOTE_PORT": "45736",
+          "DOCUMENT_ROOT": "/app/public",
+          "PATH_INFO": "",
+          "PHP_SELF": "/frankenphp-worker.php",
+          "DOCUMENT_URI": "/frankenphp-worker.php",
+          "SCRIPT_FILENAME": "/app/public/frankenphp-worker.php",
+          "SCRIPT_NAME": "/frankenphp-worker.php",
+          "SSL_CIPHER": "",
+          "SERVER_NAME": "localhost",
+          "SERVER_PORT": "18000",
+          "CONTENT_LENGTH": "",
+          "SERVER_PROTOCOL": "HTTP/1.1",
+          "HTTP_HOST": "localhost:18000",
+          "REQUEST_URI": "/api/cached?fresh=1",
+          "GATEWAY_INTERFACE": "CGI/1.1",
+          "SERVER_SOFTWARE": "FrankenPHP",
+          "REQUEST_SCHEME": "http",
+          "SSL_PROTOCOL": "",
+          "HTTPS": "",
+          "AUTH_TYPE": "",
+          "REMOTE_IDENT": "",
+          "HTTP_CONNECTION": "keep-alive",
+          "HTTP_ACCEPT": "application/json",
+          "HTTP_ACCEPT_LANGUAGE": "*",
+          "HTTP_SEC_FETCH_MODE": "cors",
+          "HTTP_USER_AGENT": "node",
+          "HTTP_ACCEPT_ENCODING": "gzip, deflate",
+          "CONTENT_TYPE": "",
+          "QUERY_STRING": "fresh=1",
+          "REQUEST_METHOD": "GET",
+          "REQUEST_TIME_FLOAT": 1793824814.168005,
+          "REQUEST_TIME": 1793824814
+        },
+        "request_cookies": "[redacted]",
+        "request_attributes": [],
+        "route": "",
+        "response_headers": {
+          "cache-control": [
+            "no-cache, private"
+          ],
+          "date": [
+            "Wed, 04 Nov 2026 20:40:14 GMT"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "access-control-allow-origin": [
+            "*"
+          ]
+        },
+        "response_cookies": "[redacted]",
+        "session_metadata": [],
+        "session_attributes": "[redacted]",
+        "flashes": [],
+        "path_info": "/api/cached",
+        "locale": "en"
+      },
+      "tooltip": {
+        "status": "200 OK",
+        "full_url": "http://localhost:18000/api/cached?fresh=1",
+        "action_name": "scenarios.cached",
+        "controller_action": "App\\Http\\Controllers\\Api\\ScenarioController@cached"
+      },
+      "badge": null
+    },
+    "exceptions": {
+      "count": 0,
+      "exceptions": []
+    },
+    "messages": {
+      "count": 0,
+      "messages": []
+    },
+    "memory": {
+      "peak_usage": 8457888,
+      "peak_usage_str": "8MB"
+    },
+    "laravel": {
+      "version": "13.x",
+      "tooltip": {
+        "Laravel Version": "13.40.0",
+        "PHP Version": "8.5.12",
+        "Environment": "local",
+        "Debug Mode": "Enabled",
+        "URL": "localhost:18080",
+        "Timezone": "UTC",
+        "Locale": "en"
+      }
+    },
+    "views": {
+      "count": 0,
+      "nb_templates": 0,
+      "templates": []
+    },
+    "queries": {
+      "count": 6,
+      "nb_statements": 6,
+      "nb_visible_statements": 6,
+      "nb_excluded_statements": 0,
+      "nb_failed_statements": 0,
+      "accumulated_duration": 0.010239999999999999,
+      "accumulated_duration_str": "10.24ms",
+      "memory_usage": 0,
+      "memory_usage_str": null,
+      "statements": [
+        {
+          "sql": "delete from \"cache\" where \"key\" in ('laravel-cache-demo:top-books', 'laravel-cache-illuminate:cache:flexible:created:demo:top-books')",
+          "type": "query",
+          "params": [
+            "laravel-cache-demo:top-books",
+            "laravel-cache-illuminate:cache:flexible:created:demo:top-books"
+          ],
+          "backtrace": [
+            {
+              "index": 11,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "line": 415
+            },
+            {
+              "index": 12,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "line": 390
+            },
+            {
+              "index": 13,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "line": 760
+            },
+            {
+              "index": 14,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/CacheManager.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/CacheManager.php",
+              "line": 600
+            },
+            {
+              "index": 16,
+              "namespace": null,
+              "name": "app/Http/Controllers/Api/ScenarioController.php",
+              "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+              "line": 42
+            }
+          ],
+          "start": 1793824814.170094,
+          "duration": 0.0038900000000000002,
+          "duration_str": "3.89ms",
+          "slow": false,
+          "filename": "DatabaseStore.php:415",
+          "source": {
+            "index": 11,
+            "namespace": null,
+            "name": "vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+            "line": 415
+          },
+          "xdebug_link": {
+            "url": "phpstorm://open?file=%2Fapp%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FCache%2FDatabaseStore.php&line=415",
+            "ajax": false,
+            "filename": "DatabaseStore.php",
+            "line": "415",
+            "path": "/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php"
+          },
+          "connection": "demo",
+          "start_percent": 0,
+          "width_percent": 37.988
+        },
+        {
+          "sql": "select * from \"cache\" where \"key\" in ('laravel-cache-demo:top-books')",
+          "type": "query",
+          "params": [
+            "laravel-cache-demo:top-books"
+          ],
+          "backtrace": [
+            {
+              "index": 11,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "line": 142
+            },
+            {
+              "index": 12,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "line": 117
+            },
+            {
+              "index": 13,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "line": 138
+            },
+            {
+              "index": 14,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "line": 108
+            },
+            {
+              "index": 15,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/CacheManager.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/CacheManager.php",
+              "line": 600
+            }
+          ],
+          "start": 1793824814.174915,
+          "duration": 0.00087,
+          "duration_str": "870μs",
+          "slow": false,
+          "filename": "DatabaseStore.php:142",
+          "source": {
+            "index": 11,
+            "namespace": null,
+            "name": "vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+            "line": 142
+          },
+          "xdebug_link": {
+            "url": "phpstorm://open?file=%2Fapp%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FCache%2FDatabaseStore.php&line=142",
+            "ajax": false,
+            "filename": "DatabaseStore.php",
+            "line": "142",
+            "path": "/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php"
+          },
+          "connection": "demo",
+          "explain": {
+            "url": "http://localhost:18000/_debugbar/queries/explain",
+            "driver": "pgsql",
+            "connection": "pgsql",
+            "query": "select * from \"cache\" where \"key\" in (?)",
+            "modes": [
+              "explain"
+            ],
+            "hash": "6e5288b322e65ff21449c8df26b8a5367ebe807f6efce58d63f87a74d27cdac2"
+          },
+          "start_percent": 37.988,
+          "width_percent": 8.496
+        },
+        {
+          "sql": "select * from \"cache\" where \"key\" in ('laravel-cache-demo:top-books')",
+          "type": "query",
+          "params": [
+            "laravel-cache-demo:top-books"
+          ],
+          "backtrace": [
+            {
+              "index": 11,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "line": 142
+            },
+            {
+              "index": 12,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "line": 117
+            },
+            {
+              "index": 13,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "line": 138
+            },
+            {
+              "index": 14,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "line": 585
+            },
+            {
+              "index": 15,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "line": 570
+            }
+          ],
+          "start": 1793824814.177582,
+          "duration": 0.00065,
+          "duration_str": "650μs",
+          "slow": false,
+          "filename": "DatabaseStore.php:142",
+          "source": {
+            "index": 11,
+            "namespace": null,
+            "name": "vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+            "line": 142
+          },
+          "xdebug_link": {
+            "url": "phpstorm://open?file=%2Fapp%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FCache%2FDatabaseStore.php&line=142",
+            "ajax": false,
+            "filename": "DatabaseStore.php",
+            "line": "142",
+            "path": "/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php"
+          },
+          "connection": "demo",
+          "explain": {
+            "url": "http://localhost:18000/_debugbar/queries/explain",
+            "driver": "pgsql",
+            "connection": "pgsql",
+            "query": "select * from \"cache\" where \"key\" in (?)",
+            "modes": [
+              "explain"
+            ],
+            "hash": "6e5288b322e65ff21449c8df26b8a5367ebe807f6efce58d63f87a74d27cdac2"
+          },
+          "start_percent": 46.484,
+          "width_percent": 6.348
+        },
+        {
+          "sql": "select * from \"books\" order by \"rating\" desc limit 5",
+          "type": "query",
+          "params": [],
+          "backtrace": [
+            {
+              "index": 13,
+              "namespace": null,
+              "name": "app/Http/Controllers/Api/ScenarioController.php",
+              "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+              "line": 51
+            },
+            {
+              "index": 14,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "line": 594
+            },
+            {
+              "index": 15,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "line": 570
+            },
+            {
+              "index": 16,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/CacheManager.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/CacheManager.php",
+              "line": 600
+            },
+            {
+              "index": 18,
+              "namespace": null,
+              "name": "app/Http/Controllers/Api/ScenarioController.php",
+              "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+              "line": 47
+            }
+          ],
+          "start": 1793824814.1790369,
+          "duration": 0.00147,
+          "duration_str": "1.47ms",
+          "slow": false,
+          "filename": "ScenarioController.php:51",
+          "source": {
+            "index": 13,
+            "namespace": null,
+            "name": "app/Http/Controllers/Api/ScenarioController.php",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 51
+          },
+          "xdebug_link": {
+            "url": "phpstorm://open?file=%2Fapp%2Fapp%2FHttp%2FControllers%2FApi%2FScenarioController.php&line=51",
+            "ajax": false,
+            "filename": "ScenarioController.php",
+            "line": "51",
+            "path": "/app/Http/Controllers/Api/ScenarioController.php"
+          },
+          "connection": "demo",
+          "explain": {
+            "url": "http://localhost:18000/_debugbar/queries/explain",
+            "driver": "pgsql",
+            "connection": "pgsql",
+            "query": "select * from \"books\" order by \"rating\" desc limit 5",
+            "modes": [
+              "explain"
+            ],
+            "hash": "004be7a98a5573c09fce1983ee701f8912a3d3ec63278d7c9c9399543db09a88"
+          },
+          "start_percent": 52.832,
+          "width_percent": 14.355
+        },
+        {
+          "sql": "select * from \"authors\" where \"authors\".\"id\" in (1, 2, 3, 15, 20)",
+          "type": "query",
+          "params": [],
+          "backtrace": [
+            {
+              "index": 18,
+              "namespace": null,
+              "name": "app/Http/Controllers/Api/ScenarioController.php",
+              "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+              "line": 51
+            },
+            {
+              "index": 19,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "line": 594
+            },
+            {
+              "index": 20,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "line": 570
+            },
+            {
+              "index": 21,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/CacheManager.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/CacheManager.php",
+              "line": 600
+            },
+            {
+              "index": 23,
+              "namespace": null,
+              "name": "app/Http/Controllers/Api/ScenarioController.php",
+              "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+              "line": 47
+            }
+          ],
+          "start": 1793824814.181633,
+          "duration": 0.00073,
+          "duration_str": "730μs",
+          "slow": false,
+          "filename": "ScenarioController.php:51",
+          "source": {
+            "index": 18,
+            "namespace": null,
+            "name": "app/Http/Controllers/Api/ScenarioController.php",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 51
+          },
+          "xdebug_link": {
+            "url": "phpstorm://open?file=%2Fapp%2Fapp%2FHttp%2FControllers%2FApi%2FScenarioController.php&line=51",
+            "ajax": false,
+            "filename": "ScenarioController.php",
+            "line": "51",
+            "path": "/app/Http/Controllers/Api/ScenarioController.php"
+          },
+          "connection": "demo",
+          "explain": {
+            "url": "http://localhost:18000/_debugbar/queries/explain",
+            "driver": "pgsql",
+            "connection": "pgsql",
+            "query": "select * from \"authors\" where \"authors\".\"id\" in (1, 2, 3, 15, 20)",
+            "modes": [
+              "explain"
+            ],
+            "hash": "a2c5ef2269c44f6b306efb103d439bc781ba2ecd98f8c86c4052c4eed290cf0b"
+          },
+          "start_percent": 67.188,
+          "width_percent": 7.129
+        },
+        {
+          "sql": "insert into \"cache\" (\"expiration\", \"key\", \"value\") values (1793825114, 'laravel-cache-demo:top-books', 'YTo1OntpOjA7YTo1OntzOjI6ImlkIjtpOjYwO3M6NToidGl0bGUiO3M6MTM6IlRlbmV0dXIgaGFydW0iO3M6MTQ6InB1Ymxpc2hlZF95ZWFyIjtpOjIwMDM7czo2OiJyYXRpbmciO3M6NDoiNS4wMCI7czo2OiJhdXRob3IiO086MzM6IkFwcFxIdHRwXFJlc291cmNlc1xBdXRob3JSZXNvdXJjZSI6Mzp7czo4OiJyZXNvdXJjZSI7TzoxNzoiQXBwXE1vZGVsc1xBdXRob3IiOjM0OntzOjEzOiIAKgBjb25uZWN0aW9uIjtzOjU6InBnc3FsIjtzOjg6IgAqAHRhYmxlIjtzOjc6ImF1dGhvcnMiO3M6MTM6IgAqAHByaW1hcnlLZXkiO3M6MjoiaWQiO3M6MTA6IgAqAGtleVR5cGUiO3M6MzoiaW50IjtzOjEyOiJpbmNyZW1lbnRpbmciO2I6MTtzOjc6IgAqAHdpdGgiO2E6MDp7fXM6MTI6IgAqAHdpdGhDb3VudCI7YTowOnt9czoxMjoiACoAcmVmcmVzaGVzIjthOjA6e31zOjE5OiJwcmV2ZW50c0xhenlMb2FkaW5nIjtiOjA7czoxMDoiACoAcGVyUGFnZSI7aToxNTtzOjY6ImV4aXN0cyI7YjoxO3M6MTg6Indhc1JlY2VudGx5Q3JlYXRlZCI7YjowO3M6Mjg6IgAqAGVzY2FwZVdoZW5DYXN0aW5nVG9TdHJpbmciO2I6MDtzOjEzOiIAKgBhdHRyaWJ1dGVzIjthOjU6e3M6MjoiaWQiO2k6MTU7czo0OiJuYW1lIjtzOjI0OiJQcm9mLiBFdW5pY2UgTydLZWVmZSBTci4iO3M6NzoiY291bnRyeSI7czoyOiJQRSI7czoxMDoiY3JlYXRlZF9hdCI7czoxOToiMjAyNi0xMS0wNCAyMDo0MDoxMSI7czoxMDoidXBkYXRlZF9hdCI7czoxOToiMjAyNi0xMS0wNCAyMDo0MDoxMSI7fXM6MTE6IgAqAG9yaWdpbmFsIjthOjU6e3M6MjoiaWQiO2k6MTU7czo0OiJuYW1lIjtzOjI0OiJQcm9mLiBFdW5pY2UgTydLZWVmZSBTci4iO3M6NzoiY291bnRyeSI7czoyOiJQRSI7czoxMDoiY3JlYXRlZF9hdCI7czoxOToiMjAyNi0xMS0wNCAyMDo0MDoxMSI7czoxMDoidXBkYXRlZF9hdCI7czoxOToiMjAyNi0xMS0wNCAyMDo0MDoxMSI7fXM6MTA6IgAqAGNoYW5nZXMiO2E6MDp7fXM6MTE6IgAqAHByZXZpb3VzIjthOjA6e31zOjg6IgAqAGNhc3RzIjthOjA6e31zOjE3OiIAKgBjbGFzc0Nhc3RDYWNoZSI7YTowOnt9czoyMToiACoAYXR0cmlidXRlQ2FzdENhY2hlIjthOjA6e31zOjEzOiIAKgBkYXRlRm9ybWF0IjtOO3M6MTA6IgAqAGFwcGVuZHMiO2E6MDp7fXM6MTk6IgAqAGRpc3BhdGNoZXNFdmVudHMiO2E6MDp7fXM6MTQ6IgAqAG9ic2VydmFibGVzIjthOjA6e31zOjEyOiIAKgByZWxhdGlvbnMiO2E6MDp7fXM6MTA6IgAqAHRvdWNoZXMiO2E6MDp7fXM6Mjc6IgAqAHJlbGF0aW9uQXV0b2xvYWRDYWxsYmFjayI7TjtzOjI2OiIAKgByZWxhdGlvbkF1dG9sb2FkQ29udGV4dCI7TjtzOjEwOiJ0aW1lc3RhbXBzIjtiOjE7czoxMzoidXNlc1VuaXF1ZUlkcyI7YjowO3M6OToiACoAaGlkZGVuIjthOjA6e31zOjEwOiIAKgB2aXNpYmxlIjthOjA6e31zOjExOiIAKgBmaWxsYWJsZSI7YToyOntpOjA7czo0OiJuYW1lIjtpOjE7czo3OiJjb3VudHJ5Ijt9czoxMDoiACoAZ3VhcmRlZCI7YToxOntpOjA7czoxOiIqIjt9fXM6NDoid2l0aCI7YTowOnt9czoxMDoiYWRkaXRpb25hbCI7YTowOnt9fX1pOjE7YTo1OntzOjI6ImlkIjtpOjExO3M6NToidGl0bGUiO3M6MzQ6IlNpbWlsaXF1ZSBkZXNlcnVudCBzdW50IGl0YXF1ZSBlc3QiO3M6MTQ6InB1Ymxpc2hlZF95ZWFyIjtpOjE5NjQ7czo2OiJyYXRpbmciO3M6NDoiNS4wMCI7czo2OiJhdXRob3IiO086MzM6IkFwcFxIdHRwXFJlc291cmNlc1xBdXRob3JSZXNvdXJjZSI6Mzp7czo4OiJyZXNvdXJjZSI7TzoxNzoiQXBwXE1vZGVsc1xBdXRob3IiOjM0OntzOjEzOiIAKgBjb25uZWN0aW9uIjtzOjU6InBnc3FsIjtzOjg6IgAqAHRhYmxlIjtzOjc6ImF1dGhvcnMiO3M6MTM6IgAqAHByaW1hcnlLZXkiO3M6MjoiaWQiO3M6MTA6IgAqAGtleVR5cGUiO3M6MzoiaW50IjtzOjEyOiJpbmNyZW1lbnRpbmciO2I6MTtzOjc6IgAqAHdpdGgiO2E6MDp7fXM6MTI6IgAqAHdpdGhDb3VudCI7YTowOnt9czoxMjoiACoAcmVmcmVzaGVzIjthOjA6e31zOjE5OiJwcmV2ZW50c0xhenlMb2FkaW5nIjtiOjA7czoxMDoiACoAcGVyUGFnZSI7aToxNTtzOjY6ImV4aXN0cyI7YjoxO3M6MTg6Indhc1JlY2VudGx5Q3JlYXRlZCI7YjowO3M6Mjg6IgAqAGVzY2FwZVdoZW5DYXN0aW5nVG9TdHJpbmciO2I6MDtzOjEzOiIAKgBhdHRyaWJ1dGVzIjthOjU6e3M6MjoiaWQiO2k6MztzOjQ6Im5hbWUiO3M6MTU6Ikxpb25lbCBNY0tlbnppZSI7czo3OiJjb3VudHJ5IjtzOjI6IlNMIjtzOjEwOiJjcmVhdGVkX2F0IjtzOjE5OiIyMDI2LTExLTA0IDIwOjQwOjExIjtzOjEwOiJ1cGRhdGVkX2F0IjtzOjE5OiIyMDI2LTExLTA0IDIwOjQwOjExIjt9czoxMToiACoAb3JpZ2luYWwiO2E6NTp7czoyOiJpZCI7aTozO3M6NDoibmFtZSI7czoxNToiTGlvbmVsIE1jS2VuemllIjtzOjc6ImNvdW50cnkiO3M6MjoiU0wiO3M6MTA6ImNyZWF0ZWRfYXQiO3M6MTk6IjIwMjYtMTEtMDQgMjA6NDA6MTEiO3M6MTA6InVwZGF0ZWRfYXQiO3M6MTk6IjIwMjYtMTEtMDQgMjA6NDA6MTEiO31zOjEwOiIAKgBjaGFuZ2VzIjthOjA6e31zOjExOiIAKgBwcmV2aW91cyI7YTowOnt9czo4OiIAKgBjYXN0cyI7YTowOnt9czoxNzoiACoAY2xhc3NDYXN0Q2FjaGUiO2E6MDp7fXM6MjE6IgAqAGF0dHJpYnV0ZUNhc3RDYWNoZSI7YTowOnt9czoxMzoiACoAZGF0ZUZvcm1hdCI7TjtzOjEwOiIAKgBhcHBlbmRzIjthOjA6e31zOjE5OiIAKgBkaXNwYXRjaGVzRXZlbnRzIjthOjA6e31zOjE0OiIAKgBvYnNlcnZhYmxlcyI7YTowOnt9czoxMjoiACoAcmVsYXRpb25zIjthOjA6e31zOjEwOiIAKgB0b3VjaGVzIjthOjA6e31zOjI3OiIAKgByZWxhdGlvbkF1dG9sb2FkQ2FsbGJhY2siO047czoyNjoiACoAcmVsYXRpb25BdXRvbG9hZENvbnRleHQiO047czoxMDoidGltZXN0YW1wcyI7YjoxO3M6MTM6InVzZXNVbmlxdWVJZHMiO2I6MDtzOjk6IgAqAGhpZGRlbiI7YTowOnt9czoxMDoiACoAdmlzaWJsZSI7YTowOnt9czoxMToiACoAZmlsbGFibGUiO2E6Mjp7aTowO3M6NDoibmFtZSI7aToxO3M6NzoiY291bnRyeSI7fXM6MTA6IgAqAGd1YXJkZWQiO2E6MTp7aTowO3M6MToiKiI7fX1zOjQ6IndpdGgiO2E6MDp7fXM6MTA6ImFkZGl0aW9uYWwiO2E6MDp7fX19aToyO2E6NTp7czoyOiJpZCI7aTo4NztzOjU6InRpdGxlIjtzOjI0OiJSZWljaWVuZGlzIGFsaWFzIHRlbXBvcmUiO3M6MTQ6InB1Ymxpc2hlZF95ZWFyIjtpOjE5Njg7czo2OiJyYXRpbmciO3M6NDoiNC4xNCI7czo2OiJhdXRob3IiO086MzM6IkFwcFxIdHRwXFJlc291cmNlc1xBdXRob3JSZXNvdXJjZSI6Mzp7czo4OiJyZXNvdXJjZSI7TzoxNzoiQXBwXE1vZGVsc1xBdXRob3IiOjM0OntzOjEzOiIAKgBjb25uZWN0aW9uIjtzOjU6InBnc3FsIjtzOjg6IgAqAHRhYmxlIjtzOjc6ImF1dGhvcnMiO3M6MTM6IgAqAHByaW1hcnlLZXkiO3M6MjoiaWQiO3M6MTA6IgAqAGtleVR5cGUiO3M6MzoiaW50IjtzOjEyOiJpbmNyZW1lbnRpbmciO2I6MTtzOjc6IgAqAHdpdGgiO2E6MDp7fXM6MTI6IgAqAHdpdGhDb3VudCI7YTowOnt9czoxMjoiACoAcmVmcmVzaGVzIjthOjA6e31zOjE5OiJwcmV2ZW50c0xhenlMb2FkaW5nIjtiOjA7czoxMDoiACoAcGVyUGFnZSI7aToxNTtzOjY6ImV4aXN0cyI7YjoxO3M6MTg6Indhc1JlY2VudGx5Q3JlYXRlZCI7YjowO3M6Mjg6IgAqAGVzY2FwZVdoZW5DYXN0aW5nVG9TdHJpbmciO2I6MDtzOjEzOiIAKgBhdHRyaWJ1dGVzIjthOjU6e3M6MjoiaWQiO2k6MjA7czo0OiJuYW1lIjtzOjE1OiJCZXJuYXJkIEtlc3NsZXIiO3M6NzoiY291bnRyeSI7czoyOiJJUSI7czoxMDoiY3JlYXRlZF9hdCI7czoxOToiMjAyNi0xMS0wNCAyMDo0MDoxMSI7czoxMDoidXBkYXRlZF9hdCI7czoxOToiMjAyNi0xMS0wNCAyMDo0MDoxMSI7fXM6MTE6IgAqAG9yaWdpbmFsIjthOjU6e3M6MjoiaWQiO2k6MjA7czo0OiJuYW1lIjtzOjE1OiJCZXJuYXJkIEtlc3NsZXIiO3M6NzoiY291bnRyeSI7czoyOiJJUSI7czoxMDoiY3JlYXRlZF9hdCI7czoxOToiMjAyNi0xMS0wNCAyMDo0MDoxMSI7czoxMDoidXBkYXRlZF9hdCI7czoxOToiMjAyNi0xMS0wNCAyMDo0MDoxMSI7fXM6MTA6IgAqAGNoYW5nZXMiO2E6MDp7fXM6MTE6IgAqAHByZXZpb3VzIjthOjA6e31zOjg6IgAqAGNhc3RzIjthOjA6e31zOjE3OiIAKgBjbGFzc0Nhc3RDYWNoZSI7YTowOnt9czoyMToiACoAYXR0cmlidXRlQ2FzdENhY2hlIjthOjA6e31zOjEzOiIAKgBkYXRlRm9ybWF0IjtOO3M6MTA6IgAqAGFwcGVuZHMiO2E6MDp7fXM6MTk6IgAqAGRpc3BhdGNoZXNFdmVudHMiO2E6MDp7fXM6MTQ6IgAqAG9ic2VydmFibGVzIjthOjA6e31zOjEyOiIAKgByZWxhdGlvbnMiO2E6MDp7fXM6MTA6IgAqAHRvdWNoZXMiO2E6MDp7fXM6Mjc6IgAqAHJlbGF0aW9uQXV0b2xvYWRDYWxsYmFjayI7TjtzOjI2OiIAKgByZWxhdGlvbkF1dG9sb2FkQ29udGV4dCI7TjtzOjEwOiJ0aW1lc3RhbXBzIjtiOjE7czoxMzoidXNlc1VuaXF1ZUlkcyI7YjowO3M6OToiACoAaGlkZGVuIjthOjA6e31zOjEwOiIAKgB2aXNpYmxlIjthOjA6e31zOjExOiIAKgBmaWxsYWJsZSI7YToyOntpOjA7czo0OiJuYW1lIjtpOjE7czo3OiJjb3VudHJ5Ijt9czoxMDoiACoAZ3VhcmRlZCI7YToxOntpOjA7czoxOiIqIjt9fXM6NDoid2l0aCI7YTowOnt9czoxMDoiYWRkaXRpb25hbCI7YTowOnt9fX1pOjM7YTo1OntzOjI6ImlkIjtpOjc7czo1OiJ0aXRsZSI7czoxMzoiTm9iaXMgcXVpYSB1dCI7czoxNDoicHVibGlzaGVkX3llYXIiO2k6MjAwNztzOjY6InJhdGluZyI7czo0OiI0LjAwIjtzOjY6ImF1dGhvciI7TzozMzoiQXBwXEh0dHBcUmVzb3VyY2VzXEF1dGhvclJlc291cmNlIjozOntzOjg6InJlc291cmNlIjtPOjE3OiJBcHBcTW9kZWxzXEF1dGhvciI6MzQ6e3M6MTM6IgAqAGNvbm5lY3Rpb24iO3M6NToicGdzcWwiO3M6ODoiACoAdGFibGUiO3M6NzoiYXV0aG9ycyI7czoxMzoiACoAcHJpbWFyeUtleSI7czoyOiJpZCI7czoxMDoiACoAa2V5VHlwZSI7czozOiJpbnQiO3M6MTI6ImluY3JlbWVudGluZyI7YjoxO3M6NzoiACoAd2l0aCI7YTowOnt9czoxMjoiACoAd2l0aENvdW50IjthOjA6e31zOjEyOiIAKgByZWZyZXNoZXMiO2E6MDp7fXM6MTk6InByZXZlbnRzTGF6eUxvYWRpbmciO2I6MDtzOjEwOiIAKgBwZXJQYWdlIjtpOjE1O3M6NjoiZXhpc3RzIjtiOjE7czoxODoid2FzUmVjZW50bHlDcmVhdGVkIjtiOjA7czoyODoiACoAZXNjYXBlV2hlbkNhc3RpbmdUb1N0cmluZyI7YjowO3M6MTM6IgAqAGF0dHJpYnV0ZXMiO2E6NTp7czoyOiJpZCI7aToyO3M6NDoibmFtZSI7czoxNzoiTXIuIE1pZ3VlbCBKYWNvYmkiO3M6NzoiY291bnRyeSI7czoyOiJNVSI7czoxMDoiY3JlYXRlZF9hdCI7czoxOToiMjAyNi0xMS0wNCAyMDo0MDoxMSI7czoxMDoidXBkYXRlZF9hdCI7czoxOToiMjAyNi0xMS0wNCAyMDo0MDoxMSI7fXM6MTE6IgAqAG9yaWdpbmFsIjthOjU6e3M6MjoiaWQiO2k6MjtzOjQ6Im5hbWUiO3M6MTc6Ik1yLiBNaWd1ZWwgSmFjb2JpIjtzOjc6ImNvdW50cnkiO3M6MjoiTVUiO3M6MTA6ImNyZWF0ZWRfYXQiO3M6MTk6IjIwMjYtMTEtMDQgMjA6NDA6MTEiO3M6MTA6InVwZGF0ZWRfYXQiO3M6MTk6IjIwMjYtMTEtMDQgMjA6NDA6MTEiO31zOjEwOiIAKgBjaGFuZ2VzIjthOjA6e31zOjExOiIAKgBwcmV2aW91cyI7YTowOnt9czo4OiIAKgBjYXN0cyI7YTowOnt9czoxNzoiACoAY2xhc3NDYXN0Q2FjaGUiO2E6MDp7fXM6MjE6IgAqAGF0dHJpYnV0ZUNhc3RDYWNoZSI7YTowOnt9czoxMzoiACoAZGF0ZUZvcm1hdCI7TjtzOjEwOiIAKgBhcHBlbmRzIjthOjA6e31zOjE5OiIAKgBkaXNwYXRjaGVzRXZlbnRzIjthOjA6e31zOjE0OiIAKgBvYnNlcnZhYmxlcyI7YTowOnt9czoxMjoiACoAcmVsYXRpb25zIjthOjA6e31zOjEwOiIAKgB0b3VjaGVzIjthOjA6e31zOjI3OiIAKgByZWxhdGlvbkF1dG9sb2FkQ2FsbGJhY2siO047czoyNjoiACoAcmVsYXRpb25BdXRvbG9hZENvbnRleHQiO047czoxMDoidGltZXN0YW1wcyI7YjoxO3M6MTM6InVzZXNVbmlxdWVJZHMiO2I6MDtzOjk6IgAqAGhpZGRlbiI7YTowOnt9czoxMDoiACoAdmlzaWJsZSI7YTowOnt9czoxMToiACoAZmlsbGFibGUiO2E6Mjp7aTowO3M6NDoibmFtZSI7aToxO3M6NzoiY291bnRyeSI7fXM6MTA6IgAqAGd1YXJkZWQiO2E6MTp7aTowO3M6MToiKiI7fX1zOjQ6IndpdGgiO2E6MDp7fXM6MTA6ImFkZGl0aW9uYWwiO2E6MDp7fX19aTo0O2E6NTp7czoyOiJpZCI7aToyO3M6NToidGl0bGUiO3M6MTc6Ikl1c3RvIGRlYml0aXMgcXVpIjtzOjE0OiJwdWJsaXNoZWRfeWVhciI7aToxOTg1O3M6NjoicmF0aW5nIjtzOjQ6IjQuMDAiO3M6NjoiYXV0aG9yIjtPOjMzOiJBcHBcSHR0cFxSZXNvdXJjZXNcQXV0aG9yUmVzb3VyY2UiOjM6e3M6ODoicmVzb3VyY2UiO086MTc6IkFwcFxNb2RlbHNcQXV0aG9yIjozNDp7czoxMzoiACoAY29ubmVjdGlvbiI7czo1OiJwZ3NxbCI7czo4OiIAKgB0YWJsZSI7czo3OiJhdXRob3JzIjtzOjEzOiIAKgBwcmltYXJ5S2V5IjtzOjI6ImlkIjtzOjEwOiIAKgBrZXlUeXBlIjtzOjM6ImludCI7czoxMjoiaW5jcmVtZW50aW5nIjtiOjE7czo3OiIAKgB3aXRoIjthOjA6e31zOjEyOiIAKgB3aXRoQ291bnQiO2E6MDp7fXM6MTI6IgAqAHJlZnJlc2hlcyI7YTowOnt9czoxOToicHJldmVudHNMYXp5TG9hZGluZyI7YjowO3M6MTA6IgAqAHBlclBhZ2UiO2k6MTU7czo2OiJleGlzdHMiO2I6MTtzOjE4OiJ3YXNSZWNlbnRseUNyZWF0ZWQiO2I6MDtzOjI4OiIAKgBlc2NhcGVXaGVuQ2FzdGluZ1RvU3RyaW5nIjtiOjA7czoxMzoiACoAYXR0cmlidXRlcyI7YTo1OntzOjI6ImlkIjtpOjE7czo0OiJuYW1lIjtzOjE4OiJNYXJxdWlzZSBIb2VnZXIgSVYiO3M6NzoiY291bnRyeSI7czoyOiJNViI7czoxMDoiY3JlYXRlZF9hdCI7czoxOToiMjAyNi0xMS0wNCAyMDo0MDoxMSI7czoxMDoidXBkYXRlZF9hdCI7czoxOToiMjAyNi0xMS0wNCAyMDo0MDoxMSI7fXM6MTE6IgAqAG9yaWdpbmFsIjthOjU6e3M6MjoiaWQiO2k6MTtzOjQ6Im5hbWUiO3M6MTg6Ik1hcnF1aXNlIEhvZWdlciBJViI7czo3OiJjb3VudHJ5IjtzOjI6Ik1WIjtzOjEwOiJjcmVhdGVkX2F0IjtzOjE5OiIyMDI2LTExLTA0IDIwOjQwOjExIjtzOjEwOiJ1cGRhdGVkX2F0IjtzOjE5OiIyMDI2LTExLTA0IDIwOjQwOjExIjt9czoxMDoiACoAY2hhbmdlcyI7YTowOnt9czoxMToiACoAcHJldmlvdXMiO2E6MDp7fXM6ODoiACoAY2FzdHMiO2E6MDp7fXM6MTc6IgAqAGNsYXNzQ2FzdENhY2hlIjthOjA6e31zOjIxOiIAKgBhdHRyaWJ1dGVDYXN0Q2FjaGUiO2E6MDp7fXM6MTM6IgAqAGRhdGVGb3JtYXQiO047czoxMDoiACoAYXBwZW5kcyI7YTowOnt9czoxOToiACoAZGlzcGF0Y2hlc0V2ZW50cyI7YTowOnt9czoxNDoiACoAb2JzZXJ2YWJsZXMiO2E6MDp7fXM6MTI6IgAqAHJlbGF0aW9ucyI7YTowOnt9czoxMDoiACoAdG91Y2hlcyI7YTowOnt9czoyNzoiACoAcmVsYXRpb25BdXRvbG9hZENhbGxiYWNrIjtOO3M6MjY6IgAqAHJlbGF0aW9uQXV0b2xvYWRDb250ZXh0IjtOO3M6MTA6InRpbWVzdGFtcHMiO2I6MTtzOjEzOiJ1c2VzVW5pcXVlSWRzIjtiOjA7czo5OiIAKgBoaWRkZW4iO2E6MDp7fXM6MTA6IgAqAHZpc2libGUiO2E6MDp7fXM6MTE6IgAqAGZpbGxhYmxlIjthOjI6e2k6MDtzOjQ6Im5hbWUiO2k6MTtzOjc6ImNvdW50cnkiO31zOjEwOiIAKgBndWFyZGVkIjthOjE6e2k6MDtzOjE6IioiO319czo0OiJ3aXRoIjthOjA6e31zOjEwOiJhZGRpdGlvbmFsIjthOjA6e319fX0=') on conflict (\"key\") do update set \"expiration\" = \"excluded\".\"expiration\", \"key\" = \"excluded\".\"key\", \"value\" = \"excluded\".\"value\"",
+          "type": "query",
+          "params": [
+            1793825114,
+            "laravel-cache-demo:top-books",
+            "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"
+          ],
+          "backtrace": [
+            {
+              "index": 10,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "line": 203
+            },
+            {
+              "index": 11,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+              "line": 179
+            },
+            {
+              "index": 12,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "line": 387
+            },
+            {
+              "index": 13,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "line": 596
+            },
+            {
+              "index": 14,
+              "namespace": null,
+              "name": "vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/Repository.php",
+              "line": 570
+            }
+          ],
+          "start": 1793824814.184043,
+          "duration": 0.00263,
+          "duration_str": "2.63ms",
+          "slow": false,
+          "filename": "DatabaseStore.php:203",
+          "source": {
+            "index": 10,
+            "namespace": null,
+            "name": "vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php",
+            "line": 203
+          },
+          "xdebug_link": {
+            "url": "phpstorm://open?file=%2Fapp%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FCache%2FDatabaseStore.php&line=203",
+            "ajax": false,
+            "filename": "DatabaseStore.php",
+            "line": "203",
+            "path": "/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php"
+          },
+          "connection": "demo",
+          "start_percent": 74.316,
+          "width_percent": 25.684
+        }
+      ]
+    },
+    "models": {
+      "data": {
+        "App\\Models\\Book": {
+          "retrieved": 5,
+          "xdebug_link": {
+            "url": "phpstorm://open?file=%2Fapp%2Fapp%2FModels%2FBook.php&line=1",
+            "ajax": false,
+            "filename": "Book.php",
+            "line": "?",
+            "path": "/app/Models/Book.php"
+          }
+        },
+        "App\\Models\\Author": {
+          "retrieved": 5,
+          "xdebug_link": {
+            "url": "phpstorm://open?file=%2Fapp%2Fapp%2FModels%2FAuthor.php&line=1",
+            "ajax": false,
+            "filename": "Author.php",
+            "line": "?",
+            "path": "/app/Models/Author.php"
+          }
+        }
+      },
+      "count": 10,
+      "key_map": {
+        "retrieved": "Retrieved",
+        "created": "Created",
+        "updated": "Updated",
+        "deleted": "Deleted"
+      },
+      "is_counter": true,
+      "badges": {
+        "retrieved": 107
+      }
+    },
+    "symfonymailer_mails": {
+      "count": 0,
+      "mails": []
+    },
+    "gate": {
+      "count": 0,
+      "messages": []
+    },
+    "jobs": {
+      "data": [],
+      "count": 0,
+      "key_map": {
+        "value": "Count"
+      },
+      "is_counter": true
+    },
+    "http_client": {
+      "nb_requests": 0,
+      "requests": []
+    },
+    "clockwork": {
+      "getData": [],
+      "postData": [],
+      "headers": {
+        "host": [
+          "localhost:18000"
+        ],
+        "user-agent": [
+          "curl/8.23.0"
+        ],
+        "accept": [
+          "*/*"
+        ]
+      },
+      "cookies": "[redacted]",
+      "uri": "/up",
+      "method": "GET",
+      "responseStatus": 200
+    },
+    "time": {
+      "count": 4,
+      "start": 1793824814.168005,
+      "end": 1793824814.194355,
+      "duration": 0.026350021362304688,
+      "duration_str": "26.35ms",
+      "measures": [
+        {
+          "label": "Application",
+          "start": 1793824814.168383,
+          "relative_start": 0.00037789344787597656,
+          "end": 1793824814.194356,
+          "relative_end": 0.026350975036621094,
+          "duration": 0.025973081588745117,
+          "duration_str": "25.97ms",
+          "memory": 0,
+          "memory_str": "0B",
+          "params": [],
+          "params_html": false,
+          "collector": "time",
+          "group": null
+        },
+        {
+          "label": "Routing",
+          "start": 1793824814.169251,
+          "relative_start": 0.0012459754943847656,
+          "end": 1793824814.169308,
+          "relative_end": 0.001302957534790039,
+          "duration": 0.00005698204040527344,
+          "duration_str": "57μs",
+          "memory": 0,
+          "memory_str": "0B",
+          "params": [],
+          "params_html": false,
+          "collector": "time",
+          "group": null
+        },
+        {
+          "label": "Preparing Response",
+          "start": 1793824814.192976,
+          "relative_start": 0.02497100830078125,
+          "end": 1793824814.193017,
+          "relative_end": 0.02501201629638672,
+          "duration": 0.00004100799560546875,
+          "duration_str": "41μs",
+          "memory": 0,
+          "memory_str": "0B",
+          "params": [],
+          "params_html": false,
+          "collector": "time",
+          "group": null
+        },
+        {
+          "label": "Preparing Response",
+          "start": 1793824814.193042,
+          "relative_start": 0.025037050247192383,
+          "end": 1793824814.193058,
+          "relative_end": 0.025053024291992188,
+          "duration": 0.000015974044799804688,
+          "duration_str": "16μs",
+          "memory": 0,
+          "memory_str": "0B",
+          "params": [],
+          "params_html": false,
+          "collector": "time",
+          "group": null
+        }
+      ]
+    },
+    "cache": {
+      "count": 4,
+      "start": 1793824814.168246,
+      "end": 1793824814.194373,
+      "duration": 0.026126861572265625,
+      "duration_str": "26.13ms",
+      "measures": [
+        {
+          "label": "forgotten\tdemo:top-books",
+          "start": 1793824814.16993,
+          "relative_start": 0.001683950424194336,
+          "end": 1793824814.174661,
+          "relative_end": 0.006414890289306641,
+          "duration": 0.004730939865112305,
+          "duration_str": "4.73ms",
+          "memory": 0,
+          "memory_str": "0B",
+          "params": {
+            "storeName": "database",
+            "key": "demo:top-books",
+            "tags": []
+          },
+          "params_html": false,
+          "collector": null,
+          "group": null
+        },
+        {
+          "label": "missed\tdemo:top-books",
+          "start": 1793824814.174791,
+          "relative_start": 0.006545066833496094,
+          "end": 1793824814.176411,
+          "relative_end": 0.00816488265991211,
+          "duration": 0.0016198158264160156,
+          "duration_str": "1.62ms",
+          "memory": 0,
+          "memory_str": "0B",
+          "params": {
+            "storeName": "database",
+            "key": "demo:top-books",
+            "tags": []
+          },
+          "params_html": false,
+          "collector": null,
+          "group": null
+        },
+        {
+          "label": "missed\tdemo:top-books",
+          "start": 1793824814.177469,
+          "relative_start": 0.009222984313964844,
+          "end": 1793824814.178762,
+          "relative_end": 0.010515928268432617,
+          "duration": 0.0012929439544677734,
+          "duration_str": "1.29ms",
+          "memory": 0,
+          "memory_str": "0B",
+          "params": {
+            "storeName": "database",
+            "key": "demo:top-books",
+            "tags": []
+          },
+          "params_html": false,
+          "collector": null,
+          "group": null
+        },
+        {
+          "label": "written\tdemo:top-books",
+          "start": 1793824814.183675,
+          "relative_start": 0.015429019927978516,
+          "end": 1793824814.187603,
+          "relative_end": 0.019356966018676758,
+          "duration": 0.003927946090698242,
+          "duration_str": "3.93ms",
+          "memory": 62056,
+          "memory_str": "60.6KB",
+          "params": {
+            "storeName": "database",
+            "key": "demo:top-books",
+            "tags": [],
+            "value": [
+              {
+                "id": 60,
+                "title": "Tenetur harum",
+                "published_year": 2003,
+                "rating": "5.00",
+                "author": {
+                  "resource": {
+                    "connection": "pgsql",
+                    "table": "authors",
+                    "primaryKey": "id",
+                    "keyType": "int",
+                    "incrementing": true,
+                    "with": [],
+                    "withCount": [],
+                    "refreshes": [],
+                    "preventsLazyLoading": false,
+                    "perPage": 15,
+                    "exists": true,
+                    "wasRecentlyCreated": false,
+                    "escapeWhenCastingToString": false,
+                    "attributes": {
+                      "id": 15,
+                      "name": "Prof. Eunice O'Keefe Sr.",
+                      "country": "PE",
+                      "created_at": "2026-11-04 20:40:11",
+                      "updated_at": "2026-11-04 20:40:11"
+                    },
+                    "original": {
+                      "id": 15,
+                      "name": "Prof. Eunice O'Keefe Sr.",
+                      "country": "PE",
+                      "created_at": "2026-11-04 20:40:11",
+                      "updated_at": "2026-11-04 20:40:11"
+                    },
+                    "changes": [],
+                    "previous": [],
+                    "casts": [],
+                    "classCastCache": [],
+                    "attributeCastCache": [],
+                    "dateFormat": null,
+                    "appends": [],
+                    "dispatchesEvents": [],
+                    "observables": [],
+                    "relations": [],
+                    "touches": [],
+                    "relationAutoloadCallback": null,
+                    "relationAutoloadContext": null,
+                    "timestamps": true,
+                    "usesUniqueIds": false,
+                    "hidden": [],
+                    "visible": [],
+                    "fillable": [
+                      "name",
+                      "country"
+                    ],
+                    "guarded": [
+                      "*"
+                    ],
+                    "_vd": [
+                      4,
+                      1814,
+                      "App\\Models\\Author",
+                      [
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        "*",
+                        null,
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        "*"
+                      ]
+                    ]
+                  },
+                  "with": [],
+                  "additional": [],
+                  "_vd": [
+                    4,
+                    2019,
+                    "App\\Http\\Resources\\AuthorResource"
+                  ]
+                }
+              },
+              {
+                "id": 11,
+                "title": "Similique deserunt sunt itaque est",
+                "published_year": 1964,
+                "rating": "5.00",
+                "author": {
+                  "resource": {
+                    "connection": "pgsql",
+                    "table": "authors",
+                    "primaryKey": "id",
+                    "keyType": "int",
+                    "incrementing": true,
+                    "with": [],
+                    "withCount": [],
+                    "refreshes": [],
+                    "preventsLazyLoading": false,
+                    "perPage": 15,
+                    "exists": true,
+                    "wasRecentlyCreated": false,
+                    "escapeWhenCastingToString": false,
+                    "attributes": {
+                      "id": 3,
+                      "name": "Lionel McKenzie",
+                      "country": "SL",
+                      "created_at": "2026-11-04 20:40:11",
+                      "updated_at": "2026-11-04 20:40:11"
+                    },
+                    "original": {
+                      "id": 3,
+                      "name": "Lionel McKenzie",
+                      "country": "SL",
+                      "created_at": "2026-11-04 20:40:11",
+                      "updated_at": "2026-11-04 20:40:11"
+                    },
+                    "changes": [],
+                    "previous": [],
+                    "casts": [],
+                    "classCastCache": [],
+                    "attributeCastCache": [],
+                    "dateFormat": null,
+                    "appends": [],
+                    "dispatchesEvents": [],
+                    "observables": [],
+                    "relations": [],
+                    "touches": [],
+                    "relationAutoloadCallback": null,
+                    "relationAutoloadContext": null,
+                    "timestamps": true,
+                    "usesUniqueIds": false,
+                    "hidden": [],
+                    "visible": [],
+                    "fillable": [
+                      "name",
+                      "country"
+                    ],
+                    "guarded": [
+                      "*"
+                    ],
+                    "_vd": [
+                      4,
+                      1813,
+                      "App\\Models\\Author",
+                      [
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        "*",
+                        null,
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        "*"
+                      ]
+                    ]
+                  },
+                  "with": [],
+                  "additional": [],
+                  "_vd": [
+                    4,
+                    787,
+                    "App\\Http\\Resources\\AuthorResource"
+                  ]
+                }
+              },
+              {
+                "id": 87,
+                "title": "Reiciendis alias tempore",
+                "published_year": 1968,
+                "rating": "4.14",
+                "author": {
+                  "resource": {
+                    "connection": "pgsql",
+                    "table": "authors",
+                    "primaryKey": "id",
+                    "keyType": "int",
+                    "incrementing": true,
+                    "with": [],
+                    "withCount": [],
+                    "refreshes": [],
+                    "preventsLazyLoading": false,
+                    "perPage": 15,
+                    "exists": true,
+                    "wasRecentlyCreated": false,
+                    "escapeWhenCastingToString": false,
+                    "attributes": {
+                      "id": 20,
+                      "name": "Bernard Kessler",
+                      "country": "IQ",
+                      "created_at": "2026-11-04 20:40:11",
+                      "updated_at": "2026-11-04 20:40:11"
+                    },
+                    "original": {
+                      "id": 20,
+                      "name": "Bernard Kessler",
+                      "country": "IQ",
+                      "created_at": "2026-11-04 20:40:11",
+                      "updated_at": "2026-11-04 20:40:11"
+                    },
+                    "changes": [],
+                    "previous": [],
+                    "casts": [],
+                    "classCastCache": [],
+                    "attributeCastCache": [],
+                    "dateFormat": null,
+                    "appends": [],
+                    "dispatchesEvents": [],
+                    "observables": [],
+                    "relations": [],
+                    "touches": [],
+                    "relationAutoloadCallback": null,
+                    "relationAutoloadContext": null,
+                    "timestamps": true,
+                    "usesUniqueIds": false,
+                    "hidden": [],
+                    "visible": [],
+                    "fillable": [
+                      "name",
+                      "country"
+                    ],
+                    "guarded": [
+                      "*"
+                    ],
+                    "_vd": [
+                      4,
+                      1815,
+                      "App\\Models\\Author",
+                      [
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        "*",
+                        null,
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        "*"
+                      ]
+                    ]
+                  },
+                  "with": [],
+                  "additional": [],
+                  "_vd": [
+                    4,
+                    1795,
+                    "App\\Http\\Resources\\AuthorResource"
+                  ]
+                }
+              },
+              {
+                "id": 7,
+                "title": "Nobis quia ut",
+                "published_year": 2007,
+                "rating": "4.00",
+                "author": {
+                  "resource": {
+                    "connection": "pgsql",
+                    "table": "authors",
+                    "primaryKey": "id",
+                    "keyType": "int",
+                    "incrementing": true,
+                    "with": [],
+                    "withCount": [],
+                    "refreshes": [],
+                    "preventsLazyLoading": false,
+                    "perPage": 15,
+                    "exists": true,
+                    "wasRecentlyCreated": false,
+                    "escapeWhenCastingToString": false,
+                    "attributes": {
+                      "id": 2,
+                      "name": "Mr. Miguel Jacobi",
+                      "country": "MU",
+                      "created_at": "2026-11-04 20:40:11",
+                      "updated_at": "2026-11-04 20:40:11"
+                    },
+                    "original": {
+                      "id": 2,
+                      "name": "Mr. Miguel Jacobi",
+                      "country": "MU",
+                      "created_at": "2026-11-04 20:40:11",
+                      "updated_at": "2026-11-04 20:40:11"
+                    },
+                    "changes": [],
+                    "previous": [],
+                    "casts": [],
+                    "classCastCache": [],
+                    "attributeCastCache": [],
+                    "dateFormat": null,
+                    "appends": [],
+                    "dispatchesEvents": [],
+                    "observables": [],
+                    "relations": [],
+                    "touches": [],
+                    "relationAutoloadCallback": null,
+                    "relationAutoloadContext": null,
+                    "timestamps": true,
+                    "usesUniqueIds": false,
+                    "hidden": [],
+                    "visible": [],
+                    "fillable": [
+                      "name",
+                      "country"
+                    ],
+                    "guarded": [
+                      "*"
+                    ],
+                    "_vd": [
+                      4,
+                      1824,
+                      "App\\Models\\Author",
+                      [
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        "*",
+                        null,
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        "*"
+                      ]
+                    ]
+                  },
+                  "with": [],
+                  "additional": [],
+                  "_vd": [
+                    4,
+                    1797,
+                    "App\\Http\\Resources\\AuthorResource"
+                  ]
+                }
+              },
+              {
+                "id": 2,
+                "title": "Iusto debitis qui",
+                "published_year": 1985,
+                "rating": "4.00",
+                "author": {
+                  "resource": {
+                    "connection": "pgsql",
+                    "table": "authors",
+                    "primaryKey": "id",
+                    "keyType": "int",
+                    "incrementing": true,
+                    "with": [],
+                    "withCount": [],
+                    "refreshes": [],
+                    "preventsLazyLoading": false,
+                    "perPage": 15,
+                    "exists": true,
+                    "wasRecentlyCreated": false,
+                    "escapeWhenCastingToString": false,
+                    "attributes": {
+                      "id": 1,
+                      "name": "Marquise Hoeger IV",
+                      "country": "MV",
+                      "created_at": "2026-11-04 20:40:11",
+                      "updated_at": "2026-11-04 20:40:11"
+                    },
+                    "original": {
+                      "id": 1,
+                      "name": "Marquise Hoeger IV",
+                      "country": "MV",
+                      "created_at": "2026-11-04 20:40:11",
+                      "updated_at": "2026-11-04 20:40:11"
+                    },
+                    "changes": [],
+                    "previous": [],
+                    "casts": [],
+                    "classCastCache": [],
+                    "attributeCastCache": [],
+                    "dateFormat": null,
+                    "appends": [],
+                    "dispatchesEvents": [],
+                    "observables": [],
+                    "relations": [],
+                    "touches": [],
+                    "relationAutoloadCallback": null,
+                    "relationAutoloadContext": null,
+                    "timestamps": true,
+                    "usesUniqueIds": false,
+                    "hidden": [],
+                    "visible": [],
+                    "fillable": [
+                      "name",
+                      "country"
+                    ],
+                    "guarded": [
+                      "*"
+                    ],
+                    "_vd": [
+                      4,
+                      1796,
+                      "App\\Models\\Author",
+                      [
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        "*",
+                        null,
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        "*",
+                        null,
+                        null,
+                        "*",
+                        "*",
+                        "*",
+                        "*"
+                      ]
+                    ]
+                  },
+                  "with": [],
+                  "additional": [],
+                  "_vd": [
+                    4,
+                    803,
+                    "App\\Http\\Resources\\AuthorResource"
+                  ]
+                }
+              }
+            ],
+            "seconds": 300
+          },
+          "params_html": false,
+          "collector": null,
+          "group": null,
+          "delete_url": "http://localhost:18000/_debugbar/cache?key=demo%3Atop-books&signature=52466e84f5467c9d7ec0eeeaeb6ecfaddf714cb78abc26645b3c80c694b26007"
+        }
+      ],
+      "nb_measures": 4
+    }
+  }
+}

@@ -1,0 +1,253 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/boom"
+  },
+  "response": {
+    "status": 500,
+    "headers": {
+      "server-timing": "app; dur=7.9169273376465; desc=\"Application\", db; dur=0.66; desc=\"Database\", timeline-event-0; dur=7.0700645446777; desc=\"Controller\"",
+      "x-clockwork-id": "1793824809-5606-856539629",
+      "x-clockwork-version": "5.3.5"
+    }
+  },
+  "record": {
+    "id": "1793824809-5606-856539629",
+    "version": 1,
+    "type": "request",
+    "time": 1793824809.560336,
+    "method": "GET",
+    "url": "http://localhost:18000/api/boom",
+    "uri": "/api/boom",
+    "headers": {
+      "host": [
+        "localhost:18000"
+      ],
+      "connection": [
+        "keep-alive"
+      ],
+      "accept": [
+        "application/json"
+      ],
+      "accept-language": [
+        "*"
+      ],
+      "sec-fetch-mode": [
+        "cors"
+      ],
+      "user-agent": [
+        "node"
+      ],
+      "accept-encoding": [
+        "gzip, deflate"
+      ]
+    },
+    "controller": "App\\Http\\Controllers\\Api\\ScenarioController@boom",
+    "getData": [],
+    "postData": [],
+    "requestData": "",
+    "sessionData": "[redacted]",
+    "authenticatedUser": null,
+    "cookies": "[redacted]",
+    "responseTime": 1793824809.568253,
+    "responseStatus": 500,
+    "responseDuration": 7.916927337646484,
+    "memoryUsage": 10485760,
+    "middleware": [
+      "api"
+    ],
+    "databaseQueries": [
+      {
+        "query": "SELECT * FROM \"books\" LIMIT 1",
+        "duration": 0.66,
+        "connection": "pgsql",
+        "time": 1793824809.562124,
+        "trace": [
+          {
+            "call": "Illuminate\\Database\\Eloquent\\Builder->first()",
+            "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+            "line": 76,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\ScenarioController->boom()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Book",
+        "tags": []
+      }
+    ],
+    "databaseQueriesCount": 1,
+    "databaseSlowQueries": 0,
+    "databaseSelects": 1,
+    "databaseInserts": 0,
+    "databaseUpdates": 0,
+    "databaseDeletes": 0,
+    "databaseOthers": 0,
+    "databaseDuration": 0.66,
+    "cacheQueries": [],
+    "cacheReads": 0,
+    "cacheHits": 0,
+    "cacheWrites": 0,
+    "cacheDeletes": 0,
+    "cacheTime": 0,
+    "modelsActions": [],
+    "modelsRetrieved": {
+      "App\\Models\\Book": 1
+    },
+    "modelsCreated": [],
+    "modelsUpdated": [],
+    "modelsDeleted": [],
+    "redisCommands": [],
+    "queueJobs": [],
+    "timelineData": [
+      {
+        "description": "Controller",
+        "start": 1793824809.56111,
+        "end": 1793824809.56818,
+        "duration": 7.070064544677734,
+        "color": null,
+        "data": null
+      }
+    ],
+    "log": [
+      {
+        "message": "Demo exception from /api/boom",
+        "exception": {
+          "type": "RuntimeException",
+          "message": "Demo exception from /api/boom",
+          "code": 0,
+          "file": "/app/app/Http/Controllers/Api/ScenarioController.php",
+          "line": 78,
+          "trace": [
+            {
+              "call": "{closure:/app/vendor/laravel/octane/bin/frankenphp-worker.php:73}()",
+              "file": null,
+              "line": null,
+              "isVendor": false
+            },
+            {
+              "call": "frankenphp_handle_request()",
+              "file": "/app/vendor/laravel/octane/bin/frankenphp-worker.php",
+              "line": 98,
+              "isVendor": true
+            },
+            {
+              "call": "require()",
+              "file": "/app/public/frankenphp-worker.php",
+              "line": 7,
+              "isVendor": false
+            }
+          ],
+          "previous": null
+        },
+        "context": {
+          "__type__": "array"
+        },
+        "level": "error",
+        "time": 1793824809.567805,
+        "trace": [
+          {
+            "call": "{closure:/app/vendor/laravel/octane/bin/frankenphp-worker.php:73}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "frankenphp_handle_request()",
+            "file": "/app/vendor/laravel/octane/bin/frankenphp-worker.php",
+            "line": 98,
+            "isVendor": true
+          },
+          {
+            "call": "require()",
+            "file": "/app/public/frankenphp-worker.php",
+            "line": 7,
+            "isVendor": false
+          }
+        ]
+      }
+    ],
+    "events": [],
+    "routes": [],
+    "notifications": [],
+    "emailsData": [],
+    "viewsData": [],
+    "userData": [],
+    "httpRequests": [],
+    "subrequests": [],
+    "xdebug": [],
+    "commandName": null,
+    "commandArguments": [],
+    "commandArgumentsDefaults": [],
+    "commandOptions": [],
+    "commandOptionsDefaults": [],
+    "commandExitCode": null,
+    "commandOutput": null,
+    "jobName": null,
+    "jobDescription": null,
+    "jobStatus": null,
+    "jobPayload": [],
+    "jobQueue": null,
+    "jobConnection": null,
+    "jobOptions": [],
+    "testName": null,
+    "testStatus": null,
+    "testStatusMessage": null,
+    "testAsserts": [],
+    "clientMetrics": [],
+    "webVitals": [],
+    "parent": null
+  }
+}

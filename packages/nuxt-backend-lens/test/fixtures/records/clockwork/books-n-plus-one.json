@@ -1,0 +1,2297 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/books"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "server-timing": "app; dur=130.61499595642; desc=\"Application\", db; dur=28.56; desc=\"Database\", timeline-event-0; dur=112.69021034241; desc=\"Controller\"",
+      "x-clockwork-id": "1793824808-9678-929933785",
+      "x-clockwork-version": "5.3.5"
+    }
+  },
+  "record": {
+    "id": "1793824808-9678-929933785",
+    "version": 1,
+    "type": "request",
+    "time": 1793824808.965981,
+    "method": "GET",
+    "url": "http://localhost:18000/api/books",
+    "uri": "/api/books",
+    "headers": {
+      "host": [
+        "localhost:18000"
+      ],
+      "user-agent": [
+        "node"
+      ],
+      "accept-encoding": [
+        "gzip, deflate"
+      ],
+      "connection": [
+        "keep-alive"
+      ],
+      "accept": [
+        "application/json"
+      ],
+      "accept-language": [
+        "*"
+      ],
+      "sec-fetch-mode": [
+        "cors"
+      ]
+    },
+    "controller": "App\\Http\\Controllers\\Api\\BookController@index",
+    "getData": [],
+    "postData": [],
+    "requestData": "",
+    "sessionData": "[redacted]",
+    "authenticatedUser": null,
+    "cookies": "[redacted]",
+    "responseTime": 1793824809.096596,
+    "responseStatus": 200,
+    "responseDuration": 130.6149959564209,
+    "memoryUsage": 8388608,
+    "middleware": [
+      "api"
+    ],
+    "databaseQueries": [
+      {
+        "query": "SELECT * FROM \"books\" ORDER BY \"id\" DESC LIMIT 30",
+        "duration": 17.11,
+        "connection": "pgsql",
+        "time": 1793824809.026017,
+        "trace": [
+          {
+            "call": "Illuminate\\Database\\Eloquent\\Builder->get()",
+            "file": "/app/app/Http/Controllers/Api/BookController.php",
+            "line": 24,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Controllers\\Api\\BookController->index()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php",
+            "line": 46,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\ControllerDispatcher->dispatch()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 276,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->runController()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php",
+            "line": 216,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Route->run()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+            "line": 835,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Router->{closure:Illuminate\\Routing\\Router::runRouteWithinStack():834}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:Illuminate\\Pipeline\\Pipeline::prepareDestination():178}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+            "line": 52,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 219,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}()",
+            "file": "/app/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php",
+            "line": 26,
+            "isVendor": true
+          },
+          {
+            "call": "Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->{closure:Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful::handle():25}()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+            "line": 180,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Book",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 20 LIMIT 1",
+        "duration": 1.71,
+        "connection": "pgsql",
+        "time": 1793824809.063839,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 20 LIMIT 1",
+        "duration": 0.76,
+        "connection": "pgsql",
+        "time": 1793824809.066397,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 20 LIMIT 1",
+        "duration": 0.73,
+        "connection": "pgsql",
+        "time": 1793824809.067781,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 19 LIMIT 1",
+        "duration": 0.64,
+        "connection": "pgsql",
+        "time": 1793824809.069138,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 19 LIMIT 1",
+        "duration": 0.74,
+        "connection": "pgsql",
+        "time": 1793824809.070386,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 19 LIMIT 1",
+        "duration": 0.67,
+        "connection": "pgsql",
+        "time": 1793824809.071712,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 18 LIMIT 1",
+        "duration": 0.51,
+        "connection": "pgsql",
+        "time": 1793824809.072896,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 18 LIMIT 1",
+        "duration": 0.29,
+        "connection": "pgsql",
+        "time": 1793824809.0738802,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 18 LIMIT 1",
+        "duration": 0.27,
+        "connection": "pgsql",
+        "time": 1793824809.074629,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 18 LIMIT 1",
+        "duration": 0.25,
+        "connection": "pgsql",
+        "time": 1793824809.075351,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 18 LIMIT 1",
+        "duration": 0.25,
+        "connection": "pgsql",
+        "time": 1793824809.076047,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 17 LIMIT 1",
+        "duration": 0.26,
+        "connection": "pgsql",
+        "time": 1793824809.0767348,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 17 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.0774488,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 17 LIMIT 1",
+        "duration": 0.25,
+        "connection": "pgsql",
+        "time": 1793824809.0781188,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 16 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.078812,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 16 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.079485,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 16 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.0801558,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 16 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.080833,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 16 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.081506,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 15 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.082177,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 15 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.0828528,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 15 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.0835218,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 15 LIMIT 1",
+        "duration": 0.25,
+        "connection": "pgsql",
+        "time": 1793824809.084183,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 14 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.084869,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 14 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.0855389,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 14 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.0862029,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 14 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.0868819,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 14 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.087548,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 13 LIMIT 1",
+        "duration": 0.24,
+        "connection": "pgsql",
+        "time": 1793824809.088212,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      },
+      {
+        "query": "SELECT * FROM \"authors\" WHERE \"authors\".\"id\" = 13 LIMIT 1",
+        "duration": 0.27,
+        "connection": "pgsql",
+        "time": 1793824809.088891,
+        "trace": [
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->__get()",
+            "file": "/app/app/Http/Resources/BookResource.php",
+            "line": 29,
+            "isVendor": false
+          },
+          {
+            "call": "App\\Http\\Resources\\BookResource->toArray()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 147,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->toAttributes()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 158,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolveResourceData()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/JsonResource.php",
+            "line": 122,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Http\\Resources\\Json\\JsonResource->resolve()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 65,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->{closure:Illuminate\\Support\\HigherOrderCollectionProxy::__call():62}()",
+            "file": null,
+            "line": null,
+            "isVendor": false
+          },
+          {
+            "call": "array_map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Arr.php",
+            "line": 868,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Arr::map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/Collection.php",
+            "line": 844,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\Collection->map()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php",
+            "line": 62,
+            "isVendor": true
+          },
+          {
+            "call": "Illuminate\\Support\\HigherOrderCollectionProxy->__call()",
+            "file": "/app/vendor/laravel/framework/src/Illuminate/Http/Resources/Json/ResourceCollection.php",
+            "line": 103,
+            "isVendor": true
+          }
+        ],
+        "model": "App\\Models\\Author",
+        "tags": []
+      }
+    ],
+    "databaseQueriesCount": 31,
+    "databaseSlowQueries": 0,
+    "databaseSelects": 31,
+    "databaseInserts": 0,
+    "databaseUpdates": 0,
+    "databaseDeletes": 0,
+    "databaseOthers": 0,
+    "databaseDuration": 28.55999999999998,
+    "cacheQueries": [],
+    "cacheReads": 0,
+    "cacheHits": 0,
+    "cacheWrites": 0,
+    "cacheDeletes": 0,
+    "cacheTime": 0,
+    "modelsActions": [],
+    "modelsRetrieved": {
+      "App\\Models\\Book": 30,
+      "App\\Models\\Author": 30
+    },
+    "modelsCreated": [],
+    "modelsUpdated": [],
+    "modelsDeleted": [],
+    "redisCommands": [],
+    "queueJobs": [],
+    "timelineData": [
+      {
+        "description": "Controller",
+        "start": 1793824808.983744,
+        "end": 1793824809.096434,
+        "duration": 112.69021034240723,
+        "color": null,
+        "data": null
+      }
+    ],
+    "log": [],
+    "events": [],
+    "routes": [],
+    "notifications": [],
+    "emailsData": [],
+    "viewsData": [],
+    "userData": [],
+    "httpRequests": [],
+    "subrequests": [],
+    "xdebug": [],
+    "commandName": null,
+    "commandArguments": [],
+    "commandArgumentsDefaults": [],
+    "commandOptions": [],
+    "commandOptionsDefaults": [],
+    "commandExitCode": null,
+    "commandOutput": null,
+    "jobName": null,
+    "jobDescription": null,
+    "jobStatus": null,
+    "jobPayload": [],
+    "jobQueue": null,
+    "jobConnection": null,
+    "jobOptions": [],
+    "testName": null,
+    "testStatus": null,
+    "testStatusMessage": null,
+    "testAsserts": [],
+    "clientMetrics": [],
+    "webVitals": [],
+    "parent": null
+  }
+}
