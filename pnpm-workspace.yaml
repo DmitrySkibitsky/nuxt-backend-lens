@@ -6,3 +6,5 @@ packages:
 allowBuilds:
   esbuild: true
   '@parcel/watcher': true
+  # Its postinstall would install the git hooks; the root `prepare` script does that instead.
+  simple-git-hooks: false
