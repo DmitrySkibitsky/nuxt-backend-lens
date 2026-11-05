@@ -146,7 +146,13 @@ Changes go through a branch and a pull request. Two rulesets protect `main`:
 A `changes` job looks at the changed files first. When they are all documentation (`docs/**`,
 `*.md`, `LICENSE`), the jobs below are skipped and **CI result** still passes. The filter lives
 inside the workflow on purpose: a workflow that does not start would leave the required check
-pending.
+pending. A rename counts with both paths, so moving code under `docs/` still runs everything.
+
+- Jobs get a read-only token, and checkouts do not keep it.
+- Actions are pinned to commit SHAs; Dependabot (`.github/dependabot.yml`) proposes updates weekly.
+- A newer push to a pull request cancels its older run; every commit on `main` gets its own run.
+- A pull request runs its **own** `ci.yml`, so a change to the workflow can make **CI result** pass
+  on anything. Read workflow changes before merging.
 
 | Job       | Steps |
 |-----------|-------|
