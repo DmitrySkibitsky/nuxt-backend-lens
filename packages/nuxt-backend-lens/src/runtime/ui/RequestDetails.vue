@@ -22,16 +22,17 @@
           data-testid="backend-lens-triggered-by"
         >triggered by {{ formatAction(action) }} (+{{ formatMs(entry.startTime - action.time) }})</span>
         <a
-          v-if="entry.ref?.webUrl"
-          :href="entry.ref.webUrl"
+          v-if="webUrl"
+          :href="webUrl"
           target="_blank"
           rel="noopener"
-        >Open in {{ entry.ref.adapter }}</a>
+        >Open in {{ entry.ref?.adapter }}</a>
         <a
-          v-if="entry.ref"
-          :href="entry.ref.url"
+          v-if="recordUrl"
+          :href="recordUrl"
           target="_blank"
           rel="noopener"
+          data-testid="backend-lens-record-link"
         >raw record</a>
       </div>
     </header>
@@ -125,6 +126,7 @@
 import { computed, ref } from 'vue'
 import { analyzeDetails } from '../core/analysis'
 import type { RequestEntry } from '../core/types'
+import { httpUrl } from '../core/url'
 import CacheTab from './CacheTab.vue'
 import { analysisOptions, formatAction, formatBytes, formatFrame, formatMs, statusClass } from './format'
 import LogsTab from './LogsTab.vue'
@@ -145,6 +147,9 @@ const action = computed(() => actions.value.find(item => item.id === props.entry
 
 type TabId = 'queries' | 'logs' | 'cache' | 'timeline'
 const activeTab = ref<TabId>('queries')
+
+const webUrl = computed(() => httpUrl(props.entry.ref?.webUrl))
+const recordUrl = computed(() => httpUrl(props.entry.ref?.url))
 
 const details = computed(() => props.entry.details)
 const analysis = computed(() => (details.value ? analyzeDetails(details.value, analysisOptions(lens.options)) : undefined))

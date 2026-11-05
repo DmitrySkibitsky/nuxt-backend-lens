@@ -5,7 +5,7 @@ import { AdapterRegistry } from '../../src/runtime/core/registry'
 import { databaseTimeMs, toServerTimingEntry } from '../../src/runtime/core/server-timing'
 import { RequestStore } from '../../src/runtime/core/store'
 import type { BackendLensAdapter, RequestEntry } from '../../src/runtime/core/types'
-import { displayPath, fillTemplate, joinPath, matchesAny, matchesPattern, resolveOnServer } from '../../src/runtime/core/url'
+import { displayPath, fillTemplate, httpUrl, joinPath, matchesAny, matchesPattern, resolveHeaderPath, resolveOnServer } from '../../src/runtime/core/url'
 import { capturedResponse } from './helpers'
 
 describe('url helpers', () => {
@@ -13,6 +13,27 @@ describe('url helpers', () => {
     expect(resolveOnServer('/__clockwork/1', 'http://a.test/api/x')).toBe('http://a.test/__clockwork/1')
     expect(resolveOnServer('_debugbar/clockwork/1', 'http://a.test/api/x/y')).toBe('http://a.test/_debugbar/clockwork/1')
     expect(resolveOnServer('https://cdn.test/r/1', 'http://a.test/api')).toBe('https://cdn.test/r/1')
+  })
+
+  it('resolves header paths only on the response origin', () => {
+    expect(resolveHeaderPath('/__clockwork/', 'http://a.test/api')).toBe('http://a.test/__clockwork/')
+    expect(resolveHeaderPath('_debugbar/clockwork/', 'http://a.test/api/x')).toBe('http://a.test/_debugbar/clockwork/')
+    expect(resolveHeaderPath('http://a.test/cw/', 'http://a.test/api')).toBe('http://a.test/cw/')
+    expect(resolveHeaderPath('https://a.test/cw/', 'http://a.test/api')).toBeUndefined()
+    expect(resolveHeaderPath('//b.test/cw/', 'http://a.test/api')).toBeUndefined()
+    expect(resolveHeaderPath('javascript://%0Aalert(1)//', 'http://a.test/api')).toBeUndefined()
+    expect(resolveHeaderPath(null, 'http://a.test/api')).toBeUndefined()
+    expect(resolveHeaderPath('', 'http://a.test/api')).toBeUndefined()
+  })
+
+  it('accepts only http(s) URLs as links', () => {
+    expect(httpUrl('https://a.test/__clockwork/1')).toBe('https://a.test/__clockwork/1')
+    expect(httpUrl('http://a.test/x')).toBe('http://a.test/x')
+    expect(httpUrl('javascript://%0Aalert(1)')).toBeUndefined()
+    expect(httpUrl('JavaScript:alert(1)')).toBeUndefined()
+    expect(httpUrl('data:text/html,<script>alert(1)</script>')).toBeUndefined()
+    expect(httpUrl('/relative')).toBeUndefined()
+    expect(httpUrl(undefined)).toBeUndefined()
   })
 
   it('joins paths and fills templates', () => {

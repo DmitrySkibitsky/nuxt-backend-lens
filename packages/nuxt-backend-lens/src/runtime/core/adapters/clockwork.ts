@@ -14,7 +14,7 @@ import type {
   DebugTimelineEvent,
   StackFrame,
 } from '../types'
-import { fillTemplate, joinPath, resolveOnServer } from '../url'
+import { fillTemplate, joinPath, resolveHeaderPath, resolveOnServer } from '../url'
 
 export const CLOCKWORK_ADAPTER = 'clockwork'
 
@@ -36,7 +36,7 @@ export function createClockworkAdapter(options: ClockworkAdapterOptions): Backen
       if (!id) {
         return null
       }
-      const directory = response.headers.get(options.pathHeader) || options.endpoint
+      const directory = resolveHeaderPath(response.headers.get(options.pathHeader), response.url) ?? options.endpoint
       return {
         adapter: CLOCKWORK_ADAPTER,
         id,

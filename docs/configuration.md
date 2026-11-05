@@ -74,7 +74,7 @@ In markup, `data-backend-lens-action="…"` gives an element an explicit action 
 |--------------------|-------------------------------|-------------|
 | `enabled`          | `true`                        | |
 | `idHeader`         | `'x-clockwork-id'`            | Response header with the record id. |
-| `pathHeader`       | `'x-clockwork-path'`          | Response header with the record directory, absolute or relative to the server root. Clockwork sends it when installed under a sub-path; Debugbar's emulation always sends it. |
+| `pathHeader`       | `'x-clockwork-path'`          | Response header with the record directory, absolute or relative to the server root. Clockwork sends it when installed under a sub-path; Debugbar's emulation always sends it. A value off the response's origin is ignored ([adapters](adapters.md#built-in-adapters)). |
 | `endpoint`         | `'/__clockwork/'`             | Record directory when the response has no path header. |
 | `webUi`            | `'/clockwork/app'`            | "Open in clockwork" link; `{id}` is replaced with the record id; `false` hides it. |
 | `ignoreStatements` | `['Connection Established']`  | Statements dropped as not being queries (Debugbar's emulation reports the DB connect this way). |

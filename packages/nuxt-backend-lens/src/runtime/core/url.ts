@@ -1,14 +1,49 @@
+const FULL_URL = /^[a-z][a-z\d+.-]*:\/\//i
+
 /**
- * Resolves a server-provided path against the origin of the response it came with.
- * Servers send both absolute (`/__clockwork/`) and root-relative-without-slash
+ * Resolves a configured path against the origin of the response it came with.
+ * Servers use both absolute (`/__clockwork/`) and root-relative-without-slash
  * (`_debugbar/clockwork/`) forms; both mean "from the server root". Full URLs are kept as is.
  * Resolving against the *response* origin (not the page) keeps cross-origin APIs working.
  */
 export function resolveOnServer(path: string, responseUrl: string): string {
-  if (/^[a-z][a-z\d+.-]*:\/\//i.test(path)) {
+  if (FULL_URL.test(path)) {
     return path
   }
   return new URL(path.replace(/^\/?/, '/'), responseUrl).toString()
+}
+
+/**
+ * Like `resolveOnServer`, for a path a response header carries: `undefined` unless it stays on the
+ * response's origin. Any API the app calls can send such a header, and the record is fetched with
+ * the page's credentials, so a full URL, `//host` or `javascript:` must not choose the target.
+ */
+export function resolveHeaderPath(path: string | null, responseUrl: string): string | undefined {
+  if (!path) {
+    return undefined
+  }
+  try {
+    const origin = new URL(responseUrl).origin
+    const resolved = new URL(FULL_URL.test(path) ? path : path.replace(/^\/?/, '/'), responseUrl)
+    return resolved.origin === origin ? resolved.toString() : undefined
+  }
+  catch {
+    return undefined
+  }
+}
+
+/** The URL when it is http(s), for rendering as a link: adapters may be third-party code. */
+export function httpUrl(url: string | undefined): string | undefined {
+  if (!url) {
+    return undefined
+  }
+  try {
+    const { protocol } = new URL(url)
+    return protocol === 'http:' || protocol === 'https:' ? url : undefined
+  }
+  catch {
+    return undefined
+  }
 }
 
 /** Joins a directory-like path and a segment with exactly one slash. */
