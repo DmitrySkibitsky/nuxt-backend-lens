@@ -134,5 +134,10 @@ export default defineNuxtPlugin(() => {
 The built-in adapters are tested against **records captured from the demo stand**
 (`packages/nuxt-backend-lens/test/fixtures/records/`), refreshed with
 `node packages/nuxt-backend-lens/scripts/capture-fixtures.mjs --source=clockwork|debugbar`. The
-script redacts secrets before writing: environment-style names (`*KEY*`, `*SECRET*`, `*PASSWORD*`,
-`*TOKEN*`), credential headers, cookies and session data.
+script redacts secrets before writing (`scripts/redact.mjs`): environment-style names (`*KEY*`,
+`*SECRET*`, `*PASSWORD*`, `*TOKEN*`), credential headers (also as `HTTP_*` server variables), form
+fields such as `password` and `_token`, passwords in URLs, cookies and session data. It then scans
+the fixture for anything still credential-like (bcrypt hashes, bearer and Sanctum tokens, session
+cookies, `base64:` keys, `user:password@` URLs) and does not write it if something is found, nor
+when the record never appeared. `--out=DIR` writes elsewhere, to try a capture without touching
+the committed fixtures. A unit test runs the same scan over the committed fixtures.
