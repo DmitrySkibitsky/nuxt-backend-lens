@@ -132,6 +132,8 @@ export interface BackendLensOptions {
   }
   /** Backoff between record fetch attempts: the server may persist a record after responding. */
   retryDelays: number[]
+  /** A record fetch is abandoned after this many milliseconds, so a hung endpoint frees its slot. */
+  recordTimeoutMs: number
   /** Queries at or above this duration are highlighted. */
   slowQueryMs: number
   sql: SqlDisplayOptions
@@ -193,6 +195,7 @@ export const defaultOptions: BackendLensOptions = {
     concurrency: 2,
   },
   retryDelays: [0, 100, 300, 1000],
+  recordTimeoutMs: 10_000,
   slowQueryMs: 100,
   sql: {
     highlight: true,
@@ -240,6 +243,7 @@ const CONSTRAINTS: Record<string, { expected: string, check: (value: unknown) =>
   'prefetch.concurrency': { expected: 'an integer ≥ 1', check: value => isCount(value, 1) },
   'nPlusOneThreshold': { expected: 'an integer ≥ 2', check: value => isCount(value, 2) },
   'retryDelays': { expected: 'an array of durations ≥ 0', check: value => Array.isArray(value) && value.every(isDuration) },
+  'recordTimeoutMs': { expected: 'a duration > 0', check: value => isDuration(value) && (value as number) > 0 },
   'slowQueryMs': { expected: 'a duration ≥ 0', check: isDuration },
   'actions.windowMs': { expected: 'a duration ≥ 0', check: isDuration },
   'vueDevtools.color': { expected: 'a colour 0x000000–0xFFFFFF', check: value => isCount(value, 0) && (value as number) <= 0xFFFFFF },
