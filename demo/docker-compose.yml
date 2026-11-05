@@ -2,7 +2,7 @@
 #
 #   docker compose up -d                       # Octane / FrankenPHP worker mode (default)
 #   BACKEND_MODE=classic docker compose up -d  # FrankenPHP classic mode (per-request bootstrap)
-#   DEBUG_BACKEND=debugbar docker compose up -d # Laravel Debugbar's Clockwork emulation instead of Clockwork
+#   DEBUG_BACKEND=debugbar docker compose up -d # Laravel Debugbar instead of Clockwork
 #
 # Host ports come from .env (see .env.example): DEMO_PORT for the same-origin proxy (SPA, /api,
 # /sanctum, /__clockwork, /clockwork), BACKEND_PORT for direct backend access. Ports inside the
@@ -122,6 +122,7 @@ services:
       NUXT_PUBLIC_SANCTUM_BASE_URL: http://localhost:${DEMO_PORT:-18080}
       # Used by the /cross-origin page when the SPA is opened on CROSS_ORIGIN_PORT.
       NUXT_PUBLIC_CROSS_ORIGIN_API: http://localhost:${BACKEND_PORT:-18000}
+      NUXT_PUBLIC_CROSS_ORIGIN_PAGE: http://localhost:${CROSS_ORIGIN_PORT:-18081}/cross-origin
       DEMO_PORT: ${DEMO_PORT:-18080}
     # Dependencies are installed on the host (pnpm install), the container only runs the dev server.
     command: ["node_modules/.bin/nuxt", "dev", "--host", "0.0.0.0", "--port", "3000"]

@@ -80,4 +80,17 @@ class ReviewEndpointTest extends TestCase
 
         $this->assertGuest('web');
     }
+
+    public function test_login_attempts_are_rate_limited(): void
+    {
+        User::factory()->create(['email' => 'demo@example.com']);
+
+        foreach (range(1, 10) as $attempt) {
+            $this->postJson('/api/login', ['email' => 'demo@example.com', 'password' => 'wrong'])
+                ->assertUnprocessable();
+        }
+
+        $this->postJson('/api/login', ['email' => 'demo@example.com', 'password' => 'password'])
+            ->assertTooManyRequests();
+    }
 }
