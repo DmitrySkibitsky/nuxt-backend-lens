@@ -1,10 +1,14 @@
 // Colour mode sources and DevTools fonts for the lens UI. Each shell picks its source.
 
 import { type Ref, ref, watch } from 'vue'
+import { findInAncestors } from '../core/global'
+import type { ColorModeClasses } from '../core/options'
 
 export type ColorMode = 'light' | 'dark'
 
 const DARK_QUERY = '(prefers-color-scheme: dark)'
+/** The classes Nuxt DevTools' client sets on its document. */
+export const DEVTOOLS_COLOR_MODE_CLASSES: ColorModeClasses = { dark: 'dark', light: 'light' }
 
 /** Follows the system preference. Returns the mode and a stop function. */
 export function systemColorMode(view: Window = window): [Ref<ColorMode>, () => void] {
@@ -21,17 +25,21 @@ export function systemColorMode(view: Window = window): [Ref<ColorMode>, () => v
 }
 
 /**
- * Follows the colour mode of a document that marks it with a `dark` class (Nuxt DevTools' client),
- * falling back to the system preference when it carries neither `dark` nor `light`.
+ * Follows the colour mode of a document that marks it with a class (Nuxt DevTools' client, an app
+ * using @nuxtjs/color-mode), falling back to the system preference when it carries neither class.
  */
-export function documentColorMode(target: Document, fallback: Window = window): [Ref<ColorMode>, () => void] {
+export function documentColorMode(
+  target: Document,
+  classes: ColorModeClasses,
+  fallback: Window = window,
+): [Ref<ColorMode>, () => void] {
   const [system, stopSystem] = systemColorMode(fallback)
   const read = (): ColorMode => {
-    const classes = target.documentElement.classList
-    if (classes.contains('dark')) {
+    const list = target.documentElement.classList
+    if (list.contains(classes.dark)) {
       return 'dark'
     }
-    if (classes.contains('light')) {
+    if (list.contains(classes.light)) {
       return 'light'
     }
     return system.value
@@ -52,21 +60,11 @@ export function documentColorMode(target: Document, fallback: Window = window): 
 }
 
 /** The nearest ancestor document (same origin) that carries a colour-mode class, if any. */
-export function findColorModeDocument(view: Window = window): Document | undefined {
-  let current: Window = view
-  while (current.parent !== current) {
-    current = current.parent
-    try {
-      const classes = current.document.documentElement.classList
-      if (classes.contains('dark') || classes.contains('light')) {
-        return current.document
-      }
-    }
-    catch {
-      return undefined
-    }
-  }
-  return undefined
+export function findColorModeDocument(classes: ColorModeClasses, view: Window = window): Document | undefined {
+  return findInAncestors(view, (ancestor) => {
+    const list = ancestor.document.documentElement.classList
+    return list.contains(classes.dark) || list.contains(classes.light) ? ancestor.document : undefined
+  })
 }
 
 /** Font families Nuxt DevTools uses for text and code. */

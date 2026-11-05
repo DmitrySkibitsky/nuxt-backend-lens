@@ -16,7 +16,7 @@ test('debug data is read from a cross-origin API', async ({ page }) => {
   await page.getByTestId('backend-lens-badge').click()
   const panel = page.getByTestId('backend-lens-panel')
   const books = panel.getByRole('listitem').filter({ hasText: /GET\/api\/books\d/ })
-  await expect(books).toHaveAttribute('title', `${backendOrigin}/api/books`)
+  await expect(books.getByRole('button')).toHaveAttribute('title', `${backendOrigin}/api/books`)
   await expect(books.getByTestId('backend-lens-chip-n-plus-one')).toBeVisible()
   await books.click()
   await expect(panel.getByTestId('backend-lens-details')).toContainText(`via ${expectedAdapter}`)

@@ -200,7 +200,10 @@ button {
 
 .bl-list {
   overflow: auto;
+  margin: 0;
+  padding: 0;
   border-right: 1px solid var(--bl-border);
+  list-style: none;
 }
 
 .bl-list-item {

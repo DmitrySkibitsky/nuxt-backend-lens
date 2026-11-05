@@ -57,11 +57,22 @@ export interface ServerTimingAdapterOptions {
 
 export type ToolbarPosition = 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
 
+/** Classes on `<html>` that mark the page's colour mode. */
+export interface ColorModeClasses {
+  dark: string
+  light: string
+}
+
 export interface ToolbarOptions {
   enabled: boolean
   position: ToolbarPosition
   /** Open the panel on load. */
   open: boolean
+  /**
+   * The app's colour-mode classes on `<html>`, which the toolbar follows; without either it follows
+   * the system. @nuxtjs/color-mode with `classSuffix: '-mode'` sets `dark-mode` / `light-mode`.
+   */
+  colorModeClasses: ColorModeClasses
 }
 
 export interface DevtoolsTabOptions {
@@ -174,6 +185,7 @@ export const defaultOptions: BackendLensOptions = {
     enabled: true,
     position: 'bottom-right',
     open: false,
+    colorModeClasses: { dark: 'dark', light: 'light' },
   },
   devtools: {
     enabled: true,

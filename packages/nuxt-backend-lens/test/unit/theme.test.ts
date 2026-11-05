@@ -1,7 +1,10 @@
 // @vitest-environment happy-dom
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
+import { defaultOptions } from '../../src/runtime/core/options'
 import { documentColorMode, systemColorMode } from '../../src/runtime/ui/theme'
+
+const classes = defaultOptions.toolbar.colorModeClasses
 
 function mockSystem(dark: boolean) {
   const listeners = new Set<() => void>()
@@ -45,7 +48,7 @@ describe('systemColorMode', () => {
 describe('documentColorMode', () => {
   it('reads the document class, follows changes, and falls back to the system', async () => {
     const system = mockSystem(true)
-    const [mode, stop] = documentColorMode(document)
+    const [mode, stop] = documentColorMode(document, classes)
     expect(mode.value).toBe('dark') // no class: system
 
     document.documentElement.classList.add('light')
@@ -65,7 +68,7 @@ describe('documentColorMode', () => {
 
   it('follows a system change alone while the document carries no class', async () => {
     const system = mockSystem(false)
-    const [mode, stop] = documentColorMode(document)
+    const [mode, stop] = documentColorMode(document, classes)
     expect(mode.value).toBe('light')
     system.set(true)
     await flush()
@@ -76,10 +79,19 @@ describe('documentColorMode', () => {
   it('ignores system changes while the document decides', async () => {
     const system = mockSystem(false)
     document.documentElement.classList.add('light')
-    const [mode, stop] = documentColorMode(document)
+    const [mode, stop] = documentColorMode(document, classes)
     system.set(true)
     await flush()
     expect(mode.value).toBe('light')
+    stop()
+  })
+
+  it('reads the configured classes, e.g. @nuxtjs/color-mode with a class suffix', async () => {
+    mockSystem(false)
+    const [mode, stop] = documentColorMode(document, { dark: 'dark-mode', light: 'light-mode' })
+    document.documentElement.classList.add('dark-mode')
+    await flush()
+    expect(mode.value).toBe('dark')
     stop()
   })
 })

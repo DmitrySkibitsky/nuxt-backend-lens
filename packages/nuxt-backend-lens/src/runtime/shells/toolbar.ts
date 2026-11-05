@@ -1,5 +1,4 @@
-// In-page toolbar shell: mounts the lens UI as a separate Vue app inside a Shadow DOM, so the app's
-// styles and the toolbar's styles never affect each other. Loaded lazily after the app has mounted.
+// In-page toolbar shell, loaded lazily after the app has mounted. Why a Shadow DOM: docs/architecture.md.
 
 import { createApp } from 'vue'
 import { IGNORE_ATTRIBUTE } from '../core/actions'
@@ -38,9 +37,9 @@ export function mountToolbar(lens: BackendLens): () => void {
   const container = document.createElement('div')
   shadow.appendChild(container)
 
-  // The app's own colour mode when it sets a `dark` / `light` class (e.g. @nuxtjs/color-mode),
+  // The app's own colour mode when it sets one of the configured classes (e.g. @nuxtjs/color-mode),
   // otherwise the system preference.
-  const [colorMode, stopColorMode] = documentColorMode(document)
+  const [colorMode, stopColorMode] = documentColorMode(document, lens.options.toolbar.colorModeClasses)
   const [state, unsubscribe] = createUiState(lens, colorMode)
   const app = createApp(LensApp)
   app.provide(LENS_UI_STATE, state)

@@ -70,6 +70,10 @@ test('the splitter sets the request list width, also from the keyboard', async (
   const panel = await openPanel(page)
   const list = panel.locator('.bl-list')
   const before = await box(list)
+  // Announced before any drag: the current width and its limit.
+  const splitter = panel.getByTestId('backend-lens-splitter')
+  await expect(splitter).toHaveAttribute('aria-valuenow', String(Math.round(before.width)))
+  await expect(splitter).toHaveAttribute('aria-valuemax', /^\d+$/)
 
   await drag(page, panel.getByTestId('backend-lens-splitter'), 120, 0)
   const dragged = await box(list)

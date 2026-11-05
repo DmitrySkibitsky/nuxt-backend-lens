@@ -83,47 +83,58 @@
       <nav
         class="bl-tabs"
         role="tablist"
+        aria-label="Record"
       >
         <button
-          v-for="tab in tabs"
+          v-for="(tab, index) in tabs"
+          :id="`${uid}-tab-${tab.id}`"
           :key="tab.id"
           type="button"
           role="tab"
           class="bl-tab"
           :class="{ 'bl-tab-active': activeTab === tab.id }"
           :aria-selected="activeTab === tab.id"
+          :aria-controls="`${uid}-panel`"
+          :tabindex="activeTab === tab.id ? 0 : -1"
           :data-testid="`backend-lens-tab-${tab.id}`"
           @click="activeTab = tab.id"
+          @keydown="onTabKey($event, index)"
         >
           {{ tab.label }} <span class="bl-muted">{{ tab.count }}</span>
         </button>
       </nav>
 
-      <QueriesTab
-        v-if="activeTab === 'queries'"
-        :queries="details.queries"
-        :analysis="analysis"
-        :slow-query-ms="lens.options.slowQueryMs"
-        :sql-options="lens.options.sql"
-      />
-      <LogsTab
-        v-else-if="activeTab === 'logs'"
-        :logs="details.logs"
-      />
-      <CacheTab
-        v-else-if="activeTab === 'cache'"
-        :cache="details.cache"
-      />
-      <TimelineTab
-        v-else
-        :details="details"
-      />
+      <div
+        :id="`${uid}-panel`"
+        role="tabpanel"
+        :aria-labelledby="`${uid}-tab-${activeTab}`"
+      >
+        <QueriesTab
+          v-if="activeTab === 'queries'"
+          :queries="details.queries"
+          :analysis="analysis"
+          :slow-query-ms="lens.options.slowQueryMs"
+          :sql-options="lens.options.sql"
+        />
+        <LogsTab
+          v-else-if="activeTab === 'logs'"
+          :logs="details.logs"
+        />
+        <CacheTab
+          v-else-if="activeTab === 'cache'"
+          :cache="details.cache"
+        />
+        <TimelineTab
+          v-else
+          :details="details"
+        />
+      </div>
     </template>
   </article>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, useId } from 'vue'
 import { analyzeDetails } from '../core/analysis'
 import type { RequestEntry } from '../core/types'
 import { httpUrl } from '../core/url'
@@ -147,6 +158,26 @@ const action = computed(() => actions.value.find(item => item.id === props.entry
 
 type TabId = 'queries' | 'logs' | 'cache' | 'timeline'
 const activeTab = ref<TabId>('queries')
+const uid = useId()
+
+/** Arrow keys, Home and End move between tabs (WAI-ARIA tabs pattern, automatic activation). */
+function onTabKey(event: KeyboardEvent, index: number) {
+  const last = tabs.value.length - 1
+  const targets: Record<string, number> = {
+    ArrowRight: index === last ? 0 : index + 1,
+    ArrowLeft: index === 0 ? last : index - 1,
+    Home: 0,
+    End: last,
+  }
+  const next = targets[event.key]
+  if (next === undefined) {
+    return
+  }
+  event.preventDefault()
+  activeTab.value = tabs.value[next]!.id
+  const tablist = (event.currentTarget as HTMLElement).parentElement
+  void nextTick(() => tablist?.querySelectorAll<HTMLElement>('[role="tab"]')[next]?.focus())
+}
 
 const webUrl = computed(() => httpUrl(props.entry.ref?.webUrl))
 const recordUrl = computed(() => httpUrl(props.entry.ref?.url))
