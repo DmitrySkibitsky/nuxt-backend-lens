@@ -140,6 +140,10 @@ export default defineNuxtConfig({
 With `enabled: false` the client bundle contains no trace of the module. The workspace's package
 check verifies this on every CI run.
 
+A production build with the module in `modules` and no explicit `enabled` warns that every visitor
+will get the toolbar: that is usually a missing `$development`. Setting `enabled`, as above, says
+the build is meant to have it.
+
 On a shared staging server, put the backend package's authentication or a gate in front of its
 endpoints, and keep retention short.
 

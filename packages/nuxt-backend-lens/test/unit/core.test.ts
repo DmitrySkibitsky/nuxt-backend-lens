@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { resolveOptions } from '../../src/module'
+import { productionBuildWarning, resolveOptions } from '../../src/module'
 import { defaultOptions } from '../../src/runtime/core/options'
 import { AdapterRegistry } from '../../src/runtime/core/registry'
 import { databaseTimeMs, toServerTimingEntry } from '../../src/runtime/core/server-timing'
@@ -219,6 +219,20 @@ describe('request store', () => {
     expect(store.get(1)?.status).toBe(500)
     expect(store.update(99, { status: 1 })).toBeUndefined()
     expect(calls).toBe(2)
+  })
+})
+
+describe('productionBuildWarning', () => {
+  const build = { options: { dev: false } }
+
+  it('warns when a production build ships the lens by default', () => {
+    expect(productionBuildWarning({}, build)).toMatch(/production build.*\$development.*backendLens\.enabled/s)
+  })
+
+  it('stays quiet in development, while preparing types, and when enabled is set explicitly', () => {
+    expect(productionBuildWarning({}, { options: { dev: true } })).toBeUndefined()
+    expect(productionBuildWarning({}, { options: { dev: false, _prepare: true } })).toBeUndefined()
+    expect(productionBuildWarning({ enabled: true }, build)).toBeUndefined()
   })
 })
 
