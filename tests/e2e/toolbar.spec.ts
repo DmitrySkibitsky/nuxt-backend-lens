@@ -125,6 +125,31 @@ test('the sanctum login flow is captured: login, identity fetch, write', async (
   await expect(panel.getByTestId('backend-lens-queries')).toContainText(/insert into "reviews"/i)
 })
 
+test('a record path header pointing off the response origin is ignored', async ({ page }) => {
+  test.skip(process.env.DEBUG_BACKEND === 'debugbar', 'Debugbar records do not use X-Clockwork-Path')
+  const foreignRequests: string[] = []
+  await page.route('https://evil.example.test/**', (route) => {
+    foreignRequests.push(route.request().url())
+    return route.abort()
+  })
+  await page.route('**/api/stats', async (route) => {
+    const response = await route.fetch()
+    await route.fulfill({ response, headers: { ...response.headers(), 'x-clockwork-path': 'https://evil.example.test/' } })
+  })
+
+  await page.goto('/stats')
+  await expect(page.locator('main pre')).toContainText('books')
+  const panel = await openPanel(page)
+  await requestRow(panel, '/api/stats').first().click()
+
+  const details = panel.getByTestId('backend-lens-details')
+  await expect(details).toContainText('via clockwork')
+  await expect(panel.getByTestId('backend-lens-queries')).toContainText(/from "books"/i)
+  const origin = new URL(page.url()).origin
+  await expect(details.getByTestId('backend-lens-record-link')).toHaveAttribute('href', new RegExp(`^${origin}/__clockwork/`))
+  expect(foreignRequests).toEqual([])
+})
+
 test('the toolbar does not inherit or leak page styles', async ({ page }) => {
   await page.goto('/')
   const host = page.locator('#backend-lens-toolbar')

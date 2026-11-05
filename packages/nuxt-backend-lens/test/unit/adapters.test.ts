@@ -44,6 +44,28 @@ describe('clockwork adapter: detect', () => {
     expect(ref?.url).toBe('https://api.example.test/__clockwork/id1')
   })
 
+  it('keeps an absolute X-Clockwork-Path on the response origin', () => {
+    const ref = clockwork.detect(capturedResponse('https://api.example.test/v1/books', {
+      'x-clockwork-id': 'id1',
+      'x-clockwork-path': 'https://api.example.test/tools/__clockwork/',
+    }))
+    expect(ref?.url).toBe('https://api.example.test/tools/__clockwork/id1')
+  })
+
+  it.each([
+    'https://app.example.test/api/logout?',
+    '//evil.example.test/',
+    '/\\evil.example.test/',
+    'https://api.example.test:8443/__clockwork/',
+    'javascript://%0Aalert(document.cookie)//',
+  ])('falls back to the endpoint when X-Clockwork-Path %s leaves the response origin', (path) => {
+    const ref = clockwork.detect(capturedResponse('https://api.example.test/v1/books', {
+      'x-clockwork-id': 'id1',
+      'x-clockwork-path': path,
+    }))
+    expect(ref?.url).toBe('https://api.example.test/__clockwork/id1')
+  })
+
   it('honours custom header names and web UI template', () => {
     const adapter = createClockworkAdapter({
       ...defaultOptions.adapters.clockwork,

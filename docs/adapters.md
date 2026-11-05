@@ -69,6 +69,12 @@ Record URLs are resolved against the **response's** origin, so an API on another
 without configuration once CORS allows it. A relative `X-Clockwork-Path` (`_debugbar/clockwork/`)
 means "from the server root".
 
+An `X-Clockwork-Path` that leads off the response's origin (another host or port, `//host`, a
+non-http scheme) is ignored in favour of `endpoint`. Any API the app calls can send that header,
+and records are fetched with the page's credentials, so a header must not choose where they go.
+Configured paths (`endpoint`, `webUi`, `prefix`) are trusted and may be full URLs. The panel links
+only to http(s) URLs, whatever an adapter returns.
+
 ### Format differences they normalize
 
 All observed on the demo stand with Clockwork 5.3.5 and fruitcake/laravel-debugbar 4.4.5.
