@@ -132,6 +132,16 @@ describe('collector', () => {
     expect(lens!.store.entries[0]!.detailsState).toBe('loaded')
   })
 
+  it('keeps recording when runtime config carries an invalid limit', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    startLens(fakeBackend(), { maxRequests: 0, include: '/api/plain' as never, prefetch: { enabled: false } })
+    await fetch('/api/books')
+    await fetch('/api/plain')
+    expect(lens!.store.entries.map(entry => entry.path)).toEqual(['/api/books'])
+    expect(warn).toHaveBeenCalledTimes(2)
+    warn.mockRestore()
+  })
+
   it('lists plain requests only when included, and never excluded ones', async () => {
     startLens(fakeBackend(), { include: ['/api/plain'], exclude: ['/api/logs'] })
     await fetch('/api/plain')

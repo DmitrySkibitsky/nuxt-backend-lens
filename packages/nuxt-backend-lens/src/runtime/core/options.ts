@@ -223,7 +223,64 @@ export const mergeOptions = createDefu((target, key, value) => {
  * Full options from a partial input. Used by the module at build time and again in the browser:
  * runtime config may be partial (NUXT_PUBLIC_BACKEND_LENS_* overrides, or a dev server started with
  * an older module version), and missing keys must fall back to defaults instead of crashing.
+ * Invalid values fall back too, with a warning: an env variable is a string unless it parses.
  */
 export function resolveOptions(input: ModuleOptions | undefined): BackendLensOptions {
-  return mergeOptions(input ?? {}, defaultOptions) as BackendLensOptions
+  return conform(mergeOptions(input ?? {}, defaultOptions), defaultOptions, '') as BackendLensOptions
+}
+
+const TOOLBAR_POSITIONS: readonly ToolbarPosition[] = ['bottom-right', 'bottom-left', 'top-right', 'top-left']
+
+const isCount = (value: unknown, min: number) => Number.isInteger(value) && (value as number) >= min
+const isDuration = (value: unknown) => typeof value === 'number' && Number.isFinite(value) && value >= 0
+
+/** Checks stricter than "the type of the default", by option path. */
+const CONSTRAINTS: Record<string, { expected: string, check: (value: unknown) => boolean }> = {
+  'maxRequests': { expected: 'an integer ≥ 1', check: value => isCount(value, 1) },
+  'prefetch.concurrency': { expected: 'an integer ≥ 1', check: value => isCount(value, 1) },
+  'nPlusOneThreshold': { expected: 'an integer ≥ 2', check: value => isCount(value, 2) },
+  'retryDelays': { expected: 'an array of durations ≥ 0', check: value => Array.isArray(value) && value.every(isDuration) },
+  'slowQueryMs': { expected: 'a duration ≥ 0', check: isDuration },
+  'actions.windowMs': { expected: 'a duration ≥ 0', check: isDuration },
+  'vueDevtools.color': { expected: 'a colour 0x000000–0xFFFFFF', check: value => isCount(value, 0) && (value as number) <= 0xFFFFFF },
+  'toolbar.position': { expected: TOOLBAR_POSITIONS.join(' | '), check: value => TOOLBAR_POSITIONS.includes(value as ToolbarPosition) },
+  'adapters.clockwork.webUi': { expected: 'a string or false', check: value => value === false || typeof value === 'string' },
+}
+
+/** `value` checked against the shape of `fallback` (a default), key by key. Unknown keys are kept. */
+function conform(value: unknown, fallback: unknown, path: string): unknown {
+  const constraint = CONSTRAINTS[path]
+  if (constraint) {
+    return constraint.check(value) ? value : invalid(path, value, constraint.expected, fallback)
+  }
+  if (Array.isArray(fallback)) {
+    // Every array option without a constraint is a list of strings (patterns, names).
+    return Array.isArray(value) && value.every(item => typeof item === 'string')
+      ? value
+      : invalid(path, value, 'an array of strings', fallback)
+  }
+  if (isPlainObject(fallback)) {
+    if (!isPlainObject(value)) {
+      return invalid(path, value, 'an object', fallback)
+    }
+    const result: Record<string, unknown> = { ...value }
+    for (const [key, nested] of Object.entries(fallback)) {
+      result[key] = conform(value[key], nested, path ? `${path}.${key}` : key)
+    }
+    return result
+  }
+  return typeof value === typeof fallback ? value : invalid(path, value, `a ${typeof fallback}`, fallback)
+}
+
+function invalid(path: string, value: unknown, expected: string, fallback: unknown): unknown {
+  console.warn(`[backend-lens] option ${path}: expected ${expected}, got ${show(value)}; using the default ${show(fallback)}`)
+  return structuredClone(fallback)
+}
+
+function show(value: unknown): string {
+  return typeof value === 'number' || value === undefined ? String(value) : JSON.stringify(value)
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
