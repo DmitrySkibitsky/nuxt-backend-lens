@@ -11,7 +11,10 @@ const ci = Boolean(process.env.CI)
 export default defineConfig({
   testDir: 'tests/e2e',
   timeout: 30_000,
+  // One stand serves every test: files running side by side would share its cache and records.
   fullyParallel: false,
+  workers: 1,
+  globalSetup: './tests/e2e/global-setup.ts',
   // On CI a single retry absorbs a cold dev server (Vite optimizing deps on first hit); the retry
   // still keeps a trace, and a test that needs it is reported as flaky.
   retries: ci ? 1 : 0,

@@ -140,14 +140,18 @@ async function main() {
 
   cpSync(join(root, 'tests', 'package', 'fixture'), app, { recursive: true })
   cpSync(join(moduleDir, 'test', 'fixtures', 'records', 'clockwork', 'books-n-plus-one.json'), join(app, 'server', 'fixture.json'))
-  const nuxtVersion = JSON.parse(readFileSync(join(root, 'demo', 'frontend', 'package.json'), 'utf8')).dependencies.nuxt
+  // No lockfile: the tarball's integrity changes with every build. The app resolves its tree like a
+  // new consumer would, so it pins Nuxt to the version the workspace lockfile installed, and skips
+  // releases younger than a day (minimumReleaseAge, in minutes) so a freshly published, possibly
+  // compromised version never runs here unreviewed.
+  const nuxtVersion = JSON.parse(readFileSync(join(root, 'demo', 'frontend', 'node_modules', 'nuxt', 'package.json'), 'utf8')).version
   writeFileSync(join(app, 'package.json'), `${JSON.stringify({
     name: 'backend-lens-package-check',
     private: true,
     type: 'module',
     dependencies: { 'nuxt': nuxtVersion, 'nuxt-backend-lens': `file:../${tarball}` },
   }, null, 2)}\n`)
-  writeFileSync(join(app, 'pnpm-workspace.yaml'), 'packages: []\nallowBuilds:\n  esbuild: true\n  \'@parcel/watcher\': true\n')
+  writeFileSync(join(app, 'pnpm-workspace.yaml'), 'packages: []\nminimumReleaseAge: 1440\nallowBuilds:\n  esbuild: true\n  \'@parcel/watcher\': true\n')
   run('pnpm', ['install', '--prefer-offline'], { cwd: app })
 
   // 1. Enabled build works for real.

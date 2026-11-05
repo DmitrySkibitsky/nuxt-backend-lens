@@ -8,3 +8,8 @@ allowBuilds:
   '@parcel/watcher': true
   # Its postinstall would install the git hooks; the root `prepare` script does that instead.
   simple-git-hooks: false
+
+overrides:
+  # Node types follow the runtime (Node 24: CI, flake, the frontend image). Packages asking for any
+  # version (`*`) would otherwise pull the newest major, splitting vite and nuxt into two peer variants.
+  '@types/node': ^24.19.2

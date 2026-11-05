@@ -57,9 +57,6 @@ test('requests made before a Vue DevTools client connects are replayed onto its 
     .filter(layer => layer.id === 'backend-lens')
     .map(layer => layer.label))).toEqual(['Backend requests'])
   await expect.poll(async () => (await booksEvents()).length).toBe(2)
-  // Give a duplicate replay the chance to show up: there must be none.
-  await page.waitForTimeout(500)
-  expect(await booksEvents()).toHaveLength(2)
   const [start, end] = await booksEvents()
   expect(start!.groupId).toBe(end!.groupId)
   expect(start!.subtitle).toBe('click “N+1: books”')
@@ -70,4 +67,6 @@ test('requests made before a Vue DevTools client connects are replayed onto its 
   await page.getByRole('link', { name: 'Slow query' }).click()
   await expect.poll(() => page.evaluate(() => (window as KitWindow).__lensTimelineEvents
     .filter(item => item.layerId === 'backend-lens' && item.event.title === 'GET /api/slow').length)).toBe(2)
+  // That request made the emitter sync again: a duplicate replay of the books events would show now.
+  expect(await booksEvents()).toHaveLength(2)
 })
