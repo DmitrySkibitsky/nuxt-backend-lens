@@ -10,12 +10,22 @@ import { documentColorMode } from '../ui/theme'
 import styles from '../ui/styles.css?inline'
 
 const HOST_ID = 'backend-lens-toolbar'
+// On the host element, not in module state: a re-run plugin may load another copy of this module.
+const UNMOUNT = Symbol.for('backend-lens.toolbar.unmount')
+
+type ToolbarHost = HTMLElement & { [UNMOUNT]?: () => void }
 
 /** Mounts the toolbar; returns an unmount function. Replaces a previously mounted toolbar. */
 export function mountToolbar(lens: BackendLens): () => void {
-  document.getElementById(HOST_ID)?.remove()
+  const previous = document.getElementById(HOST_ID) as ToolbarHost | null
+  if (previous?.[UNMOUNT]) {
+    previous[UNMOUNT]()
+  }
+  else {
+    previous?.remove()
+  }
 
-  const host = document.createElement('div')
+  const host: ToolbarHost = document.createElement('div')
   host.id = HOST_ID
   // Clicks on the toolbar are not user actions of the app.
   host.setAttribute(IGNORE_ATTRIBUTE, '')
@@ -36,10 +46,16 @@ export function mountToolbar(lens: BackendLens): () => void {
   app.provide(LENS_UI_STATE, state)
   app.mount(container)
 
-  return () => {
+  const unmount = () => {
+    if (host[UNMOUNT] !== unmount) {
+      return
+    }
+    host[UNMOUNT] = undefined
     stopColorMode()
     unsubscribe()
     app.unmount()
     host.remove()
   }
+  host[UNMOUNT] = unmount
+  return unmount
 }

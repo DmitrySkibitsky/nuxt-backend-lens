@@ -23,7 +23,7 @@ export default defineNuxtConfig({
 
 | Option              | Default                                    | Description |
 |---------------------|--------------------------------------------|-------------|
-| `enabled`           | `true`                                     | Master switch, applied at build time. With `false` the module adds no code at all. Prefer adding the module under `$development`, or switch it with an env variable for staging builds. |
+| `enabled`           | `true`                                     | Master switch, applied at build time. With `false` the module adds no code at all. A build that has it can still be turned off at runtime with `NUXT_PUBLIC_BACKEND_LENS_ENABLED=false`. Prefer adding the module under `$development`, or switch it with an env variable for staging builds. |
 | `include`           | `[]`                                       | Also list requests **without** debug data (status and duration only). Globs over the path (`/api/**`) or the full URL (`https://api.example.com/**`). Requests an adapter detects are always listed. |
 | `exclude`           | `[]`                                       | Never list these, even with debug data. Same syntax. |
 | `adapterOrder`      | `['debugbar', 'clockwork', 'server-timing']` | When several adapters detect the same response, the first wins. Debugbar's Clockwork emulation sends both ids; the native Debugbar reader comes first because it is complete and Octane-safe. |

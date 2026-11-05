@@ -209,6 +209,49 @@ describe('collector', () => {
     expect(lens!.store.entries).toHaveLength(1)
   })
 
+  it('stops a replaced lens even when something wrapped its fetch since (HMR)', async () => {
+    const backend = fakeBackend()
+    const first = startLens(backend)
+    const patched = window.fetch
+    // An error tracker or APM agent wrapping fetch after the lens.
+    window.fetch = ((...args: Parameters<typeof fetch>) => patched(...args)) as typeof fetch
+    first.destroy()
+    lens = createBackendLens(resolveOptions({ retryDelays: [0] }), { window, observeServerTiming: () => () => {} })
+
+    await fetch('/api/books')
+    await settle()
+    expect(first.store.entries).toHaveLength(0)
+    expect(lens.store.entries).toHaveLength(1)
+    expect(backend.calls.filter(call => call.startsWith('/__clockwork/'))).toHaveLength(1)
+  })
+
+  it('records an XHR once when a second send() throws', () => {
+    const realSend = XMLHttpRequest.prototype.send
+    let sends = 0
+    XMLHttpRequest.prototype.send = vi.fn(() => {
+      if (sends++ > 0) {
+        throw new DOMException('already sent', 'InvalidStateError')
+      }
+    })
+    try {
+      startLens(fakeBackend(), { prefetch: { enabled: false } })
+      const xhr = new XMLHttpRequest()
+      Object.defineProperty(xhr, 'status', { value: 200 })
+      Object.defineProperty(xhr, 'responseURL', { value: `${ORIGIN}/api/xhr` })
+      vi.spyOn(xhr, 'getResponseHeader').mockImplementation(name => (name === 'x-clockwork-id' ? 'xhr-1' : null))
+      xhr.open('GET', '/api/xhr')
+      xhr.send()
+      expect(() => xhr.send()).toThrow('already sent')
+      xhr.dispatchEvent(new Event('loadend'))
+      expect(lens!.store.entries).toHaveLength(1)
+    }
+    finally {
+      lens?.destroy()
+      lens = undefined
+      XMLHttpRequest.prototype.send = realSend
+    }
+  })
+
   it('never breaks the application when a listener fails', async () => {
     const backend = fakeBackend()
     startLens(backend)

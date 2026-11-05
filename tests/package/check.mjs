@@ -2,7 +2,8 @@
 // Packaged-consumption check: builds and packs nuxt-backend-lens, installs the tarball into a clean
 // Nuxt app outside the workspace, then
 //   1. BACKEND_LENS=1 production build → the toolbar works in a browser against a replayed record;
-//   2. BACKEND_LENS=0 production build → no trace of the module in the client bundle.
+//   2. the same build with NUXT_PUBLIC_BACKEND_LENS_ENABLED=false → nothing patched or mounted;
+//   3. BACKEND_LENS=0 production build → no trace of the module in the client bundle.
 // Afterwards the module's stub build is restored, so the playground keeps working.
 //
 // Usage: node tests/package/check.mjs [--keep]   (--keep leaves tests/package/.work in place)
@@ -69,6 +70,38 @@ function check(condition, message) {
   console.log(`  ✓ ${message}`)
 }
 
+async function withServer(env, callback) {
+  const port = await freePort()
+  const server = spawn('node', [join(app, '.output', 'server', 'index.mjs')], {
+    cwd: app,
+    env: { ...process.env, ...env, PORT: String(port), HOST: '127.0.0.1' },
+    stdio: 'inherit',
+  })
+  try {
+    await waitForHttp(`http://127.0.0.1:${port}/`)
+    await callback(port)
+  }
+  finally {
+    server.kill()
+  }
+}
+
+/** The plugin runs before the app mounts, so a native fetch on a loaded page means it bailed out. */
+async function disabledBrowserCheck(port) {
+  const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined })
+  try {
+    const page = await browser.newPage()
+    await page.goto(`http://127.0.0.1:${port}/`)
+    await page.getByTestId('status').getByText('loaded').waitFor()
+    const nativeFetch = await page.evaluate(() => Function.prototype.toString.call(window.fetch).includes('[native code]'))
+    check(nativeFetch, 'runtime-disabled build: fetch is not patched')
+    check(await page.locator('#backend-lens-toolbar').count() === 0, 'runtime-disabled build: no toolbar')
+  }
+  finally {
+    await browser.close()
+  }
+}
+
 async function browserCheck(port) {
   const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined })
   try {
@@ -119,22 +152,15 @@ async function main() {
 
   // 1. Enabled build works for real.
   run('pnpm', ['exec', 'nuxt', 'build'], { cwd: app, env: { ...process.env, BACKEND_LENS: '1' } })
-  check(clientBundle().includes('__BACKEND_LENS__'), 'enabled build: the module is in the client bundle')
-  const port = await freePort()
-  const server = spawn('node', [join(app, '.output', 'server', 'index.mjs')], {
-    cwd: app,
-    env: { ...process.env, PORT: String(port), HOST: '127.0.0.1' },
-    stdio: 'inherit',
-  })
-  try {
-    await waitForHttp(`http://127.0.0.1:${port}/`)
-    await browserCheck(port)
-  }
-  finally {
-    server.kill()
-  }
+  const enabledBundle = clientBundle()
+  check(enabledBundle.includes('backend-lens-toolbar'), 'enabled build: the module is in the client bundle')
+  check(!enabledBundle.includes('__BACKEND_LENS__'), 'enabled build: the lens is not published on window')
+  await withServer({}, browserCheck)
 
-  // 2. Disabled build carries nothing.
+  // 2. The same build, turned off through runtime config.
+  await withServer({ NUXT_PUBLIC_BACKEND_LENS_ENABLED: 'false' }, disabledBrowserCheck)
+
+  // 3. Disabled build carries nothing.
   run('pnpm', ['exec', 'nuxt', 'build'], { cwd: app, env: { ...process.env, BACKEND_LENS: '0' } })
   const bundle = clientBundle()
   check(!bundle.includes('__BACKEND_LENS__') && !bundle.includes('backend-lens'), 'disabled build: no module code in the client bundle')

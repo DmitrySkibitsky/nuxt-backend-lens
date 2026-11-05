@@ -5,7 +5,7 @@ import { type ActionTarget, attributeToAction, trackActions } from './actions'
 import { createClockworkAdapter } from './adapters/clockwork'
 import { createDebugbarAdapter } from './adapters/debugbar'
 import { createServerTimingAdapter } from './adapters/server-timing'
-import { installInterceptor, type InterceptorHandle } from './interceptor'
+import { installInterceptor } from './interceptor'
 import type { BackendLensOptions } from './options'
 import { AdapterRegistry } from './registry'
 import { observeServerTiming, type ServerTimingEntry } from './server-timing'
@@ -64,12 +64,15 @@ export function createBackendLens(options: BackendLensOptions, environment: Back
   const prefetchQueue: number[] = []
   let activePrefetches = 0
 
-  let interceptor: InterceptorHandle | undefined
-  const fetchRecord = (ref: RecordRef) => (interceptor?.originalFetch ?? fetch)(ref.url, {
-    credentials: 'include',
-    headers: { Accept: 'application/json' },
-    ...ref.init,
-  })
+  // `interceptor` is installed below, once the handlers exist; records load only after that.
+  function fetchRecord(ref: RecordRef): Promise<Response> {
+    const { originalFetch } = interceptor
+    return originalFetch(ref.url, {
+      credentials: 'include',
+      headers: { Accept: 'application/json' },
+      ...ref.init,
+    })
+  }
 
   function attachTiming(entry: RequestEntry, timing: ServerTimingEntry): void {
     store.update(entry.key, { serverTiming: timing.metrics })
@@ -195,7 +198,7 @@ export function createBackendLens(options: BackendLensOptions, environment: Back
     return promise
   }
 
-  interceptor = installInterceptor(environment.window, onResponse)
+  const interceptor = installInterceptor(environment.window, onResponse)
   const stopTiming = (environment.observeServerTiming ?? observeServerTiming)(onTiming)
   const { document } = environment.window
   const stopActions = options.actions.enabled && document
@@ -228,10 +231,10 @@ export function createBackendLens(options: BackendLensOptions, environment: Back
       store.clear()
     },
     destroy() {
+      prefetchQueue.length = 0
       stopActions()
       stopTiming()
-      interceptor?.restore()
-      interceptor = undefined
+      interceptor.restore()
     },
   }
 }

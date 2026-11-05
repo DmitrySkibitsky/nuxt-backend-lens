@@ -9,6 +9,7 @@ export type ResponseListener = (response: CapturedResponse) => void
 export interface InterceptorHandle {
   /** The unpatched fetch: the lens loads records with it, so its own requests are never captured. */
   originalFetch: typeof fetch
+  /** Stops recording for good: undoes the patches, or makes them pass calls through when wrapped. */
   restore(): void
 }
 
@@ -24,7 +25,6 @@ const INSTALLED = Symbol.for('backend-lens.interceptor')
 interface XhrMeta {
   method: string
   url: string
-  startTime: number
 }
 
 const xhrMeta = new WeakMap<XMLHttpRequest, XhrMeta>()
@@ -47,8 +47,14 @@ export function installInterceptor(target: PatchableWindow, listener: ResponseLi
 
   const originalFetch = target.fetch
   const now = () => target.performance.now()
+  // A patch something else has wrapped cannot be taken out of the chain: after restore() it only
+  // passes calls through, so a replaced lens stops recording.
+  let restored = false
 
   const patchedFetch: typeof fetch = async function (input, init) {
+    if (restored) {
+      return originalFetch.call(target as unknown as typeof globalThis, input, init)
+    }
     const startTime = now()
     const method = (init?.method ?? (isRequest(input) ? input.method : 'GET')).toUpperCase()
     const requestUrl = absoluteUrl(isRequest(input) ? input.url : String(input), target.location.href)
@@ -70,30 +76,40 @@ export function installInterceptor(target: PatchableWindow, listener: ResponseLi
   const originalSend = xhrPrototype.send
 
   const patchedOpen = function (this: XMLHttpRequest, method: string, url: string | URL, ...rest: unknown[]) {
-    xhrMeta.set(this, { method: method.toUpperCase(), url: absoluteUrl(String(url), target.location.href), startTime: 0 })
+    xhrMeta.set(this, { method: method.toUpperCase(), url: absoluteUrl(String(url), target.location.href) })
     return (originalOpen as (...args: unknown[]) => void).call(this, method, url, ...rest)
   } as typeof xhrPrototype.open
 
   const patchedSend = function (this: XMLHttpRequest, body?: Parameters<XMLHttpRequest['send']>[0]) {
     const meta = xhrMeta.get(this)
-    if (meta) {
-      meta.startTime = now()
-      this.addEventListener('loadend', () => {
-        if (this.status === 0) {
-          return
-        }
-        notify({
-          url: this.responseURL || meta.url,
-          method: meta.method,
-          status: this.status,
-          headers: xhrHeaders(this),
-          startTime: meta.startTime,
-          endTime: now(),
-          initiator: 'xhr',
-        })
-      }, { once: true })
+    if (!meta || restored) {
+      return originalSend.call(this, body)
     }
-    return originalSend.call(this, body)
+    const startTime = now()
+    const onLoadEnd = () => {
+      if (this.status === 0 || restored) {
+        return
+      }
+      notify({
+        url: this.responseURL || meta.url,
+        method: meta.method,
+        status: this.status,
+        headers: xhrHeaders(this),
+        startTime,
+        endTime: now(),
+        initiator: 'xhr',
+      })
+    }
+    // Before send(): a synchronous XHR fires loadend inside it.
+    this.addEventListener('loadend', onLoadEnd, { once: true })
+    try {
+      return originalSend.call(this, body)
+    }
+    catch (error) {
+      // Not sent (e.g. send() on a request in flight): that request's own listener reports it.
+      this.removeEventListener('loadend', onLoadEnd)
+      throw error
+    }
   }
 
   target.fetch = patchedFetch
@@ -103,6 +119,7 @@ export function installInterceptor(target: PatchableWindow, listener: ResponseLi
   const handle: InterceptorHandle = {
     originalFetch,
     restore() {
+      restored = true
       // Only undo our own patches: something may have wrapped them since.
       if (target.fetch === patchedFetch) {
         target.fetch = originalFetch
