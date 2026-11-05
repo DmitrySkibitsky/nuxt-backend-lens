@@ -3,17 +3,23 @@
 // Each fixture holds the response headers the adapters detect from and the raw record they parse,
 // so adapter tests run against actual vendor output instead of hand-written guesses.
 //
-//   DEBUG_BACKEND=clockwork docker compose up -d   (in demo/)  →  node scripts/capture-fixtures.mjs --source=clockwork
-//   DEBUG_BACKEND=debugbar  docker compose up -d   (in demo/)  →  node scripts/capture-fixtures.mjs --source=debugbar
+//   make restart BACKEND=clockwork  →  node scripts/capture-fixtures.mjs --source=clockwork
+//   make restart BACKEND=debugbar   →  node scripts/capture-fixtures.mjs --source=debugbar
 //
-// Options: --base=http://localhost:$BACKEND_PORT (default port 18000)
+// Options: --base=http://localhost:$BACKEND_PORT (default port 18000), --out=DIR (default: the
+// fixtures directory of the source).
 //
-// Records are redacted before they are written: Debugbar's request collector dumps the server
-// environment (it masks *PASSWORD* but not APP_KEY), and both packages keep cookies and session data.
+// Records are redacted before they are written (scripts/redact.mjs): Debugbar's request collector
+// dumps the server environment, and both packages keep cookies and session data. A fixture that
+// still looks like it holds a credential, or whose record never appeared, is not written.
+// Header names and record paths are the module's defaults, read from its source (Node strips types).
 
 import { mkdir, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { defaultOptions } from '../src/runtime/core/options.ts'
+import { fillTemplate, joinPath, resolveHeaderPath, resolveOnServer } from '../src/runtime/core/url.ts'
+import { findLeaks, redact } from './redact.mjs'
 
 const args = Object.fromEntries(process.argv.slice(2).map((arg) => {
   const [key, value] = arg.replace(/^--/, '').split('=')
@@ -33,58 +39,45 @@ const scenarios = {
   'boom': '/api/boom',
 }
 
-const recordUrl = {
-  clockwork(headers) {
-    const id = headers.get('x-clockwork-id')
-    const directory = (headers.get('x-clockwork-path') || '/__clockwork/').replace(/^\/?/, '/').replace(/\/?$/, '/')
-    return id && new URL(`${directory}${id}`, base).toString()
+const { clockwork, debugbar, serverTiming } = defaultOptions.adapters
+// The same URLs the adapters build (core/adapters/*.ts), without importing them: their extensionless
+// imports need a bundler.
+const sources = {
+  clockwork: {
+    headers: [clockwork.idHeader, clockwork.pathHeader],
+    recordUrl(response) {
+      const id = response.headers.get(clockwork.idHeader)
+      const directory = resolveHeaderPath(response.headers.get(clockwork.pathHeader), response.url) ?? clockwork.endpoint
+      return id && resolveOnServer(joinPath(directory, encodeURIComponent(id)), response.url)
+    },
   },
-  debugbar(headers) {
-    const id = headers.get('phpdebugbar-id')
-    return id && new URL(`/_debugbar/open?op=get&id=${encodeURIComponent(id)}`, base).toString()
+  debugbar: {
+    headers: [debugbar.idHeader],
+    recordUrl(response) {
+      const id = response.headers.get(debugbar.idHeader)
+      return id && resolveOnServer(joinPath(debugbar.prefix, fillTemplate(debugbar.openPath, id)), response.url)
+    },
   },
 }
 
-if (!recordUrl[source]) {
-  console.error(`--source must be one of: ${Object.keys(recordUrl).join(', ')}`)
+const selected = sources[source]
+if (!selected) {
+  console.error(`--source must be one of: ${Object.keys(sources).join(', ')}`)
   process.exit(1)
 }
+const keptHeaders = new Set([...selected.headers, serverTiming.header].map(name => name.toLowerCase()))
 
-const outDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'test', 'fixtures', 'records', source)
+const outDir = args.out ?? join(dirname(fileURLToPath(import.meta.url)), '..', 'test', 'fixtures', 'records', source)
 await mkdir(outDir, { recursive: true })
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const REDACTED = '[redacted]'
-// Environment-style names (APP_KEY, AWS_SECRET_ACCESS_KEY, …) and credential-bearing headers.
-const SECRET_ENV_NAME = /^[A-Z0-9_]*(?:KEY|SECRET|PASSWORD|TOKEN|CREDENTIAL)[A-Z0-9_]*$/
-const SECRET_FIELD = /^(?:cookie|set-cookie|authorization|x-xsrf-token|x-csrf-token|php_auth_pw)$/i
-// Whole collectors / fields that hold cookies or session contents.
-const SECRET_CONTAINER = /^(?:cookies|sessionData|request_cookies|response_cookies|session_attributes)$/
-
-/** Deep copy with secrets replaced. Cache keys and other lowercase `key` fields are left alone. */
-function redact(value, name = '') {
-  if (SECRET_CONTAINER.test(name) && value && typeof value === 'object') {
-    return REDACTED
-  }
-  if (Array.isArray(value)) {
-    return value.map(item => redact(item, name))
-  }
-  if (value && typeof value === 'object') {
-    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, redact(item, key)]))
-  }
-  if (typeof value === 'string' && (SECRET_ENV_NAME.test(name) || SECRET_FIELD.test(name) || value.startsWith('base64:'))) {
-    return REDACTED
-  }
-  return value
-}
-
 for (const [name, path] of Object.entries(scenarios)) {
   const response = await fetch(new URL(path, base), { headers: { Accept: 'application/json' } })
   await response.arrayBuffer()
-  const url = recordUrl[source](response.headers)
+  const url = selected.recordUrl(response)
   if (!url) {
-    console.error(`${name}: response carries no ${source} id`)
+    console.error(`${source}/${name}: the response carries no ${source} id; fixture left as it was`)
     process.exitCode = 1
     continue
   }
@@ -98,11 +91,20 @@ for (const [name, path] of Object.entries(scenarios)) {
       break
     }
   }
+  if (record === undefined) {
+    console.error(`${source}/${name}: no record at ${url}; fixture left as it was`)
+    process.exitCode = 1
+    continue
+  }
 
-  const headers = Object.fromEntries(
-    [...response.headers].filter(([key]) => /^(?:x-clockwork-|phpdebugbar-|server-timing$)/i.test(key)),
-  )
+  const headers = Object.fromEntries([...response.headers].filter(([key]) => keptHeaders.has(key.toLowerCase())))
   const fixture = { request: { method: 'GET', path }, response: { status: response.status, headers }, record: redact(record) }
+  const leaks = findLeaks(fixture)
+  if (leaks.length) {
+    console.error(`${source}/${name}: possible secrets after redaction; fixture left as it was:\n  ${leaks.join('\n  ')}`)
+    process.exitCode = 1
+    continue
+  }
   await writeFile(join(outDir, `${name}.json`), `${JSON.stringify(fixture, null, 2)}\n`)
-  console.log(`${source}/${name}: HTTP ${response.status}, record ${record ? 'ok' : 'MISSING'}`)
+  console.log(`${source}/${name}: HTTP ${response.status}, record ok`)
 }

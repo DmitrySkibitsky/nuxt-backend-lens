@@ -52,7 +52,8 @@ allows nor denies, and an existing `node_modules` hides it.
 ## Tests
 
 - Parsing changes need unit tests on real captured records (`test/fixtures/records`, refreshed by
-  `scripts/capture-fixtures.mjs`, which redacts `APP_KEY`).
+  `scripts/capture-fixtures.mjs`, which redacts secrets and refuses to write a fixture that still
+  looks like it holds one).
 - UI or wire changes need an e2e test (`tests/e2e`).
 - A test for a bug should fail without the fix; say in the pull request that you checked.
 
