@@ -72,3 +72,8 @@ Every target is a thin alias over a script (`pnpm …`, `demo/bin/*`, `docker co
 them also work without make. `.github/workflows/ci.yml` runs the same checks: the module job, the
 package check, and the stand as a matrix `{octane, clockwork}`, `{octane, debugbar}`,
 `{classic, clockwork}`.
+
+## Contributing
+
+Branches, commits, the definition of done and the pull request template:
+[CONTRIBUTING.md](CONTRIBUTING.md).
