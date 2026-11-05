@@ -1,4 +1,4 @@
-import { addImports, addPlugin, createResolver, defineNuxtModule, extendViteConfig } from '@nuxt/kit'
+import { addImports, addPlugin, createResolver, defineNuxtModule, extendViteConfig, useLogger } from '@nuxt/kit'
 import { resolveModulePath } from 'exsolve'
 import { setupDevtoolsTab } from './devtools'
 import { type ModuleOptions, mergeOptions, resolveOptions } from './runtime/core/options'
@@ -29,6 +29,20 @@ export function clientDependencyIncludes(rootDir: string): string[] {
   return CLIENT_DEPENDENCIES.filter(resolvable)
 }
 
+/**
+ * The warning for a production build that ships the lens only because `enabled` defaults to true:
+ * the module was added to `modules` instead of `$development`. Setting `enabled` explicitly (a
+ * staging switch) silences it. `undefined` when there is nothing to warn about.
+ */
+export function productionBuildWarning(input: ModuleOptions, nuxt: { options: { dev: boolean, _prepare?: boolean } }): string | undefined {
+  if (nuxt.options.dev || nuxt.options._prepare || input.enabled !== undefined) {
+    return undefined
+  }
+  return 'nuxt-backend-lens is in this production build: every visitor gets the toolbar, and fetch and '
+    + 'XMLHttpRequest are patched. Add the module under `$development`, or set `backendLens.enabled` '
+    + 'explicitly (e.g. from an env variable for a staging build) to keep it and silence this warning.'
+}
+
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'nuxt-backend-lens',
@@ -42,6 +56,10 @@ export default defineNuxtModule<ModuleOptions>({
     const options = resolveOptions(input)
     if (!options.enabled) {
       return
+    }
+    const warning = productionBuildWarning(input, nuxt)
+    if (warning) {
+      useLogger('nuxt-backend-lens').warn(warning)
     }
 
     const resolver = createResolver(import.meta.url)
