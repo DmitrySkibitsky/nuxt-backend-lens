@@ -1,3 +1,4 @@
+import type { BackendLensOptions } from '../core/options'
 import { databaseTimeMs } from '../core/server-timing'
 import type { RequestEntry } from '../core/types'
 
@@ -28,8 +29,8 @@ export function queryCount(entry: RequestEntry): number | undefined {
 }
 
 /** DB time from the record, or from Server-Timing while the record is not loaded yet. */
-export function databaseMs(entry: RequestEntry): number | undefined {
-  return entry.details?.queriesDurationMs ?? databaseTimeMs(entry.serverTiming)
+export function databaseMs(entry: RequestEntry, options: BackendLensOptions): number | undefined {
+  return entry.details?.queriesDurationMs ?? databaseTimeMs(entry.serverTiming, options.adapters.serverTiming.databaseMetrics)
 }
 
 export function statusClass(status: number): string {

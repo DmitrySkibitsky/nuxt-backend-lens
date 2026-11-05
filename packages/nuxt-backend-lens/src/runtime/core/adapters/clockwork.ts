@@ -18,12 +18,12 @@ import { fillTemplate, joinPath, resolveHeaderPath, resolveOnServer } from '../u
 
 export const CLOCKWORK_ADAPTER = 'clockwork'
 
-const CACHE_TYPES: Record<string, DebugCacheEventType> = {
-  hit: 'hit',
-  miss: 'miss',
-  write: 'write',
-  delete: 'delete',
-}
+const CACHE_TYPES = new Map<string, DebugCacheEventType>([
+  ['hit', 'hit'],
+  ['miss', 'miss'],
+  ['write', 'write'],
+  ['delete', 'delete'],
+])
 
 export function createClockworkAdapter(options: ClockworkAdapterOptions): BackendLensAdapter {
   const ignoredStatements = new Set(options.ignoreStatements)
@@ -142,7 +142,7 @@ function stripTypeMarkers(value: unknown): unknown {
 
 function parseCacheEvent(event: Record<string, unknown>): DebugCacheEvent {
   return {
-    type: CACHE_TYPES[String(event.type)] ?? 'other',
+    type: CACHE_TYPES.get(String(event.type)) ?? 'other',
     key: String(event.key ?? ''),
     durationMs: toNumber(event.duration),
   }

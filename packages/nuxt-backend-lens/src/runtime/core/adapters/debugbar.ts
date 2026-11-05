@@ -20,12 +20,12 @@ import { fillTemplate, joinPath, resolveOnServer } from '../url'
 export const DEBUGBAR_ADAPTER = 'debugbar'
 
 /** Cache measure labels are `"<event>\t<key>"`. */
-const CACHE_TYPES: Record<string, DebugCacheEventType> = {
-  hit: 'hit',
-  missed: 'miss',
-  written: 'write',
-  forgotten: 'delete',
-}
+const CACHE_TYPES = new Map<string, DebugCacheEventType>([
+  ['hit', 'hit'],
+  ['missed', 'miss'],
+  ['written', 'write'],
+  ['forgotten', 'delete'],
+])
 
 /** Log collector messages are formatted as `[12:34:56] LOG.info: text {context}`. */
 const LOG_PREFIX = /^\[\d{2}:\d{2}:\d{2}\] LOG\.\w+: /
@@ -180,7 +180,7 @@ function parseCacheMeasure(measure: Record<string, unknown>): DebugCacheEvent {
   const [event = '', ...keyParts] = label.split('\t')
   const params = isRecord(measure.params) ? measure.params : {}
   return {
-    type: CACHE_TYPES[event] ?? 'other',
+    type: CACHE_TYPES.get(event) ?? 'other',
     key: asString(params.key) ?? keyParts.join('\t'),
     durationMs: secondsToMs(measure.duration),
   }

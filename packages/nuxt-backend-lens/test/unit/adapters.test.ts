@@ -202,4 +202,16 @@ describe('clockwork adapter: vendor quirks', () => {
     expect(clockwork.parse(null, ref)).toMatchObject({ id: 'x', queries: [], logs: [], cache: [] })
     expect(debugbar.parse('nonsense', { ...ref, adapter: 'debugbar' })).toMatchObject({ id: 'x', queries: [] })
   })
+
+  it('maps unknown cache event names, Object.prototype keys included, to other', () => {
+    const ref = clockwork.detect(capturedResponse(`${FIXTURE_ORIGIN}/api`, { 'x-clockwork-id': 'x' }))!
+    const names = ['constructor', 'toString', '__proto__', 'flushed']
+    const clockworkTypes = clockwork.parse({ cacheQueries: names.map(type => ({ type, key: 'k' })) }, ref).cache.map(event => event.type)
+    const debugbarTypes = debugbar
+      .parse({ cache: { measures: names.map(name => ({ label: `${name}\tk` })) } }, { ...ref, adapter: 'debugbar' })
+      .cache
+      .map(event => event.type)
+    expect(clockworkTypes).toEqual(['other', 'other', 'other', 'other'])
+    expect(debugbarTypes).toEqual(['other', 'other', 'other', 'other'])
+  })
 })

@@ -42,6 +42,12 @@ export class RequestStore {
     this.navigationItems = exists
       ? this.navigationItems.map(item => (item.id === navigation.id ? navigation : item))
       : [...this.navigationItems, navigation]
+    // Navigations without requests would pile up on a page that makes none: keep the ones requests
+    // refer to, and the new one.
+    if (!exists && this.navigationItems.length > this.limit) {
+      const referenced = new Set(this.items.map(entry => entry.navigationId))
+      this.navigationItems = this.navigationItems.filter(item => item.id === navigation.id || referenced.has(item.id))
+    }
     this.emit()
   }
 

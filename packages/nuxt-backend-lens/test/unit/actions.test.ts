@@ -39,6 +39,17 @@ describe('describeElement', () => {
     expect(describeElement(body.querySelector('#body'))).toBe('textarea body')
   })
 
+  it('never reads the text of an editable region', () => {
+    const body = html(`
+      <div id="editor" contenteditable="true">private notes</div>
+      <div contenteditable><p id="paragraph">more private notes</p></div>
+      <div contenteditable="false"><span id="static">Static text</span></div>
+    `)
+    expect(describeElement(body.querySelector('#editor'))).toBe('div#editor')
+    expect(describeElement(body.querySelector('#paragraph'))).toBe('p#paragraph')
+    expect(describeElement(body.querySelector('#static'))).toBe('Static text')
+  })
+
   it('clips long labels and falls back to tag and id', () => {
     const body = html(`<button id="long">${'word '.repeat(40)}</button><div id="empty"></div>`)
     const label = describeElement(body.querySelector('#long'))

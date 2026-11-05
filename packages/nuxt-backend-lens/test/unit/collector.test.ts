@@ -232,6 +232,14 @@ describe('collector', () => {
     expect(lens!.store.entries[1]!.serverTiming).toEqual([{ name: 'db', durationMs: 9 }])
   })
 
+  it('reads method and URL from a Request built in another realm', async () => {
+    startLens(fakeBackend(), { prefetch: { enabled: false } })
+    // Another realm's Request fails `instanceof Request` here; only its shape is the same.
+    const foreign = { url: `${ORIGIN}/api/books`, method: 'POST' }
+    await fetch(foreign as unknown as Request)
+    expect(lens!.store.entries.map(entry => [entry.method, entry.path])).toEqual([['POST', '/api/books']])
+  })
+
   it('captures XMLHttpRequest too', () => {
     // Stub the transport before the lens wraps it: happy-dom would really send the request.
     const realSend = XMLHttpRequest.prototype.send

@@ -56,9 +56,14 @@ export function observeServerTiming(onEntry: (entry: ServerTimingEntry) => void)
   return () => observer.disconnect()
 }
 
-/** The metric servers use for total database time (Clockwork: `db`). */
-export function databaseTimeMs(metrics: readonly ServerTimingMetric[], names: readonly string[] = ['db']): number | undefined {
-  return metrics.find(metric => names.includes(metric.name))?.durationMs
+/**
+ * Database time from Server-Timing metrics named in `names` (`adapters.serverTiming.databaseMetrics`),
+ * summed and matched case-insensitively like the Server-Timing adapter does.
+ */
+export function databaseTimeMs(metrics: readonly ServerTimingMetric[], names: readonly string[]): number | undefined {
+  const wanted = new Set(names.map(name => name.toLowerCase()))
+  const matching = metrics.filter(metric => wanted.has(metric.name.toLowerCase()))
+  return matching.length ? matching.reduce((sum, metric) => sum + metric.durationMs, 0) : undefined
 }
 
 /**

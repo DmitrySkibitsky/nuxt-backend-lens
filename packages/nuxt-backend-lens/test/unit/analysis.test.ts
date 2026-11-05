@@ -31,6 +31,19 @@ describe('normalizeSql', () => {
     expect(normalizeSql('select * from books where id in (?, ?)')).toBe('select * from books where id in (?)')
     expect(normalizeSql('select  -1.5,\n  col2   from t')).toBe('select ?, col2 from t')
   })
+
+  it('handles escaped, empty and unclosed string literals', () => {
+    expect(normalizeSql('select * from t where a = \'it\\\'s\' and b = \'\' and c = \'x\'')).toBe('select * from t where a = ? and b = ? and c = ?')
+    expect(normalizeSql('select \'a\', \'unclosed from t')).toBe('select ?, \'unclosed from t')
+  })
+
+  it('stays linear on a statement with an unclosed quote', () => {
+    const broken = `select '${'\\\''.repeat(100_000)}`
+    const started = performance.now()
+    normalizeSql(broken)
+    // A rescanning regex needs seconds here; the bound is loose for slow CI runners.
+    expect(performance.now() - started).toBeLessThan(500)
+  })
 })
 
 describe.each(['clockwork', 'debugbar'] as const)('analysis of real %s records', (source) => {
