@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { resolveOptions } from '../../src/module'
 import { defaultOptions } from '../../src/runtime/core/options'
 import { AdapterRegistry } from '../../src/runtime/core/registry'
@@ -73,6 +73,48 @@ describe('options', () => {
     const options = resolveOptions({ adapterOrder: ['clockwork'], retryDelays: [0, 50] })
     expect(options.adapterOrder).toEqual(['clockwork'])
     expect(options.retryDelays).toEqual([0, 50])
+  })
+
+  it('falls back to the default, with a warning, for an invalid value', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const options = resolveOptions({
+      maxRequests: 0,
+      prefetch: { concurrency: 'abc' as never },
+      slowQueryMs: Number.NaN,
+      nPlusOneThreshold: 1,
+      retryDelays: [0, -5],
+      toolbar: { position: 'middle' as never },
+      include: '/api/**' as never,
+      actions: true as never,
+    })
+    expect(options.maxRequests).toBe(defaultOptions.maxRequests)
+    expect(options.prefetch).toEqual(defaultOptions.prefetch)
+    expect(options.slowQueryMs).toBe(defaultOptions.slowQueryMs)
+    expect(options.nPlusOneThreshold).toBe(defaultOptions.nPlusOneThreshold)
+    expect(options.retryDelays).toEqual(defaultOptions.retryDelays)
+    expect(options.toolbar.position).toBe(defaultOptions.toolbar.position)
+    expect(options.include).toEqual([])
+    expect(options.actions).toEqual(defaultOptions.actions)
+    expect(warn).toHaveBeenCalledTimes(8)
+    expect(warn).toHaveBeenCalledWith('[backend-lens] option maxRequests: expected an integer ≥ 1, got 0; using the default 200')
+    warn.mockRestore()
+  })
+
+  it('keeps valid values, including webUi: false, without warnings', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const options = resolveOptions({
+      maxRequests: 1,
+      include: ['/api/**'],
+      adapters: { clockwork: { webUi: false } },
+      vueDevtools: { color: 0xFFFFFF },
+    })
+    expect(options.maxRequests).toBe(1)
+    expect(options.include).toEqual(['/api/**'])
+    expect(options.adapters.clockwork.webUi).toBe(false)
+    expect(options.vueDevtools.color).toBe(0xFFFFFF)
+    expect(resolveOptions({})).toEqual(defaultOptions)
+    expect(warn).not.toHaveBeenCalled()
+    warn.mockRestore()
   })
 
   it('fills in keys missing from a partial or stale runtime config', () => {

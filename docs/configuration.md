@@ -7,8 +7,12 @@ required.
   means exactly that.
 - **Scalars can be overridden at runtime** with `NUXT_PUBLIC_BACKEND_LENS_*` environment variables,
   for example `NUXT_PUBLIC_BACKEND_LENS_SQL_FORMAT=true` or `NUXT_PUBLIC_BACKEND_LENS_SLOW_QUERY_MS=50`.
+  An array needs JSON: `NUXT_PUBLIC_BACKEND_LENS_INCLUDE='["/api/**"]'`.
 - **The browser re-applies the defaults** to whatever runtime config it receives, so a partial
   override never leaves an option undefined.
+- **Invalid values fall back to the default** with a console warning: a wrong type
+  (`maxRequests: "abc"`, a string where an array belongs) or a value out of range (`maxRequests: 0`,
+  a negative duration, an unknown `toolbar.position`).
 
 ```ts
 export default defineNuxtConfig({
