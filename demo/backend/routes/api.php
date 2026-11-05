@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\ScenarioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login')->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/user', fn (Request $request) => $request->user())->middleware('auth:sanctum')->name('user');

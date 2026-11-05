@@ -5,8 +5,12 @@
 #   BACKEND_MODE=classic    - FrankenPHP classic mode (fresh bootstrap per request, the PHP-FPM-like baseline)
 #
 #   DEBUG_BACKEND=clockwork - Clockwork serves the Clockwork protocol
-#   DEBUG_BACKEND=debugbar  - Laravel Debugbar serves it through its Clockwork emulation
+#   DEBUG_BACKEND=debugbar  - Laravel Debugbar serves its native records (its Clockwork emulation is
+#                             on as well, see below)
 #   (unset)                 - nothing is touched, e.g. for the test suite
+#
+# Local only: the debug endpoints have no authentication and records hold SQL bindings, cookies and
+# session data. The stand binds its ports to 127.0.0.1; do not expose it.
 #
 # `serve` starts the HTTP server; any other command is executed as is (e.g. `php artisan queue:work`).
 set -e
@@ -17,6 +21,9 @@ case "${DEBUG_BACKEND:-}" in
         ;;
     debugbar)
         # Open storage: the record endpoint must answer requests that do not come from localhost.
+        # The Clockwork emulation leaks data between requests under Octane (docs/upstream/), which is
+        # why it stays on here: responses carry both ids, as in apps that enabled it, and the stand
+        # checks that the lens reads the native record instead. Never copy this setting to an app.
         export CLOCKWORK_ENABLE=false DEBUGBAR_ENABLED=true DEBUGBAR_CLOCKWORK=true DEBUGBAR_OPEN_STORAGE=true
         ;;
     "")

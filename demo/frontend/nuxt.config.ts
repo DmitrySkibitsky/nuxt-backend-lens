@@ -22,6 +22,8 @@ export default defineNuxtConfig({
     public: {
       // Backend origin for the /cross-origin page (NUXT_PUBLIC_CROSS_ORIGIN_API).
       crossOriginApi: '',
+      // That page on the cross-origin entry, for the link to it (NUXT_PUBLIC_CROSS_ORIGIN_PAGE).
+      crossOriginPage: '',
     },
   },
   compatibilityDate: '2025-07-15',

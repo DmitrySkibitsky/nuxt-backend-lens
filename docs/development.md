@@ -65,13 +65,18 @@ Scenario pages and the endpoints behind them:
 | `/cached`       | `GET /api/cached[?fresh=1]`      | cache miss + write, then hit                     |
 | `/logs`         | `GET /api/logs`                  | log levels                                       |
 | `/boom`         | `GET /api/boom`                  | a 500 with an exception                          |
-| `/reviews`      | `POST /api/books/{id}/reviews`   | Sanctum login, insert, event, queued job         |
+| `/reviews`      | `POST /api/books/{id}/reviews`   | Sanctum login (10 attempts a minute), insert, event, queued job |
 | `/clients`      | `GET /api/stats` ×6              | six HTTP clients                                 |
 | `/everything`   | all of the above                 | parallel requests in one navigation              |
 | `/cross-origin` | `BACKEND_PORT` directly          | the CORS setup (open it on `CROSS_ORIGIN_PORT`)  |
 | `/timing-only`  | `GET /api/timing-only`           | the Server-Timing fallback (excluded from both packages) |
 
 Demo login: `demo@example.com` / `password`.
+
+The stand is for local use only. Its debug endpoints have no authentication, records hold SQL
+bindings, cookies and session data, and the scenario endpoints are slow on purpose (`/api/slow`,
+`/api/marker`): a few concurrent requests occupy every Octane worker. Do not expose it, and do not
+copy its debug settings into an app.
 
 ## Module development
 
