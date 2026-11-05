@@ -46,7 +46,9 @@ a feature in `core/` is available to every shell.
 - The plugin runs with `enforce: 'pre'`, so requests fired during other plugins' setup are
   captured too.
 - Response bodies are never read.
-- The patches are idempotent across HMR, and `restore()` undoes only the module's own patches.
+- The patches are idempotent across HMR, and `restore()` undoes only the module's own patches. A
+  patch that something else (an error tracker, an APM agent) has wrapped since cannot be taken out
+  of the chain, so after `restore()` it passes calls through: a replaced lens stops recording.
 
 **Records are loaded with the original `fetch`.** The lens's own requests never show up as app
 traffic.
@@ -56,7 +58,8 @@ traffic.
 - Because the store holds no Vue reactivity, Vue running in **another realm** can subscribe to it
   directly. That realm is the DevTools tab iframe, which has its own Vue instance.
 - The tab finds the lens through `window.__BACKEND_LENS__`. It is a string key on purpose: Symbols
-  are per realm.
+  are per realm. The key is set in development only, where the tab exists: a staging page does not
+  hand its records to every script on it.
 
 **Server-Timing through a `PerformanceObserver`, never `performance.getEntriesByType()`.**
 - In `nuxt dev`, Vite loads hundreds of modules and the resource timing buffer (250 entries by
