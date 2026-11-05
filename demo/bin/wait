@@ -6,14 +6,17 @@
 set -eu
 
 DEMO_DIR=$(cd "$(dirname "$0")/.." && pwd)
-[ -f "$DEMO_DIR/.env" ] && . "$DEMO_DIR/.env"
+# shellcheck source=SCRIPTDIR/env.sh
+. "$DEMO_DIR/bin/env.sh"
+load_env "$DEMO_DIR/.env"
 
 TIMEOUT=${1:-180}
 deadline=$(( $(date +%s) + TIMEOUT ))
 
 wait_for() {
     url=$1
-    until [ "$(curl -s -o /dev/null -w '%{http_code}' "$url")" = 200 ]; do
+    # --max-time: a server that accepts the connection but never answers must not outlast the deadline.
+    until [ "$(curl -s --max-time 5 -o /dev/null -w '%{http_code}' "$url")" = 200 ]; do
         if [ "$(date +%s)" -ge "$deadline" ]; then
             echo "Timed out waiting for $url" >&2
             exit 1

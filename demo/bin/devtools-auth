@@ -5,7 +5,9 @@ set -eu
 
 DEMO_DIR=$(cd "$(dirname "$0")/.." && pwd)
 cd "$DEMO_DIR"
-[ -f .env ] && . ./.env
+# shellcheck source=SCRIPTDIR/env.sh
+. "$DEMO_DIR/bin/env.sh"
+load_env .env
 
 token=$(docker compose exec -T frontend sh -c 'cat "${XDG_CONFIG_HOME:-$HOME}/.nuxt/devtools/dev-auth-token.txt" 2>/dev/null' || true)
 if [ -z "$token" ]; then

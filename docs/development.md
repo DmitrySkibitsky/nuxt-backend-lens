@@ -53,7 +53,9 @@ make down
 ```
 
 Ports are configurable in `demo/.env` (`DEMO_PORT` 18080, `BACKEND_PORT` 18000,
-`CROSS_ORIGIN_PORT` 18081), all bound to `127.0.0.1`.
+`CROSS_ORIGIN_PORT` 18081), all bound to `127.0.0.1`. The `demo/bin` scripts read `demo/.env` as
+`KEY=VALUE` lines, not as shell code, and a variable already set in the environment wins, as in
+docker compose.
 
 Scenario pages and the endpoints behind them:
 
@@ -124,11 +126,11 @@ The tour is scripted in `scripts/record-demo.mjs`; frames come from Chromium's s
 
 | Command                         | What                                                                  |
 |---------------------------------|-----------------------------------------------------------------------|
-| `make unit`                     | ~100 vitest tests: adapters on real records, analysis, interceptor, collector, SQL, actions, timeline, colour mode |
+| `make unit`                     | ~130 vitest tests: adapters on real records, analysis, interceptor, collector, SQL, actions, timeline, colour mode |
 | `make backend-test`             | PHPUnit for the demo backend (clean env, in the image)                |
 | `make leak`                     | concurrent marker requests plus noise; every record must hold only its own marker query, log entry and UUID |
-| `make e2e`                      | Playwright against the running stand (debug-package-specific tests skip themselves) |
-| `make package`                  | pack, install into a clean app outside the workspace, production build with the module on (browser check) and off (no code in the bundle) |
+| `make e2e`                      | Playwright against the running stand, one worker (the tests share it). The stand's response headers decide which debug package it runs, whatever `demo/.env` says; package-specific tests skip themselves |
+| `make package`                  | pack, install into a clean app outside the workspace, production build with the module on (browser check), turned off at runtime, and off (no code in the bundle). The app pins Nuxt to the workspace's version and skips releases younger than a day (`minimumReleaseAge`): right after a Nuxt bump to a fresh release it fails until the release is a day old |
 | `make stand MODE=… BACKEND=…`   | one CI stand configuration: restart, wait, leak test, e2e             |
 | `make check`                    | everything CI runs                                                    |
 

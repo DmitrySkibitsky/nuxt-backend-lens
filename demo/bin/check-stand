@@ -10,12 +10,11 @@ DEMO_DIR=$(cd "$(dirname "$0")/.." && pwd)
 ROOT_DIR=$(cd "$DEMO_DIR/.." && pwd)
 cd "$DEMO_DIR"
 
-# Explicit environment wins over demo/.env, as in docker compose itself.
-mode=${BACKEND_MODE:-}
-backend=${DEBUG_BACKEND:-}
-[ -f .env ] && . ./.env
-BACKEND_MODE=${mode:-${BACKEND_MODE:-octane}}
-DEBUG_BACKEND=${backend:-${DEBUG_BACKEND:-clockwork}}
+# shellcheck source=SCRIPTDIR/env.sh
+. "$DEMO_DIR/bin/env.sh"
+load_env .env
+BACKEND_MODE=${BACKEND_MODE:-octane}
+DEBUG_BACKEND=${DEBUG_BACKEND:-clockwork}
 export BACKEND_MODE DEBUG_BACKEND
 
 echo "== stand: BACKEND_MODE=$BACKEND_MODE DEBUG_BACKEND=$DEBUG_BACKEND"
