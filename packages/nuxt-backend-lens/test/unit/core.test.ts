@@ -177,8 +177,13 @@ describe('server timing', () => {
     expect(toServerTimingEntry({ name: 'u', startTime: 1, initiatorType: 'fetch', serverTiming: [] })).toBeNull()
     const entry = toServerTimingEntry({ name: 'u', startTime: 1, initiatorType: 'xmlhttprequest', serverTiming: metrics })
     expect(entry?.metrics).toEqual([{ name: 'db', durationMs: 12.5, description: 'Database' }])
-    expect(databaseTimeMs(entry!.metrics)).toBe(12.5)
+    expect(databaseTimeMs(entry!.metrics, ['db'])).toBe(12.5)
     expect(databaseTimeMs(entry!.metrics, ['sql'])).toBeUndefined()
+  })
+
+  it('sums the configured database metrics, whatever their case', () => {
+    const metrics = [{ name: 'SQL', durationMs: 4 }, { name: 'db', durationMs: 6 }, { name: 'app', durationMs: 30 }]
+    expect(databaseTimeMs(metrics, defaultOptions.adapters.serverTiming.databaseMetrics)).toBe(10)
   })
 })
 
@@ -206,6 +211,18 @@ describe('request store', () => {
     store.add(entry(3, 2))
     expect(store.entries.map(item => item.key)).toEqual([2, 3])
     expect(store.navigations.map(item => item.id)).toEqual([2])
+  })
+
+  it('keeps navigations bounded when they carry no requests', () => {
+    const store = new RequestStore(2)
+    store.upsertNavigation({ id: 1, route: '/a', startTime: 0 })
+    store.add(entry(1, 1))
+    for (let id = 2; id <= 10; id++) {
+      store.upsertNavigation({ id, route: `/${id}`, startTime: id })
+    }
+    expect(store.navigations.length).toBeLessThanOrEqual(3)
+    // The one a request refers to, and the current one.
+    expect(store.navigations.map(item => item.id)).toEqual(expect.arrayContaining([1, 10]))
   })
 
   it('replaces entries on update and notifies listeners', () => {

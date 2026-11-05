@@ -62,6 +62,15 @@ export function createTimelineEmitter(
           emit(endEvent(entry, groupId, epoch(entry.startTime + entry.durationMs), options))
         }
       }
+      // Keys only grow and the store drops the oldest entries: older keys never come back.
+      const oldest = entries[0]?.key ?? Number.POSITIVE_INFINITY
+      for (const sent of [started, ended]) {
+        for (const key of sent) {
+          if (key < oldest) {
+            sent.delete(key)
+          }
+        }
+      }
     },
   }
 }

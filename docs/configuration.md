@@ -100,5 +100,5 @@ In markup, `data-backend-lens-action="…"` gives an element an explicit action 
 |-------------------|-------------------------------|-------------|
 | `enabled`         | `true`                        | Timing-only fallback for responses with a readable `Server-Timing` header and no other debug id. |
 | `header`          | `'server-timing'`             | Header to read. Cross-origin it must be listed in `Access-Control-Expose-Headers`. |
-| `databaseMetrics` | `['db', 'database', 'sql']`   | Metric names summed as database time. |
+| `databaseMetrics` | `['db', 'database', 'sql']`   | Metric names summed as database time, case-insensitively. The request list uses them too while a record is not loaded yet. |
 | `totalMetrics`    | `['total', 'app']`            | Metric names taken as the server time; the first match wins. |

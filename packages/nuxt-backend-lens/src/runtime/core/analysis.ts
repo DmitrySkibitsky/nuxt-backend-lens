@@ -52,7 +52,6 @@ export interface NavigationSummary {
   repeatedRequests: { method: string, path: string, count: number }[]
 }
 
-const STRING_LITERAL = /'(?:[^'\\]|\\.|'')*'/g
 const NUMBER_LITERAL = /(?<![\w$."`])-?\d+(?:\.\d+)?(?![\w"`])/g
 const POSITIONAL_PARAMETER = /\$\d+/g
 const VALUE_LIST = /\(\s*\?(?:\s*,\s*\?)*\s*\)/g
@@ -63,14 +62,53 @@ const WHITESPACE = /\s+/g
  * whitespace and case are normalized. Quoted identifiers ("authors", `authors`) are kept.
  */
 export function normalizeSql(sql: string): string {
-  return sql
-    .replace(STRING_LITERAL, '?')
+  return replaceStringLiterals(sql)
     .replace(POSITIONAL_PARAMETER, '?')
     .replace(NUMBER_LITERAL, '?')
     .replace(VALUE_LIST, '(?)')
     .replace(WHITESPACE, ' ')
     .trim()
     .toLowerCase()
+}
+
+/**
+ * `'…'` literals (with `''` and backslash escapes) become `?`, in one pass. A regex would rescan an
+ * unclosed quote from every later quote: quadratic on a broken statement. An unclosed literal and
+ * everything after it stay as they are.
+ */
+function replaceStringLiterals(sql: string): string {
+  let result = ''
+  let index = 0
+  while (index < sql.length) {
+    const start = sql.indexOf('\'', index)
+    if (start === -1) {
+      break
+    }
+    let cursor = start + 1
+    let end = -1
+    while (cursor < sql.length) {
+      const char = sql[cursor]
+      if (char === '\\') {
+        cursor += 2
+      }
+      else if (char === '\'' && sql[cursor + 1] === '\'') {
+        cursor += 2
+      }
+      else if (char === '\'') {
+        end = cursor
+        break
+      }
+      else {
+        cursor++
+      }
+    }
+    if (end === -1) {
+      break
+    }
+    result += `${sql.slice(index, start)}?`
+    index = end + 1
+  }
+  return result + sql.slice(index)
 }
 
 /** Exact identity of an executed statement: text plus bindings (servers may keep them apart). */

@@ -25,6 +25,7 @@ const INTERACTIVE = [
   'summary',
   'label',
 ].join(', ')
+const EDITABLE = '[contenteditable]:not([contenteditable="false"])'
 
 export interface ActionEntry {
   id: number
@@ -71,7 +72,9 @@ export function describeElement(target: unknown): string {
     const name = element.getAttribute('placeholder') || element.getAttribute('name') || element.id
     return clip(name ? `${tag} ${name}` : tag)
   }
-  const text = clip(element.textContent ?? '')
+  // The text of an editable region is what the user typed.
+  const editable = element.closest(EDITABLE) !== null
+  const text = editable ? '' : clip(element.textContent ?? '')
   if (text) {
     return text
   }

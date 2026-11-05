@@ -49,7 +49,7 @@
             v-else-if="entry.detailsState === 'error'"
             class="bl-status-error"
           >!</span>
-          <span v-if="databaseMs(entry) !== undefined">{{ formatMs(databaseMs(entry)) }} DB</span>
+          <span v-if="databaseMs(entry, lens.options) !== undefined">{{ formatMs(databaseMs(entry, lens.options)) }} DB</span>
           <span
             v-for="chip in chips(entry)"
             :key="chip.kind"

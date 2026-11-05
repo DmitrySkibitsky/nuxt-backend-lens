@@ -140,8 +140,10 @@ export function installInterceptor(target: PatchableWindow, listener: ResponseLi
   return handle
 }
 
+/** By shape, not `instanceof`: a Request built in another realm (an iframe) has another class. */
 function isRequest(input: unknown): input is Request {
-  return typeof Request !== 'undefined' && input instanceof Request
+  return typeof input === 'object' && input !== null
+    && typeof (input as Request).url === 'string' && typeof (input as Request).method === 'string'
 }
 
 function absoluteUrl(url: string, base: string): string {

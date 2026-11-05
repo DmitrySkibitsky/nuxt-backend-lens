@@ -101,7 +101,7 @@ click “Post review” (+12 ms)".
   3. the text of the button or link;
   4. for fields, their placeholder or name.
 
-  **Values typed into fields are never read.**
+  **Values typed into fields are never read**, nor the text of a `contenteditable` region.
 - Elements inside `data-backend-lens-ignore` are not tracked. The toolbar carries it, so clicks on
   the panel itself are not actions.
 

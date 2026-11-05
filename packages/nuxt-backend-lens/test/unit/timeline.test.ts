@@ -90,4 +90,12 @@ describe('timeline emitter gating', () => {
     timeline.sync(entries, [])
     expect(events).toHaveLength(4)
   })
+
+  it('emits nothing twice after the oldest requests left the store', () => {
+    const { events, timeline } = emitter()
+    timeline.sync([entry(1, { detailsState: 'none' }), entry(2, { detailsState: 'none' })], [])
+    expect(events).toHaveLength(4)
+    timeline.sync([entry(2, { detailsState: 'none' }), entry(3, { detailsState: 'none' })], [])
+    expect(events.slice(4).map(event => event.groupId)).toEqual(['backend-lens-3', 'backend-lens-3'])
+  })
 })
