@@ -34,7 +34,8 @@ export default defineNuxtConfig({
 | `maxRequests`       | `200`                                      | Requests kept in memory, oldest dropped first. |
 | `prefetch.enabled`  | `true`                                     | Load records in the background, so the list can show query counts and issues without opening each request. |
 | `prefetch.concurrency` | `2`                                     | Parallel record fetches. |
-| `retryDelays`       | `[0, 100, 300, 1000]`                      | Backoff between record fetch attempts (ms). Only a 404 is retried: the server may persist a record after responding. |
+| `retryDelays`       | `[0, 100, 300, 1000]`                      | Backoff between record fetch attempts (ms). A 404 is retried (the server may persist a record after responding), and so is a network error; other statuses, a body that is not a record and a timeout are not. |
+| `recordTimeoutMs`   | `10000`                                    | A record fetch, body included, is abandoned after this long, so a hung endpoint does not hold a prefetch slot. |
 | `slowQueryMs`       | `100`                                      | Queries at or above this duration are flagged as slow. |
 | `nPlusOneThreshold` | `3`                                        | Minimum repetitions of one statement shape from one call site to count as N+1. |
 

@@ -67,10 +67,14 @@ export function createBackendLens(options: BackendLensOptions, environment: Back
   // `interceptor` is installed below, once the handlers exist; records load only after that.
   function fetchRecord(ref: RecordRef): Promise<Response> {
     const { originalFetch } = interceptor
+    // Also bounds reading the body, which is part of the same fetch.
+    const timeout = AbortSignal.timeout(options.recordTimeoutMs)
+    const own = ref.init?.signal
     return originalFetch(ref.url, {
       credentials: 'include',
       headers: { Accept: 'application/json' },
       ...ref.init,
+      signal: own ? AbortSignal.any([timeout, own]) : timeout,
     })
   }
 
@@ -163,26 +167,39 @@ export function createBackendLens(options: BackendLensOptions, environment: Back
       return
     }
 
+    // Retried: a 404 (the server may persist a record after responding) and a network error.
+    // Not retried: other statuses, a body that is not a record (a login page), a timeout or abort.
     let lastError = 'not found'
     for (const delay of options.retryDelays.length ? options.retryDelays : [0]) {
       if (delay) {
         await sleep(delay)
       }
+      let response: Response
       try {
-        const response = await fetchRecord(entry.ref)
-        if (response.ok) {
-          const details = adapter.parse(await response.json(), entry.ref)
-          store.update(key, { detailsState: 'loaded', details })
-          return
-        }
-        lastError = `HTTP ${response.status}`
-        // A record may be persisted after the response was sent: only 404 is worth retrying.
-        if (response.status !== 404) {
-          break
-        }
+        response = await fetchRecord(entry.ref)
       }
       catch (error) {
-        lastError = error instanceof Error ? error.message : String(error)
+        lastError = describeFetchError(error, options.recordTimeoutMs)
+        if (isAborted(error)) {
+          break
+        }
+        continue
+      }
+      if (!response.ok) {
+        lastError = `HTTP ${response.status}`
+        if (response.status === 404) {
+          continue
+        }
+        break
+      }
+      try {
+        const details = adapter.parse(await response.json(), entry.ref)
+        store.update(key, { detailsState: 'loaded', details })
+        return
+      }
+      catch (error) {
+        lastError = describeFetchError(error, options.recordTimeoutMs)
+        break
       }
     }
     store.update(key, { detailsState: 'error', error: `Record ${entry.ref.id}: ${lastError}` })
@@ -254,6 +271,23 @@ function closestRequest(entries: readonly RequestEntry[], timing: ServerTimingEn
     }
   }
   return best
+}
+
+/** By name: a DOMException is not an Error in every DOM implementation. */
+function errorName(error: unknown): string | undefined {
+  return typeof error === 'object' && error !== null ? (error as { name?: string }).name : undefined
+}
+
+/** The timeout, or the adapter's own signal, ended the fetch: another attempt would end the same way. */
+function isAborted(error: unknown): boolean {
+  return errorName(error) === 'TimeoutError' || errorName(error) === 'AbortError'
+}
+
+function describeFetchError(error: unknown, timeoutMs: number): string {
+  if (errorName(error) === 'TimeoutError') {
+    return `no answer within ${timeoutMs} ms`
+  }
+  return error instanceof Error ? error.message : String(error)
 }
 
 function sleep(ms: number): Promise<void> {

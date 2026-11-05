@@ -25,7 +25,7 @@ function fakeBackend(options: { recordMisses?: number } = {}): FakeBackend {
   let misses = options.recordMisses ?? 0
   const calls: string[] = []
 
-  const fetch = vi.fn(async (input: RequestInfo | URL) => {
+  const fetch = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url, ORIGIN)
     calls.push(url.pathname + url.search)
     const json = (body: unknown, status = 200, headers: Record<string, string> = {}) => {
@@ -35,6 +35,22 @@ function fakeBackend(options: { recordMisses?: number } = {}): FakeBackend {
     }
     if (url.pathname === '/api/books') {
       return json({}, 200, { 'x-clockwork-id': recordId })
+    }
+    // Records that cannot load: a login page instead of JSON, an endpoint that never answers, no network.
+    const broken = /^\/api\/(html|hang|offline)$/.exec(url.pathname)
+    if (broken) {
+      return json({}, 200, { 'x-clockwork-id': broken[1]! })
+    }
+    if (url.pathname === '/__clockwork/html') {
+      return new Response('<!doctype html><title>Log in</title>', { status: 200, headers: { 'content-type': 'text/html' } })
+    }
+    if (url.pathname === '/__clockwork/hang') {
+      return new Promise<Response>((_, reject) => {
+        init?.signal?.addEventListener('abort', () => reject(init.signal!.reason))
+      })
+    }
+    if (url.pathname === '/__clockwork/offline') {
+      throw new TypeError('Failed to fetch')
     }
     if (url.pathname === '/api/logs') {
       return json({}, 200, { 'phpdebugbar-id': debugbarId, 'x-clockwork-id': debugbarId })
@@ -121,6 +137,49 @@ describe('collector', () => {
     await settle()
     expect(lens!.store.entries[0]).toMatchObject({ detailsState: 'error' })
     expect(lens!.store.entries[0]!.error).toMatch(/HTTP 404/)
+  })
+
+  it('retries a network error', async () => {
+    const backend = fakeBackend()
+    startLens(backend)
+    await fetch('/api/offline')
+    await settle()
+    expect(lens!.store.entries[0]).toMatchObject({ detailsState: 'error', error: 'Record offline: Failed to fetch' })
+    expect(backend.calls.filter(call => call === '/__clockwork/offline')).toHaveLength(3)
+  })
+
+  it('does not retry a body that is not a record', async () => {
+    const backend = fakeBackend()
+    startLens(backend)
+    await fetch('/api/html')
+    await settle()
+    expect(lens!.store.entries[0]!.detailsState).toBe('error')
+    expect(backend.calls.filter(call => call === '/__clockwork/html')).toHaveLength(1)
+  })
+
+  it('does not retry a record its adapter cannot parse', async () => {
+    const backend = fakeBackend()
+    startLens(backend)
+    lens!.registry.register({
+      name: 'broken',
+      detect: response => (response.url.endsWith('/api/plain') ? { adapter: 'broken', id: 'b', url: `${ORIGIN}/api/plain` } : null),
+      parse: () => {
+        throw new Error('unexpected record shape')
+      },
+    })
+    await fetch('/api/plain')
+    await settle()
+    expect(lens!.store.entries[0]).toMatchObject({ detailsState: 'error', error: 'Record b: unexpected record shape' })
+    expect(backend.calls.filter(call => call === '/api/plain')).toHaveLength(2)
+  })
+
+  it('gives up on a record endpoint that does not answer, without retrying', async () => {
+    const backend = fakeBackend()
+    startLens(backend, { recordTimeoutMs: 50 })
+    await fetch('/api/hang')
+    await settle()
+    expect(lens!.store.entries[0]).toMatchObject({ detailsState: 'error', error: 'Record hang: no answer within 50 ms' })
+    expect(backend.calls.filter(call => call === '/__clockwork/hang')).toHaveLength(1)
   })
 
   it('loads lazily when prefetch is off', async () => {
