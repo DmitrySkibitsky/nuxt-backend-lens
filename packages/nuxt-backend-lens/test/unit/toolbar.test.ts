@@ -4,10 +4,6 @@ import { resolveOptions } from '../../src/module'
 import { type BackendLens, createBackendLens } from '../../src/runtime/core/collector'
 import { mountToolbar } from '../../src/runtime/shells/toolbar'
 
-// The shell's lifecycle is under test, not the UI: there is no Vue SFC transform in unit tests.
-vi.mock('../../src/runtime/ui/LensApp.vue', () => ({ default: { render: () => null } }))
-vi.mock('../../src/runtime/ui/styles.css?inline', () => ({ default: '' }))
-
 let lens: BackendLens | undefined
 
 afterEach(() => {
@@ -39,7 +35,9 @@ describe('toolbar shell', () => {
 
     mountToolbar(lens)
     mountToolbar(lens)
-    expect(document.querySelectorAll('#backend-lens-toolbar')).toHaveLength(1)
+    const hosts = document.querySelectorAll('#backend-lens-toolbar')
+    expect(hosts).toHaveLength(1)
+    expect(hosts[0]!.shadowRoot?.querySelector('[data-testid="backend-lens-badge"]')).not.toBeNull()
     expect(active.size).toBe(1)
   })
 
