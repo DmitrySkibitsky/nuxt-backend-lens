@@ -40,6 +40,8 @@ const LEAKS = [
   { name: 'Sanctum token', pattern: /\b\d+\|[a-z0-9]{40,}/i },
   { name: 'session or XSRF cookie', pattern: /(?:_session|XSRF-TOKEN|remember_web_\w+)=[^;\s"]{16,}/ },
   { name: 'credentials in a URL', pattern: /\b[a-z][a-z\d+.-]*:\/\/[^\s/:@]+:[^\s/@]+@/i },
+  // A query on the session table carries the session id and payload in its SQL or bindings.
+  { name: 'session table query', pattern: /\b(?:from|update|into)\s+["`]?sessions["`]?/i },
 ]
 
 /** Credential-looking strings left in `value`, with their JSON paths. Empty means safe to commit. */

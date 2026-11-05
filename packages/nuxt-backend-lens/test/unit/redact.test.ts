@@ -44,6 +44,7 @@ describe('fixture redaction', () => {
       queries: [{ bindings: ['3|abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN'] }],
       config: { redis: 'redis://default:hunter2@cache:6379' },
       raw: 'Cookie: laravel_session=eyJpdiI6IjEyMzQ1Njc4OTAiLCJ2YWx1ZSI6',
+      databaseQueries: [{ query: 'select * from "sessions" where "id" = \'IQ23PgazbNw0zzWxe5gN2TRhE14mVHu8kL8v6w7U\' limit 1' }],
     })
     expect(leaks).toEqual([
       '$.logs[0].message: bcrypt hash',
@@ -51,6 +52,7 @@ describe('fixture redaction', () => {
       '$.queries[0].bindings[0]: Sanctum token',
       '$.config.redis: credentials in a URL',
       '$.raw: session or XSRF cookie',
+      '$.databaseQueries[0].query: session table query',
     ])
   })
 

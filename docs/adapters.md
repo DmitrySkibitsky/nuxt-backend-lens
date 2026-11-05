@@ -138,6 +138,6 @@ script redacts secrets before writing (`scripts/redact.mjs`): environment-style 
 `*SECRET*`, `*PASSWORD*`, `*TOKEN*`), credential headers (also as `HTTP_*` server variables), form
 fields such as `password` and `_token`, passwords in URLs, cookies and session data. It then scans
 the fixture for anything still credential-like (bcrypt hashes, bearer and Sanctum tokens, session
-cookies, `base64:` keys, `user:password@` URLs) and does not write it if something is found, nor
+cookies, `base64:` keys, `user:password@` URLs, queries on the `sessions` table) and does not write it if something is found, nor
 when the record never appeared. `--out=DIR` writes elsewhere, to try a capture without touching
 the committed fixtures. A unit test runs the same scan over the committed fixtures.
