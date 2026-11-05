@@ -93,7 +93,7 @@
               v-for="member in row.group.indexes.slice(1)"
               :key="member"
               class="bl-query bl-group-member"
-              :class="{ 'bl-slow': queries[member]!.durationMs >= slowQueryMs }"
+              :class="{ 'bl-slow': queries[member]!.durationMs >= slowQueryMs, 'bl-flash': flashed === member }"
               :data-index="member"
               data-testid="backend-lens-query"
             >
@@ -138,20 +138,23 @@ type GroupIssue = Extract<QueryIssue, { kind: 'n+1' | 'duplicate' }>
  * N+1 and duplicate groups are disjoint (the analysis never puts a query in both), so each group
  * collapses into its first query; the other members open right below it.
  */
-const rows = computed(() => {
-  const groupByLead = new Map<number, GroupIssue>()
-  const members = new Set<number>()
+const groups = computed(() => {
+  const byLead = new Map<number, GroupIssue>()
+  const leadOf = new Map<number, number>()
   for (const issue of props.analysis.issues) {
     if (issue.kind === 'slow') {
       continue
     }
-    groupByLead.set(issue.indexes[0]!, issue)
-    issue.indexes.slice(1).forEach(index => members.add(index))
+    const lead = issue.indexes[0]!
+    byLead.set(lead, issue)
+    issue.indexes.slice(1).forEach(index => leadOf.set(index, lead))
   }
-  return props.queries
-    .map((query, index) => ({ query, index, group: groupByLead.get(index) }))
-    .filter(row => !members.has(row.index))
+  return { byLead, leadOf }
 })
+
+const rows = computed(() => props.queries
+  .map((query, index) => ({ query, index, group: groups.value.byLead.get(index) }))
+  .filter(row => !groups.value.leadOf.has(row.index)))
 
 const expanded = ref(new Set<number>())
 const flashed = ref<number>()
@@ -173,17 +176,24 @@ function toggle(lead: number) {
   expanded.value = next
 }
 
-/** From the issues summary: a group toggles like its own chip; opening (or a slow query) scrolls to it. */
+/**
+ * From the issues summary: a group toggles like its own chip; opening it scrolls to it. A slow query
+ * inside a collapsed group opens that group first, so there is a row to scroll to.
+ */
 function onIssue(issue: QueryIssue) {
-  const lead = issue.indexes[0]!
-  if (issue.kind !== 'slow' && expanded.value.has(lead)) {
-    toggle(lead)
+  const target = issue.indexes[0]!
+  if (issue.kind === 'slow') {
+    const lead = groups.value.leadOf.get(target)
+    if (lead !== undefined && !expanded.value.has(lead)) {
+      toggle(lead)
+    }
+    void reveal(target)
     return
   }
-  if (issue.kind !== 'slow') {
-    toggle(lead)
+  toggle(target)
+  if (expanded.value.has(target)) {
+    void reveal(target)
   }
-  void reveal(lead)
 }
 
 function issueTitle(issue: QueryIssue): string {
@@ -194,12 +204,12 @@ function issueTitle(issue: QueryIssue): string {
 }
 
 /** Brings a query into view and flashes it. */
-async function reveal(lead: number) {
-  flashed.value = lead
+async function reveal(index: number) {
+  flashed.value = index
   await nextTick()
-  list.value?.querySelector(`[data-index="${lead}"]`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+  list.value?.querySelector(`[data-index="${index}"]`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
   setTimeout(() => {
-    if (flashed.value === lead) {
+    if (flashed.value === index) {
       flashed.value = undefined
     }
   }, 1200)

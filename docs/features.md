@@ -131,7 +131,7 @@ Timeline.
 
 The palette matches Nuxt DevTools in light and dark.
 - The **toolbar** follows the app's colour mode when the page carries a `dark` / `light` class
-  (`@nuxtjs/color-mode` does), otherwise the system.
+  (`@nuxtjs/color-mode` does; other class names: `toolbar.colorModeClasses`), otherwise the system.
 - The **DevTools tab** follows DevTools' own mode.
 
 The toolbar lives in a **Shadow DOM**: the app's CSS cannot reach it, and its CSS cannot reach the

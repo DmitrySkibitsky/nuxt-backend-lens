@@ -106,6 +106,29 @@ test('logs of a request are listed with their levels', async ({ page }) => {
   }
 })
 
+test('the record tabs follow the ARIA tabs pattern, keyboard included', async ({ page }) => {
+  await page.goto('/logs')
+  await expect(page.locator('main pre')).toContainText('logged')
+
+  const panel = await openPanel(page)
+  await requestRow(panel, '/api/logs').first().click()
+  const queriesTab = panel.getByRole('tab', { name: /Queries/ })
+  await expect(queriesTab).toHaveAttribute('aria-selected', 'true')
+  await queriesTab.focus()
+  await page.keyboard.press('ArrowRight')
+
+  const logsTab = panel.getByRole('tab', { name: /Logs/ })
+  await expect(logsTab).toHaveAttribute('aria-selected', 'true')
+  await expect(logsTab).toBeFocused()
+  await expect(queriesTab).toHaveAttribute('tabindex', '-1')
+  const tabpanel = panel.getByRole('tabpanel')
+  await expect(tabpanel).toHaveAttribute('aria-labelledby', (await logsTab.getAttribute('id'))!)
+  await expect(tabpanel.getByTestId('backend-lens-logs')).toContainText('Demo error message')
+
+  await page.keyboard.press('End')
+  await expect(panel.getByRole('tab', { name: /Timeline/ })).toBeFocused()
+})
+
 test('the sanctum login flow is captured: login, identity fetch, write', async ({ page }) => {
   await page.goto('/reviews')
   await page.getByRole('button', { name: 'Log in' }).click()

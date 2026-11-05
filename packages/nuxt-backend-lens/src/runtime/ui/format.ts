@@ -33,6 +33,15 @@ export function databaseMs(entry: RequestEntry, options: BackendLensOptions): nu
   return entry.details?.queriesDurationMs ?? databaseTimeMs(entry.serverTiming, options.adapters.serverTiming.databaseMetrics)
 }
 
+/** PSR-3 levels; the stylesheet colours some of them. */
+const LOG_LEVELS = new Set(['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug'])
+
+/** A class for a log level from the record: only known levels, never the raw backend string. */
+export function logLevelClass(level: string): string {
+  const normalized = level.toLowerCase()
+  return `bl-level-${LOG_LEVELS.has(normalized) ? normalized : 'other'}`
+}
+
 export function statusClass(status: number): string {
   if (status >= 500) {
     return 'bl-status-error'

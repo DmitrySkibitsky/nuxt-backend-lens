@@ -15,10 +15,7 @@ const CLIENT_DEPENDENCIES = ['sql-formatter', '@vue/devtools-api', '@vue/devtool
  * them at start instead of discovering them at runtime and reloading the page. When the app can
  * resolve the module by name (installed, or a workspace dependency), they are nested deps
  * (`nuxt-backend-lens > sql-formatter`); otherwise only names the app resolves itself are listed:
- * Vite fails on unresolvable ones.
- *
- * Resolution is ESM-style (exsolve), like Vite's: CommonJS `require.resolve` would also honour
- * NODE_PATH, which pnpm's bin shims point at the whole store, and report packages Vite cannot find.
+ * Vite fails on unresolvable ones. Resolved like Vite does (exsolve): docs/architecture.md.
  */
 export function clientDependencyIncludes(rootDir: string): string[] {
   const from = rootDir.endsWith('/') ? rootDir : `${rootDir}/`

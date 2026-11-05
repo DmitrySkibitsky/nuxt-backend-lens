@@ -54,6 +54,7 @@ export default defineNuxtConfig({
 | `toolbar.enabled`    | `true`               | The in-page badge and panel. |
 | `toolbar.position`   | `'bottom-right'`     | `bottom-right`, `bottom-left`, `top-right` or `top-left`. |
 | `toolbar.open`       | `false`              | Open the panel on load. |
+| `toolbar.colorModeClasses` | `{ dark: 'dark', light: 'light' }` | Classes on `<html>` that mark the app's colour mode; the toolbar follows them, and the system preference when neither is set. With @nuxtjs/color-mode's `classSuffix: '-mode'`: `{ dark: 'dark-mode', light: 'light-mode' }`. |
 | `devtools.enabled`   | `true`               | The Nuxt DevTools tab (`nuxt dev` only). |
 | `devtools.route`     | `'/__backend-lens/'` | Dev-server route of the tab's page. |
 | `devtools.icon`      | `'carbon:data-base'` | Any [Iconify](https://icones.js.org) icon. |
