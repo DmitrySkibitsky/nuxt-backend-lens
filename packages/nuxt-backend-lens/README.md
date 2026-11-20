@@ -93,4 +93,4 @@ staging servers with short retention. Never use them in production.
 
 ## License
 
-MIT
+[MIT](https://github.com/DmitrySkibitsky/nuxt-backend-lens/blob/main/LICENSE)

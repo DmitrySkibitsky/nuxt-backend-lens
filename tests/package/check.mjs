@@ -135,6 +135,9 @@ async function main() {
   const files = run('tar', ['-tzf', join(work, tarball)], { capture: true }).split('\n')
   check(files.some(file => file.endsWith('dist/module.mjs')), 'tarball contains dist/module.mjs')
   check(!files.some(file => /\/(?:src|test|playground)\//.test(file)), 'tarball ships no src, tests or playground')
+  // npm takes LICENSE from the package directory only, so the module keeps a copy of the root one.
+  const license = files.includes('package/LICENSE') && run('tar', ['-xOzf', join(work, tarball), 'package/LICENSE'], { capture: true })
+  check(license === readFileSync(join(root, 'LICENSE'), 'utf8'), 'tarball LICENSE matches the root LICENSE')
   check(!readFileSync(join(moduleDir, 'dist', 'module.mjs'), 'utf8').includes(root), 'dist has no absolute workspace paths (not a stub)')
   void packed
 
