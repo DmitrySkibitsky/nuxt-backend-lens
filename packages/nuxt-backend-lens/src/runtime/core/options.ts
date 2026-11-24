@@ -112,6 +112,43 @@ export interface ActionTrackingOptions {
   windowMs: number
 }
 
+/**
+ * An editor the settings screen offers. In the templates `{file}` is the local path, `{line}` the
+ * line (1 when unknown); URL templates also take `{path}`, the path URL-encoded with a leading `/`
+ * (`/C:/…` on Windows), and `{file}` URL-encoded as a query value.
+ */
+export interface EditorPreset {
+  label: string
+  /** URL the browser follows; the OS hands it to the editor's registered handler. */
+  url: string
+  /** Executable the dev server runs in command mode: a name looked up on PATH, or a path. */
+  binary: string
+  /** Command-line arguments in command mode. */
+  args: string[]
+}
+
+export interface EditorOptions {
+  /**
+   * Editors offered for opening source paths. Which one, and whether at all, is chosen per browser
+   * on the settings screen; paths stay plain text until then. Keys are ids; `custom` is reserved.
+   */
+  presets: Record<string, EditorPreset>
+  /**
+   * Namespace prefix → directory under the backend's project root (PSR-4), to find the file of a
+   * controller the record names only by class (Clockwork).
+   */
+  namespaces: Record<string, string>
+  /** Let the dev server run an editor command (`nuxt dev` only, requests from this machine only). */
+  launcher: boolean
+  /** Dev-server route of the launcher. */
+  route: string
+  /**
+   * Page hosts allowed to call the launcher, besides IP addresses, `localhost`, `*.localhost` and
+   * `*.test`. A leading dot allows subdomains (`.example.dev`).
+   */
+  allowedHosts: string[]
+}
+
 export interface BackendLensOptions {
   /** Master switch. Prefer adding the module under `$development` so it never reaches production. */
   enabled: boolean
@@ -150,6 +187,8 @@ export interface BackendLensOptions {
   sql: SqlDisplayOptions
   /** The same statement shape from one call site this many times (with different values) is N+1. */
   nPlusOneThreshold: number
+  /** Opening source paths (call sites, controllers, exceptions) in an editor. */
+  editor: EditorOptions
 }
 
 export const defaultOptions: BackendLensOptions = {
@@ -215,6 +254,32 @@ export const defaultOptions: BackendLensOptions = {
     dialect: 'sql',
   },
   nPlusOneThreshold: 3,
+  editor: {
+    presets: {
+      vscode: {
+        label: 'VS Code',
+        url: 'vscode://file{path}:{line}',
+        binary: 'code',
+        args: ['--goto', '{file}:{line}'],
+      },
+      phpstorm: {
+        label: 'PhpStorm',
+        url: 'phpstorm://open?file={file}&line={line}',
+        binary: 'phpstorm',
+        args: ['--line', '{line}', '{file}'],
+      },
+      zed: {
+        label: 'Zed',
+        url: 'zed://file{path}:{line}',
+        binary: 'zed',
+        args: ['{file}:{line}'],
+      },
+    },
+    namespaces: { 'App\\': 'app/' },
+    launcher: true,
+    route: '/__backend-lens/open-in-editor',
+    allowedHosts: [],
+  },
 }
 
 type DeepPartial<T> = T extends readonly unknown[]

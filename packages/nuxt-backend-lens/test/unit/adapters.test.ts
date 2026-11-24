@@ -215,3 +215,55 @@ describe('clockwork adapter: vendor quirks', () => {
     expect(debugbarTypes).toEqual(['other', 'other', 'other', 'other'])
   })
 })
+
+describe.each(sources)('$source adapter: source locations', ({ source, adapter }) => {
+  it('reveals the backend project root', () => {
+    for (const name of ['books-n-plus-one', 'boom', 'logs', 'cached-miss']) {
+      expect(parseFixture(adapter, source, name).basePath, name).toBe('/app')
+    }
+  })
+})
+
+describe('debugbar adapter: source locations', () => {
+  it('names the controller file and action line, relative to the project root', () => {
+    expect(parseFixture(debugbar, 'debugbar', 'boom').controllerSource)
+      .toEqual({ file: 'app/Http/Controllers/Api/ScenarioController.php', line: 74 })
+  })
+
+  it('takes a log entry location from its editor link, query or path style', () => {
+    const ref = debugbar.detect(capturedResponse(`${FIXTURE_ORIGIN}/api`, { 'phpdebugbar-id': 'x' }))!
+    const message = (url: string) => ({ message: 'm', label: 'info', xdebug_link: { url, line: '12' } })
+    const logs = debugbar.parse({
+      messages: {
+        messages: [
+          message('phpstorm://open?file=%2Fapp%2Fapp%2FModels%2FBook.php&line=12'),
+          message('vscode://file/C:/www/app/Models/Book.php:12'),
+          { message: 'no link', label: 'info', xdebug_link: null },
+        ],
+      },
+    }, ref).logs
+    expect(logs.map(entry => entry.callSite && [entry.callSite.file, entry.callSite.line])).toEqual([
+      ['/app/app/Models/Book.php', 12],
+      ['C:/www/app/Models/Book.php', 12],
+      undefined,
+    ])
+  })
+})
+
+describe('clockwork adapter: source locations', () => {
+  it('locates log entries and cache events by the first application frame', () => {
+    const [entry] = parseFixture(clockwork, 'clockwork', 'logs').logs
+    expect(entry!.callSite).toMatchObject({ file: '/app/app/Http/Controllers/Api/ScenarioController.php', line: 63 })
+    const [event] = parseFixture(clockwork, 'clockwork', 'cached-miss').cache
+    expect(event!.callSite).toMatchObject({ file: '/app/app/Http/Controllers/Api/ScenarioController.php', line: 42 })
+  })
+
+  it('finds a Windows project root from vendor frames', () => {
+    const ref = clockwork.detect(capturedResponse(`${FIXTURE_ORIGIN}/api`, { 'x-clockwork-id': 'x' }))!
+    const details = clockwork.parse({
+      databaseQueries: [{ query: 'select 1', trace: [{ file: 'C:\\www\\shop\\vendor\\laravel\\x.php', line: 1 }] }],
+    }, ref)
+    expect(details.basePath).toBe('C:\\www\\shop')
+    expect(details.queries[0]!.trace[0]!.isVendor).toBe(true)
+  })
+})

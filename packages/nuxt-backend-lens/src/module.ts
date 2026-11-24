@@ -1,6 +1,8 @@
-import { addImports, addPlugin, createResolver, defineNuxtModule, extendViteConfig, useLogger } from '@nuxt/kit'
+import { addDevServerHandler, addImports, addPlugin, createResolver, defineNuxtModule, extendViteConfig, useLogger } from '@nuxt/kit'
 import { resolveModulePath } from 'exsolve'
+import { joinURL } from 'ufo'
 import { setupDevtoolsTab } from './devtools'
+import { editorLauncherHandler } from './editor-launcher'
 import { type ModuleOptions, mergeOptions, resolveOptions } from './runtime/core/options'
 
 export type { BackendLensOptions, ModuleOptions } from './runtime/core/options'
@@ -80,6 +82,15 @@ export default defineNuxtModule<ModuleOptions>({
       { name: 'useBackendLens', from: resolver.resolve('./runtime/composables') },
       { name: 'defineBackendLensAdapter', from: resolver.resolve('./runtime/composables') },
     ])
+
+    if (nuxt.options.dev && options.editor.launcher) {
+      // Hosts the app already trusts for Vite's own DNS-rebinding check are trusted here too.
+      const viteHosts = nuxt.options.vite.server?.allowedHosts
+      addDevServerHandler({
+        route: joinURL(nuxt.options.app.baseURL, options.editor.route),
+        handler: editorLauncherHandler([...options.editor.allowedHosts, ...(Array.isArray(viteHosts) ? viteHosts : [])]),
+      })
+    }
 
     if (nuxt.options.dev && options.devtools.enabled) {
       await setupDevtoolsTab(options.devtools, nuxt, resolver)

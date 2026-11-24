@@ -34,13 +34,14 @@ iframe that reads it directly, so the tab and the toolbar never disagree.
 duplicates and slow queries.
 
 **Request details**: controller, duration, memory, which adapter read the record, and a link to
-the source's own UI and to the raw record. Four tabs:
+the source's own UI and to the raw record. Source paths can open in an editor
+([below](#opening-files-in-an-editor)). Four tabs:
 
 | Tab       | Shows                                                                                |
 |-----------|--------------------------------------------------------------------------------------|
 | Queries   | every statement with duration and **call site** (`app/Http/Resources/BookResource.php:29`), bindings when reported separately, and the detected issues |
-| Logs      | log entries with level and context                                                    |
-| Cache     | hit / miss / write / delete events with keys                                          |
+| Logs      | log entries with level, context and source                                            |
+| Cache     | hit / miss / write / delete events with keys, and their source when the record has it |
 | Timeline  | the server's timeline events and every query on one time axis                         |
 
 Exceptions are shown above the tabs. A "timing only" note marks records from the Server-Timing
@@ -85,6 +86,47 @@ N+1 and duplicate groups never overlap. In the Queries tab:
 *Call site* is the first application frame of the query's stack trace: the first frame outside
 `vendor/`. When application middleware wraps the whole stack, queries made by vendor middleware
 inside it (a session store, for example) are attributed to that application middleware.
+
+## Opening files in an editor
+
+Off by default: source paths are plain text. **Settings** in the panel header turns them into
+links, per browser (kept in `localStorage`, shared by the toolbar and the DevTools tab):
+
+- query call sites, the N+1 call site in the issue summary, exceptions, log entries and cache
+  events;
+- the **controller**: Debugbar names its file and action line. Clockwork names only the class, so its
+  file comes from the PSR-4 namespaces (`editor.namespaces`, `App\` → `app/`) and opens at line 1.
+
+| Editor          | Opens through                                                                    |
+|-----------------|----------------------------------------------------------------------------------|
+| VS Code         | `vscode://file/<path>:<line>`, or the command `code --goto <path>:<line>`         |
+| PhpStorm        | `phpstorm://open?file=<path>&line=<line>`, or `phpstorm --line <line> <path>`     |
+| Zed             | `zed://file/<path>:<line>`, or `zed <path>:<line>`                                |
+| Custom command  | any binary with an arguments template (`{file}`, `{line}`)                         |
+
+**Link or command.**
+- A **link** is followed by the browser, which hands it to the editor's registered URL handler. It
+  works wherever the dev server runs, a container included. VS Code registers its handler on macOS,
+  Windows and Linux. PhpStorm has `phpstorm://` only through JetBrains Toolbox on macOS. Zed
+  registers `zed://` with its desktop entry.
+- A **command** is run by the Nuxt dev server, so it needs `nuxt dev` running on the same machine as
+  the browser, outside a container. The settings screen asks the launcher first and says when it
+  cannot run commands for the page. The binary is a name on the dev server's `PATH` or a full path, where a leading `~` is
+  the home directory (`command -v zeditor` prints it; `where` on Windows). A custom path covers
+  NixOS (`~/.nix-profile/bin/zeditor` from Home Manager, `/run/current-system/sw/bin/zeditor`,
+  `/etc/profiles/per-user/<user>/bin/phpstorm`), macOS
+  bundles (`/Applications/PhpStorm.app/Contents/MacOS/phpstorm`) and Windows
+  (`C:\Program Files\JetBrains\PhpStorm 2025.2\bin\phpstorm64.exe`). On Windows a bare name is
+  looked up with `PATHEXT`, and `.cmd` shims such as VS Code's `code` run through `cmd.exe`.
+
+**Path mapping.** A backend in a container reports its own paths (`/app/app/Models/Book.php`). Set
+the project root on this machine (`/home/me/shop/backend`, `C:\projects\shop`). The server root is
+taken from the records (the directory above `vendor/`), or set explicitly. Relative paths (Debugbar's
+exceptions) resolve against the same root. Paths are passed with forward slashes, which every editor
+accepts on Windows too.
+
+The screen shows an example from the captured records and what it will open, with a link to try
+it. A failed command shows the dev server's reason in the request details.
 
 ## Actions
 

@@ -2,7 +2,7 @@
 // per id. Served by Clockwork itself and by Laravel Debugbar's Clockwork emulation.
 
 import type { ClockworkAdapterOptions } from '../options'
-import { asArray, asString, findCallSite, isRecord, isVendorPath, toLine, toNumber } from '../trace'
+import { asArray, asString, basePathFromVendor, findCallSite, isRecord, isVendorPath, toLine, toNumber } from '../trace'
 import type {
   BackendLensAdapter,
   DebugCacheEvent,
@@ -55,6 +55,12 @@ export function createClockworkAdapter(options: ClockworkAdapterOptions): Backen
         .map(parseQuery)
 
       const logs = asArray(record.log).filter(isRecord).map(parseLogEntry)
+      const cache = asArray(record.cacheQueries).filter(isRecord).map(parseCacheEvent)
+      // Clockwork names no project root; the frames of the request's traces reveal it.
+      const files = [
+        ...queries.flatMap(query => query.trace),
+        ...[...asArray(record.log), ...asArray(record.cacheQueries)].filter(isRecord).flatMap(item => parseTrace(item.trace)),
+      ].map(frame => frame.file)
 
       return {
         id: asString(record.id) ?? ref.id,
@@ -63,13 +69,14 @@ export function createClockworkAdapter(options: ClockworkAdapterOptions): Backen
         uri: asString(record.uri),
         status: toNumber(record.responseStatus),
         controller: asString(record.controller),
+        basePath: basePathFromVendor(files),
         startedAt: requestStart,
         durationMs: toNumber(record.responseDuration),
         memoryBytes: toNumber(record.memoryUsage),
         queries,
         queriesDurationMs: toNumber(record.databaseDuration) ?? sum(queries.map(query => query.durationMs)),
         logs,
-        cache: asArray(record.cacheQueries).filter(isRecord).map(parseCacheEvent),
+        cache,
         timeline: asArray(record.timelineData).filter(isRecord).map(event => parseTimelineEvent(event, requestStart)),
         exceptions: logs.flatMap(entry => (entry.exception ? [entry.exception] : [])),
       } satisfies DebugDetails
@@ -122,6 +129,7 @@ function parseLogEntry(entry: Record<string, unknown>): DebugLogEntry {
     context: stripTypeMarkers(entry.context),
     time: toNumber(entry.time),
     exception: parseException(entry.exception),
+    callSite: findCallSite(parseTrace(entry.trace)),
   }
 }
 
@@ -145,6 +153,7 @@ function parseCacheEvent(event: Record<string, unknown>): DebugCacheEvent {
     type: CACHE_TYPES.get(String(event.type)) ?? 'other',
     key: String(event.key ?? ''),
     durationMs: toNumber(event.duration),
+    callSite: findCallSite(parseTrace(event.trace)),
   }
 }
 

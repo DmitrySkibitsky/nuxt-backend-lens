@@ -6,6 +6,7 @@ import { createClockworkAdapter } from './adapters/clockwork'
 import { createDebugbarAdapter } from './adapters/debugbar'
 import { createServerTimingAdapter } from './adapters/server-timing'
 import { installInterceptor } from './interceptor'
+import type { EditorCommand } from './editor'
 import type { BackendLensOptions } from './options'
 import { AdapterRegistry } from './registry'
 import { observeServerTiming, type ServerTimingEntry } from './server-timing'
@@ -22,6 +23,8 @@ export interface BackendLensEnvironment {
   /** The page window; action tracking needs its `document`. */
   window: Parameters<typeof installInterceptor>[0] & Partial<ActionTarget>
   observeServerTiming?: typeof observeServerTiming
+  /** URL of the dev-server editor launcher; absent outside `nuxt dev` or when it is turned off. */
+  editorLauncher?: string
 }
 
 export interface BackendLens {
@@ -36,6 +39,12 @@ export interface BackendLens {
   readonly navigationId: number
   /** Loads (or reloads) a request's debug record. */
   load(key: number): Promise<void>
+  /** URL of the dev-server editor launcher, when there is one. */
+  readonly editorLauncher?: string
+  /** Asks the dev server to run an editor command; rejects with the server's reason. */
+  launchEditor(command: EditorCommand): Promise<void>
+  /** Why the dev server would refuse to run an editor command for this page; `undefined` when it would not. */
+  probeEditorLauncher(): Promise<string | undefined>
   clear(): void
   destroy(): void
 }
@@ -76,6 +85,25 @@ export function createBackendLens(options: BackendLensOptions, environment: Back
       ...ref.init,
       signal: own ? AbortSignal.any([timeout, own]) : timeout,
     })
+  }
+
+  /** The launcher's refusal, or `undefined` when it accepted. */
+  async function postToLauncher(body: object): Promise<string | undefined> {
+    if (!environment.editorLauncher) {
+      return 'the editor launcher runs in `nuxt dev` only'
+    }
+    // The original fetch: the launch is not a request of the app.
+    const { originalFetch } = interceptor
+    const response = await originalFetch(environment.editorLauncher, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+    if (response.ok) {
+      return undefined
+    }
+    const reason = await response.text().catch(() => '')
+    return reason || `the launcher answered ${response.status}`
   }
 
   function attachTiming(entry: RequestEntry, timing: ServerTimingEntry): void {
@@ -242,6 +270,14 @@ export function createBackendLens(options: BackendLensOptions, environment: Back
       store.upsertNavigation({ id: navigationId, route, startTime: initial?.startTime ?? 0 })
     },
     load,
+    editorLauncher: environment.editorLauncher,
+    async launchEditor(command) {
+      const refusal = await postToLauncher({ binary: command.binary, args: command.args })
+      if (refusal) {
+        throw new Error(refusal)
+      }
+    },
+    probeEditorLauncher: () => postToLauncher({ probe: true }).catch(() => undefined),
     clear() {
       prefetchQueue.length = 0
       pendingTimings = []

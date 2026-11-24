@@ -7,7 +7,7 @@
       v-if="query.callSite"
       class="bl-frame"
       :title="formatFrame(query.callSite.file, query.callSite.line)"
-    ><bdi>{{ formatFrame(query.callSite.file, query.callSite.line) }}</bdi></span>
+    ><SourceLink :location="query.callSite"><bdi>{{ formatFrame(query.callSite.file, query.callSite.line) }}</bdi></SourceLink></span>
   </div>
   <SqlCode
     :sql="query.sql"
@@ -25,6 +25,7 @@
 import type { SqlDisplayOptions } from '../core/options'
 import type { DebugQuery } from '../core/types'
 import { formatFrame, formatMs, formatValue } from './format'
+import SourceLink from './SourceLink.vue'
 import SqlCode from './SqlCode.vue'
 
 defineProps<{
