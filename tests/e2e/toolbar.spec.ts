@@ -189,3 +189,15 @@ test('the toolbar does not inherit or leak page styles', async ({ page }) => {
   })
   expect(pageButtonPadding).not.toBe('6px 10px')
 })
+
+test('the hovered badge stays opaque over page content', async ({ browser }) => {
+  for (const scheme of ['light', 'dark'] as const) {
+    const page = await browser.newPage({ colorScheme: scheme })
+    await page.goto('/')
+    const badge = page.getByTestId('backend-lens-badge')
+    await badge.hover()
+    const background = await badge.evaluate(element => getComputedStyle(element).backgroundColor)
+    expect(background, scheme).toBe(scheme === 'light' ? 'rgb(255, 255, 255)' : 'rgb(21, 21, 21)')
+    await page.close()
+  }
+})
