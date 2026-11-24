@@ -219,7 +219,7 @@ npmjs.com, in the package's **Settings**:
 
 1. **Trusted publishing**: GitHub Actions, owner `DmitrySkibitsky`, repository
    `nuxt-backend-lens`, workflow `release.yml`, environment `npm`, allowed action `npm publish`.
-2. **Publishing access**: "Require two-factor authentication and disallow tokens"
+2. **Publishing access**: "Require two-factor authentication and disallow bypass 2fa tokens"
    (`npm access set mfa=publish nuxt-backend-lens`). Trusted publishing and a publish by hand
    with 2FA keep working.
 
