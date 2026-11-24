@@ -137,7 +137,7 @@ async function tour(page, startRecording) {
 /** Runs the tour while saving screencast frames; returns them with their timestamps (seconds). */
 async function record(frameDir) {
   const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined })
-  const context = await browser.newContext({ baseURL, viewport, colorScheme: 'dark' })
+  const context = await browser.newContext({ baseURL, viewport, colorScheme: 'light' })
   await context.addInitScript(overlay)
   const page = await context.newPage()
   const session = await context.newCDPSession(page)
