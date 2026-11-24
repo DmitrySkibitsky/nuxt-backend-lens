@@ -205,7 +205,7 @@ The tag starts `.github/workflows/release.yml`:
 | Job              | Steps |
 |------------------|-------|
 | `build`          | the tag matches the version and is on `main`, **CI result** passed on that commit, the changelog has the version's section; pack (no publishing rights here, dependency scripts run in this job) |
-| `publish`        | `npm publish` of that tarball: `latest`, or `next` for a prerelease (`0.3.0-beta.1`). A version already on npm is skipped |
+| `publish`        | `npm publish` of that tarball: `latest`, or `next` for a prerelease (`0.3.0-beta.1`), then a check that npm lists its provenance. A version already on npm is skipped |
 | `github-release` | a GitHub release with the changelog section and the tarball |
 
 A failed run is re-run from the Actions tab; the tag stays.
@@ -219,9 +219,14 @@ npmjs.com, in the package's **Settings**:
 
 1. **Trusted publishing**: GitHub Actions, owner `DmitrySkibitsky`, repository
    `nuxt-backend-lens`, workflow `release.yml`, environment `npm`, allowed action `npm publish`.
-   A configuration that has not published within two days expires and has to be recreated.
-2. **Publishing access**: "Require two-factor authentication and disallow tokens", once a run has
-   published.
+2. **Publishing access**: "Require two-factor authentication and disallow tokens"
+   (`npm access set mfa=publish nuxt-backend-lens`). Trusted publishing and a publish by hand
+   with 2FA keep working.
+
+A new trusted publisher is pending until a run publishes through it, and expires after two days
+without one (a run that skips npm does not count). Then `publish` fails and says so: delete it,
+recreate it with the values above and re-run the job. After a publish, the job waits until npm
+lists the provenance attestation and fails without one.
 
 Trusted publishing is set up on a package that exists. The first version is therefore published by
 hand, without provenance: check out its tag, `pnpm -F nuxt-backend-lens pack`, `npm publish` the
