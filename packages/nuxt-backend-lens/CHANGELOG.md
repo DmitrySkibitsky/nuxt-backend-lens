@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v0.1.1
+
+[compare changes](https://github.com/DmitrySkibitsky/nuxt-backend-lens/compare/v0.1.0...v0.1.1)
+
+### 🚀 Enhancements
+
+- Open source paths in an editor ([777e4ab](https://github.com/DmitrySkibitsky/nuxt-backend-lens/commit/777e4ab))
+  - A **Settings** screen in the panel chooses the editor: VS Code, PhpStorm, Zed or a custom binary. Off by default and kept per browser.
+  - The controller, query call sites, the origin of N+1 and duplicate groups, exceptions, log sources and cache sources become links. A known line opens there; an unknown one (a controller found by its class name) opens at line 1.
+  - Files open through the editor's URL handler, which works with a dev server in a container, or through a command the Nuxt dev server runs, for editors without a handler or at a custom path (NixOS, macOS bundles, Windows `.exe` and `.cmd`).
+  - Paths reported by a backend in a container map to a local project root. The adapters find the backend's root in the record.
+  - New options: `editor.presets`, `editor.namespaces` (PSR-4 prefixes for controller classes), `editor.launcher`, `editor.route`, `editor.allowedHosts`. See [Opening files in an editor](https://github.com/DmitrySkibitsky/nuxt-backend-lens/blob/main/docs/features.md#opening-files-in-an-editor).
+
+### 🩹 Fixes
+
+- **ui:** Keep the hovered toolbar badge opaque ([6e653e4](https://github.com/DmitrySkibitsky/nuxt-backend-lens/commit/6e653e4))
+
+### ❤️ Contributors
+
+- Dmitry Skibitsky ([@DmitrySkibitsky](https://github.com/DmitrySkibitsky))
+
 ## v0.1.0
 
 
