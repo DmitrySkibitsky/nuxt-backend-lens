@@ -142,7 +142,8 @@ jobs:
               exit 1
               ;;
           esac
-          if ! npm publish release/*.tgz --provenance --tag "$DIST_TAG"; then
+          # "./": npm reads "release/x.tgz" as the GitHub repository release/x.tgz.
+          if ! npm publish ./release/*.tgz --provenance --tag "$DIST_TAG"; then
             echo "::error::npm publish failed. If npm refused the OIDC token, the trusted publisher on npmjs.com has most likely expired (an unvalidated one does after two days): delete it, recreate it with the values in docs/development.md#npm-trusted-publishing, then re-run this job."
             exit 1
           fi
