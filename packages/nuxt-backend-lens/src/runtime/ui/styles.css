@@ -103,7 +103,8 @@ button {
   cursor: pointer;
 }
 
-.bl-badge:hover { background: var(--bl-hover); }
+/* The badge floats over the page and --bl-hover is translucent: tint the opaque background instead of replacing it. */
+.bl-badge:hover { background: linear-gradient(var(--bl-hover), var(--bl-hover)) var(--bl-bg); }
 .bl-badge-title { font-weight: 600; }
 .bl-badge-problem { border-color: var(--bl-error); }
 
