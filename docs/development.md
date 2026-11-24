@@ -182,7 +182,7 @@ no direct pushes, so the release commit goes through a pull request like any oth
 Prepare the release on a branch from an up-to-date `main`:
 
 ```bash
-git switch -c release/v0.2.0
+git switch -c chore/release-v0.2.0
 pnpm -F nuxt-backend-lens changelog            # version from the commits since the last tag
 pnpm -F nuxt-backend-lens changelog -r 0.2.0   # or name it
 ```
