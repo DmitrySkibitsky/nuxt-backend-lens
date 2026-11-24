@@ -101,7 +101,7 @@ jobs:
     name: Publish to npm
     needs: build
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     # The npm trusted publisher names this environment, so no other job can publish.
     environment:
       name: npm
@@ -121,7 +121,8 @@ jobs:
       # Publishes the tarball the build job packed, byte for byte. A version that is already on npm
       # (published by hand, or by an earlier run of this tag) is left alone, so the run can go on to
       # the GitHub release.
-      - name: npm publish
+      - id: publish
+        name: npm publish
         env:
           PACKAGE: ${{ needs.build.outputs.name }}
           VERSION: ${{ needs.build.outputs.version }}
@@ -132,7 +133,7 @@ jobs:
           status=$(curl -s -o /dev/null -w '%{http_code}' "https://registry.npmjs.org/$PACKAGE/$VERSION")
           case "$status" in
             200)
-              echo "::warning::$PACKAGE@$VERSION is already on npm; not publishing it again."
+              echo "::warning::$PACKAGE@$VERSION is already on npm; not publishing it again. A trusted publisher that is pending validation stays pending."
               exit 0
               ;;
             404) ;;
@@ -141,7 +142,29 @@ jobs:
               exit 1
               ;;
           esac
-          npm publish release/*.tgz --provenance --tag "$DIST_TAG"
+          if ! npm publish release/*.tgz --provenance --tag "$DIST_TAG"; then
+            echo "::error::npm publish failed. If npm refused the OIDC token, the trusted publisher on npmjs.com has most likely expired (an unvalidated one does after two days): delete it, recreate it with the values in docs/development.md#npm-trusted-publishing, then re-run this job."
+            exit 1
+          fi
+          echo "published=true" >> "$GITHUB_OUTPUT"
+      # Provenance needs the OIDC publish from a public repository; a token publish would go through
+      # without it. The registry may take a few minutes to list a new version.
+      - name: npm lists the provenance attestation
+        if: steps.publish.outputs.published == 'true'
+        env:
+          PACKAGE: ${{ needs.build.outputs.name }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          for _ in $(seq 1 40); do
+            if curl -s "https://registry.npmjs.org/-/npm/v1/attestations/$PACKAGE@$VERSION" \
+              | jq -e '.attestations[]? | select(.predicateType == "https://slsa.dev/provenance/v1")' > /dev/null; then
+              echo "$PACKAGE@$VERSION has a provenance attestation."
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "::error::$PACKAGE@$VERSION has no provenance attestation on npm after 10 minutes."
+          exit 1
 
   github-release:
     name: GitHub release
