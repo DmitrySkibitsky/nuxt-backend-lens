@@ -19,6 +19,9 @@
           <th>Event</th>
           <th>Key</th>
           <th>Time</th>
+          <th v-if="hasSources">
+            Source
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +35,15 @@
           </td>
           <td><code>{{ event.key }}</code></td>
           <td>{{ formatMs(event.durationMs) }}</td>
+          <td
+            v-if="hasSources"
+            class="bl-muted"
+          >
+            <SourceLink
+              v-if="event.callSite"
+              :location="event.callSite"
+            />
+          </td>
         </tr>
       </tbody>
     </table>
@@ -48,10 +60,13 @@
 import { computed } from 'vue'
 import type { DebugCacheEvent } from '../core/types'
 import { formatMs } from './format'
+import SourceLink from './SourceLink.vue'
 
 const props = defineProps<{
   cache: readonly DebugCacheEvent[]
 }>()
+
+const hasSources = computed(() => props.cache.some(event => event.callSite))
 
 const counts = computed(() => props.cache.reduce<Record<string, number>>((result, event) => {
   result[event.type] = (result[event.type] ?? 0) + 1

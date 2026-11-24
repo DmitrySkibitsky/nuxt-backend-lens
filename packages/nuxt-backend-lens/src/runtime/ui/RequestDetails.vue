@@ -13,7 +13,13 @@
         >{{ entry.status }}</span>
       </div>
       <div class="bl-details-meta">
-        <span v-if="details?.controller">{{ details.controller }}</span>
+        <SourceLink
+          v-if="details?.controller"
+          :location="controller"
+          data-testid="backend-lens-controller"
+        >
+          {{ details.controller }}
+        </SourceLink>
         <span>{{ formatMs(details?.durationMs ?? entry.durationMs) }}</span>
         <span v-if="details?.memoryBytes">{{ formatBytes(details.memoryBytes) }}</span>
         <span v-if="entry.ref">via {{ entry.ref.adapter }}</span>
@@ -65,6 +71,14 @@
 
     <template v-else-if="details && analysis">
       <p
+        v-if="launchError"
+        class="bl-note bl-status-error"
+        role="alert"
+        data-testid="backend-lens-launch-error"
+      >
+        Could not open the editor: {{ launchError }}
+      </p>
+      <p
         v-if="details.note"
         class="bl-note"
         data-testid="backend-lens-note"
@@ -77,7 +91,10 @@
         class="bl-exception"
       >
         <strong>{{ exception.type }}</strong>: {{ exception.message }}
-        <span class="bl-muted">{{ formatFrame(exception.file, exception.line) }}</span>
+        <SourceLink
+          class="bl-muted"
+          :location="exception.file ? { file: exception.file, line: exception.line ?? null } : undefined"
+        />
       </div>
 
       <nav
@@ -134,14 +151,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, useId } from 'vue'
+import { computed, nextTick, provide, ref, useId, watch } from 'vue'
 import { analyzeDetails } from '../core/analysis'
+import { controllerLocation, editorTarget } from '../core/editor'
 import type { RequestEntry } from '../core/types'
 import { httpUrl } from '../core/url'
 import CacheTab from './CacheTab.vue'
-import { analysisOptions, formatAction, formatBytes, formatFrame, formatMs, statusClass } from './format'
+import { SOURCE_LINKS } from './editor'
+import { analysisOptions, formatAction, formatBytes, formatMs, statusClass } from './format'
 import LogsTab from './LogsTab.vue'
 import QueriesTab from './QueriesTab.vue'
+import SourceLink from './SourceLink.vue'
 import { useLensUiState } from './state'
 import TimelineTab from './TimelineTab.vue'
 
@@ -153,7 +173,7 @@ const emit = defineEmits<{
   reload: []
 }>()
 
-const { lens, actions } = useLensUiState()
+const { lens, actions, editorSettings } = useLensUiState()
 const action = computed(() => actions.value.find(item => item.id === props.entry.actionId))
 
 type TabId = 'queries' | 'logs' | 'cache' | 'timeline'
@@ -183,6 +203,26 @@ const webUrl = computed(() => httpUrl(props.entry.ref?.webUrl))
 const recordUrl = computed(() => httpUrl(props.entry.ref?.url))
 
 const details = computed(() => props.entry.details)
+const controller = computed(() => (details.value ? controllerLocation(details.value, lens.options.editor.namespaces) : undefined))
+
+const launchError = ref<string>()
+watch(() => props.entry.key, () => {
+  launchError.value = undefined
+})
+provide(SOURCE_LINKS, {
+  target: location => editorTarget(location, {
+    settings: editorSettings.value,
+    options: lens.options.editor,
+    basePath: details.value?.basePath,
+    launcher: lens.editorLauncher,
+  }),
+  launch: (command) => {
+    launchError.value = undefined
+    lens.launchEditor(command).catch((error: unknown) => {
+      launchError.value = error instanceof Error ? error.message : String(error)
+    })
+  },
+})
 const analysis = computed(() => (details.value ? analyzeDetails(details.value, analysisOptions(lens.options)) : undefined))
 
 const tabs = computed(() => [

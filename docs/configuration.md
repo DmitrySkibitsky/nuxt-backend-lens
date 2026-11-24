@@ -72,6 +72,19 @@ export default defineNuxtConfig({
 In markup, `data-backend-lens-action="…"` gives an element an explicit action label, and
 `data-backend-lens-ignore` excludes an element and its subtree.
 
+## Editor
+
+Which editor opens source paths, and how, is chosen per browser on the panel's settings screen
+([Features](features.md#opening-files-in-an-editor)). These options shape what the screen offers.
+
+| Option                 | Default                              | Description |
+|------------------------|--------------------------------------|-------------|
+| `editor.presets`       | `vscode`, `phpstorm`, `zed`          | Editors offered, by id: `{ label, url, binary, args }`. In the templates `{file}` is the local path and `{line}` the line (1 when unknown). URL templates also take `{path}`, the path URL-encoded behind a leading `/` (`/C:/…` on Windows), while `{file}` is URL-encoded as a query value. Merged with the defaults: add an editor (`cursor: { label: 'Cursor', url: 'cursor://file{path}:{line}', binary: 'cursor', args: ['--goto', '{file}:{line}'] }`) or change a field of one. `custom` is reserved. |
+| `editor.namespaces`    | `{ 'App\\': 'app/' }`                | PSR-4 namespace prefix → directory under the project root, to find a controller's file when the record names only its class (Clockwork). The longest prefix wins. |
+| `editor.launcher`      | `true`                               | Let the dev server run editor commands (`nuxt dev` only). With `false` only links are offered. |
+| `editor.route`         | `'/__backend-lens/open-in-editor'`   | Dev-server route of the launcher. |
+| `editor.allowedHosts`  | `[]`                                 | Page hosts allowed to call the launcher, besides `localhost`, loopback addresses, `*.localhost` and `*.test`. A leading dot allows subdomains (`.dev.example`). Vite's `server.allowedHosts` are allowed too. |
+
 ## Adapters
 
 ### `adapters.clockwork`

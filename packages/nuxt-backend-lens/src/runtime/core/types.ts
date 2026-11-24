@@ -1,8 +1,12 @@
 // Normalized, vendor-neutral model. Nothing outside an adapter may depend on a vendor's record format.
 
-export interface StackFrame {
+/** A place in the backend's source, as the backend reports it (absolute, or relative to its project root). */
+export interface SourceLocation {
   file: string
   line: number | null
+}
+
+export interface StackFrame extends SourceLocation {
   call?: string
   /** Frame inside a dependency (vendor/) rather than application code. */
   isVendor: boolean
@@ -35,6 +39,8 @@ export interface DebugLogEntry {
   /** Epoch seconds, when known. */
   time?: number
   exception?: DebugException
+  /** First application frame of the entry's trace: where it was logged. */
+  callSite?: StackFrame
 }
 
 export type DebugCacheEventType = 'hit' | 'miss' | 'write' | 'delete' | 'other'
@@ -43,6 +49,8 @@ export interface DebugCacheEvent {
   type: DebugCacheEventType
   key: string
   durationMs?: number
+  /** First application frame of the event's trace. */
+  callSite?: StackFrame
 }
 
 export interface DebugTimelineEvent {
@@ -60,6 +68,10 @@ export interface DebugDetails {
   uri?: string
   status?: number
   controller?: string
+  /** The controller's file (and action line), when the record names it. */
+  controllerSource?: SourceLocation
+  /** The backend's project root, when the record reveals it; relative paths are relative to it. */
+  basePath?: string
   /** Epoch seconds of the request start on the server, when known. */
   startedAt?: number
   durationMs?: number

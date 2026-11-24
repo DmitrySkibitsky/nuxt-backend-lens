@@ -1,4 +1,5 @@
 import { defineNuxtPlugin, useRuntimeConfig } from '#app'
+import { joinURL } from 'ufo'
 import { START_LOCATION } from 'vue-router'
 import { type BackendLens, createBackendLens } from './core/collector'
 import { LENS_GLOBAL_KEY } from './core/global'
@@ -9,7 +10,8 @@ export default defineNuxtPlugin({
   // Before every other plugin: nuxt-auth-sanctum and others fire requests during their own setup.
   enforce: 'pre',
   setup(nuxtApp) {
-    const options = resolveOptions(useRuntimeConfig().public.backendLens as ModuleOptions | undefined)
+    const config = useRuntimeConfig()
+    const options = resolveOptions(config.public.backendLens as ModuleOptions | undefined)
     // The build has the module; runtime config (NUXT_PUBLIC_BACKEND_LENS_ENABLED) can still turn it off.
     if (!options.enabled) {
       return
@@ -22,7 +24,11 @@ export default defineNuxtPlugin({
     if (import.meta.dev) {
       globalScope[LENS_GLOBAL_KEY]?.destroy()
     }
-    const lens = createBackendLens(options, { window })
+    // The module serves the launcher in `nuxt dev` only.
+    const editorLauncher = import.meta.dev && options.editor.launcher
+      ? joinURL(config.app.baseURL, options.editor.route)
+      : undefined
+    const lens = createBackendLens(options, { window, editorLauncher })
     if (import.meta.dev) {
       globalScope[LENS_GLOBAL_KEY] = lens
     }

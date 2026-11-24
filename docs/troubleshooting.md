@@ -65,6 +65,26 @@ container log, and the token lives in the container: re-creating the container i
 Vue DevTools keeps plugin layers switched off. Enable **Backend requests** in its Timeline.
 Requests made before it connected are delivered on connect.
 
+## Source paths do not open in the editor
+
+- **Nothing is a link**: choose an editor under **Settings** in the panel; it is off by default and
+  chosen per browser.
+- **A link does nothing**: the OS has no handler for the editor's URL scheme. PhpStorm on Linux and
+  Windows has none without JetBrains Toolbox. Switch to **Command run by the Nuxt dev server**.
+- **The file opens at the wrong path**: the backend runs elsewhere (a container). Set the project
+  root on this machine under **Path mapping**; check the example the screen shows.
+- **"… was not found where the dev server runs"**: the binary is not on the dev server's `PATH`.
+  Set the full path; `command -v zeditor` (`where zed` on Windows) prints it. NixOS keeps binaries
+  under `~/.nix-profile/bin` (Home Manager), `/etc/profiles/per-user/<user>/bin` or
+  `/run/current-system/sw/bin`, and names Zed's `zeditor`. A dev server in a container does not
+  see the host's editors at all: use a link.
+- **"the dev server runs in a container …"**: the settings screen asks the launcher before a command
+  is used. A dev server in a container, or one reached through a proxy elsewhere, cannot start an
+  editor on your machine. Choose a preset with **Open with: Link** and set the local project root
+  under **Path mapping**.
+- **"pages on … may not launch an editor"**: the app is opened on a host name the launcher does not
+  trust. Add it to `editor.allowedHosts`.
+
 ## Chromium does not start (NixOS)
 
 A global `LD_LIBRARY_PATH` pointing at other glibc builds breaks Chromium. Use `nix develop`,

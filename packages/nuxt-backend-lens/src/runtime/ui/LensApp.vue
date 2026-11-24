@@ -66,19 +66,30 @@
         <strong v-if="!embedded">Backend Lens</strong>
         <span class="bl-muted">{{ scopeLabel }}</span>
         <span class="bl-spacer" />
-        <label class="bl-toggle">
-          <input
-            v-model="showAll"
-            type="checkbox"
+        <template v-if="!settingsOpen">
+          <label class="bl-toggle">
+            <input
+              v-model="showAll"
+              type="checkbox"
+            >
+            all navigations
+          </label>
+          <button
+            type="button"
+            class="bl-button"
+            @click="clear"
           >
-          all navigations
-        </label>
+            Clear
+          </button>
+        </template>
         <button
           type="button"
           class="bl-button"
-          @click="clear"
+          :aria-pressed="settingsOpen"
+          data-testid="backend-lens-settings-toggle"
+          @click="settingsOpen = !settingsOpen"
         >
-          Clear
+          {{ settingsOpen ? 'Done' : 'Settings' }}
         </button>
         <button
           v-if="!embedded"
@@ -91,6 +102,13 @@
         </button>
       </header>
       <div
+        v-if="settingsOpen"
+        class="bl-settings-body"
+      >
+        <SettingsView />
+      </div>
+      <div
+        v-if="!settingsOpen"
         class="bl-summary"
         data-testid="backend-lens-summary"
       >
@@ -126,6 +144,7 @@
         >({{ summary.requests - summary.loaded }} not loaded)</span>
       </div>
       <div
+        v-if="!settingsOpen"
         ref="body"
         class="bl-panel-body"
         :style="bodyStyle"
@@ -172,6 +191,7 @@ import { LAYOUT_LIMITS, resizableEdges, usePanelLayout } from './layout'
 import RequestDetails from './RequestDetails.vue'
 import RequestList from './RequestList.vue'
 import ResizeHandle from './ResizeHandle.vue'
+import SettingsView from './SettingsView.vue'
 import { useLensUiState } from './state'
 
 const props = withDefaults(defineProps<{
@@ -209,6 +229,7 @@ const bodyStyle = computed(() => ({
 
 const listWidth = () => body.value?.querySelector<HTMLElement>('.bl-list')?.offsetWidth ?? layout.value.listWidth
 const showAll = ref(false)
+const settingsOpen = ref(false)
 const selectedKey = ref<number>()
 
 const visible = computed(() => (showAll.value

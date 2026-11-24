@@ -38,7 +38,7 @@ test('N+1 is collapsed into its first query and opens indented below it', async 
 
   const issue = panel.getByTestId('backend-lens-issue-n-plus-one')
   await expect(issue).toContainText('30×')
-  await expect(issue).toContainText('BookResource.php:29')
+  await expect(panel.getByTestId('backend-lens-issue-source')).toContainText('BookResource.php:29')
   const total = await queryTotal(panel)
   expect(total).toBeGreaterThanOrEqual(31)
 

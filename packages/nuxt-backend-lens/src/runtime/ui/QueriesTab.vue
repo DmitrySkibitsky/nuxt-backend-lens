@@ -8,11 +8,12 @@
       <li
         v-for="(issue, index) in analysis.issues"
         :key="index"
+        class="bl-issue"
+        :class="`bl-issue-${issueClass(issue.kind)}`"
       >
         <button
           type="button"
-          class="bl-issue"
-          :class="`bl-issue-${issueClass(issue.kind)}`"
+          class="bl-issue-toggle"
           :data-testid="`backend-lens-issue-${issueClass(issue.kind)}`"
           :title="issueTitle(issue)"
           :aria-expanded="issue.kind === 'slow' ? undefined : expanded.has(issue.indexes[0]!)"
@@ -25,10 +26,6 @@
               :options="sqlOptions"
               inline
             />
-            <span
-              v-if="issue.callSite"
-              class="bl-muted"
-            > from {{ formatFrame(issue.callSite.file, issue.callSite.line) }}</span>
           </span>
           <span v-else-if="issue.kind === 'duplicate'">
             {{ issue.indexes.length }}× identical <SqlCode
@@ -44,8 +41,14 @@
               inline
             />
           </span>
-          <span class="bl-issue-time">{{ formatMs(issue.totalMs) }}</span>
         </button>
+        <!-- Beside the toggle, not in it: a link inside a button is not valid HTML. -->
+        <span
+          v-if="issue.kind === 'n+1' && issue.callSite"
+          class="bl-muted bl-issue-source"
+          data-testid="backend-lens-issue-source"
+        >from <SourceLink :location="issue.callSite" /></span>
+        <span class="bl-issue-time">{{ formatMs(issue.totalMs) }}</span>
       </li>
     </ul>
 
@@ -121,8 +124,9 @@ import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 import type { QueryIssue, RequestAnalysis } from '../core/analysis'
 import type { SqlDisplayOptions } from '../core/options'
 import type { DebugQuery } from '../core/types'
-import { formatFrame, formatMs, ISSUE_LABELS } from './format'
+import { formatMs, ISSUE_LABELS } from './format'
 import QueryRow from './QueryRow.vue'
+import SourceLink from './SourceLink.vue'
 import SqlCode from './SqlCode.vue'
 
 const props = defineProps<{

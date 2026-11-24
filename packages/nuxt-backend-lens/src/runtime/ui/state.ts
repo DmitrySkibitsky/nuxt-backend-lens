@@ -1,7 +1,9 @@
 import { type InjectionKey, inject, type Ref, ref, shallowRef } from 'vue'
 import type { ActionEntry } from '../core/actions'
 import type { BackendLens } from '../core/collector'
+import type { EditorSettings } from '../core/editor'
 import type { NavigationEntry, RequestEntry } from '../core/types'
+import { useEditorSettings } from './editor'
 import type { ColorMode } from './theme'
 
 export interface LensUiState {
@@ -12,6 +14,9 @@ export interface LensUiState {
   currentNavigationId: Ref<number>
   /** Decided by the shell. */
   colorMode: Ref<ColorMode>
+  /** From the settings screen, per browser. */
+  editorSettings: Ref<EditorSettings>
+  setEditorSettings: (settings: EditorSettings) => void
 }
 
 export const LENS_UI_STATE: InjectionKey<LensUiState> = Symbol('backend-lens-ui')
@@ -23,14 +28,21 @@ export function createUiState(lens: BackendLens, colorMode: Ref<ColorMode>): [Le
   const actions = shallowRef(lens.store.actions)
   const currentNavigationId = ref(lens.navigationId)
 
-  const unsubscribe = lens.store.subscribe(() => {
+  const [editorSettings, setEditorSettings, stopEditorSettings] = useEditorSettings()
+
+  const unsubscribeStore = lens.store.subscribe(() => {
     entries.value = lens.store.entries
     navigations.value = lens.store.navigations
     actions.value = lens.store.actions
     currentNavigationId.value = lens.navigationId
   })
 
-  return [{ lens, entries, navigations, actions, currentNavigationId, colorMode }, unsubscribe]
+  const unsubscribe = () => {
+    unsubscribeStore()
+    stopEditorSettings()
+  }
+
+  return [{ lens, entries, navigations, actions, currentNavigationId, colorMode, editorSettings, setEditorSettings }, unsubscribe]
 }
 
 export function useLensUiState(): LensUiState {

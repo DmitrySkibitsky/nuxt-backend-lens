@@ -60,7 +60,9 @@ A **Backend** badge appears in the bottom-right corner; click it to open the pan
   - queries with call sites (`app/Http/Resources/BookResource.php:29`), SQL highlighting and
     optional formatting (`sql.format`);
   - logs, cache events, exceptions;
-  - a timeline with every query on the request's time axis.
+  - a timeline with every query on the request's time axis;
+  - source paths that open in VS Code, PhpStorm, Zed or any editor command, with path mapping for a
+    backend in a container (off until chosen in the panel's settings).
 - **Issues**:
   - N+1 and duplicate queries, collapsed into their first query and opened right below it;
   - slow queries;

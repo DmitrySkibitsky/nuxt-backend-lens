@@ -95,6 +95,28 @@ whole store, which would make `require.resolve` find everything.
 So the emitter marks an event as sent only when devtools-kit accepts it, catches up on connect, and
 its setup is idempotent: no loss, no duplicates.
 
+**Editor links: a URL or a dev-server command.**
+- A URL (`vscode://`, `phpstorm://`, `zed://`) needs nothing from the dev server and works when it
+  runs in a container, but only where the OS has the editor's handler. A command runs any binary,
+  but only on the dev server's machine. The settings screen offers both; the choice is per browser
+  (`localStorage`), not a module option, because it depends on each developer's machine.
+- Paths are mapped in the browser, from the server's project root to a local one. Adapters report
+  the root when the record reveals it: the directory above `vendor/`, or a file Debugbar names both
+  absolute and relative.
+- The launcher spawns whatever binary the page sends, so it is a remote-code-execution endpoint by
+  design and is fenced accordingly. It exists only in `nuxt dev` (`editor.launcher`), answers only
+  a TCP peer on loopback (a dev server started with `--host` is reachable from the network), and
+  only a JSON `POST` whose `Origin` matches the request's host and is a trusted name: loopback,
+  `localhost`, `*.localhost`, `*.test` or a configured host. The JSON body forces a CORS preflight,
+  which the launcher never grants, so other sites cannot reach it. A DNS-rebinding page has a
+  public name, so it fails the host check.
+- It spawns without a shell. Windows runs `.cmd` / `.bat` only through `cmd.exe`, where no quoting
+  neutralizes `"` or `%`: such arguments are refused instead.
+- The settings screen sends `{ "probe": true }` before a command is used: it passes the same checks
+  and runs nothing, so the screen can say why commands would fail instead of failing on the first
+  click. A dev server in a container answers the probe with a warning but still launches, because a
+  dev container (VS Code's) may hold the editor.
+
 **Issue detection in the browser.** It works the same for every adapter, and it needs nothing from
 the backend beyond what the debug package already records.
 

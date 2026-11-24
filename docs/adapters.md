@@ -42,13 +42,15 @@ interface DebugDetails {
   uri?: string
   status?: number
   controller?: string
+  controllerSource?: { file: string, line: number | null }  // the controller's file, when the record names it
+  basePath?: string         // the backend's project root, when the record reveals it
   startedAt?: number        // epoch seconds of the request start
   durationMs?: number
   memoryBytes?: number
   queries: { sql: string, bindings?: unknown[], durationMs: number, time?: number, callSite?: StackFrame, trace: StackFrame[] }[]
   queriesDurationMs: number
-  logs: { level: string, message: string, context?: unknown, time?: number, exception?: DebugException }[]
-  cache: { type: 'hit' | 'miss' | 'write' | 'delete' | 'other', key: string, durationMs?: number }[]
+  logs: { level: string, message: string, context?: unknown, time?: number, exception?: DebugException, callSite?: StackFrame }[]
+  cache: { type: 'hit' | 'miss' | 'write' | 'delete' | 'other', key: string, durationMs?: number, callSite?: StackFrame }[]
   timeline: { label: string, startMs: number, durationMs: number }[]
   exceptions: { type: string, message: string, file?: string, line?: number | null }[]
   note?: string             // shown with the details, e.g. what the source cannot provide
@@ -126,6 +128,9 @@ export default defineNuxtPlugin(() => {
   already in `adapterOrder` keeps its place and an unknown name goes last.
 - Provide `callSite` (the first application frame) on queries to get N+1 detection; without it,
   every query counts as coming from the same, unknown place.
+- File paths may be absolute or relative to the backend's project root. Set `basePath` when the
+  record reveals the root, so relative paths can be opened in an editor and the settings screen can
+  offer it for path mapping.
 - A response carrying everything itself can return `inline` from `detect`. Then `url` is only
   shown as the "raw record" link.
 

@@ -3,7 +3,7 @@
 // emulation.
 
 import type { DebugbarAdapterOptions } from '../options'
-import { asArray, asString, findCallSite, isRecord, isVendorPath, toLine, toNumber } from '../trace'
+import { asArray, asString, basePathFromPair, basePathFromVendor, findCallSite, isRecord, isVendorPath, toLine, toNumber } from '../trace'
 import type {
   BackendLensAdapter,
   DebugCacheEvent,
@@ -13,6 +13,7 @@ import type {
   DebugLogEntry,
   DebugQuery,
   DebugTimelineEvent,
+  SourceLocation,
   StackFrame,
 } from '../types'
 import { fillTemplate, joinPath, resolveOnServer } from '../url'
@@ -26,6 +27,9 @@ const CACHE_TYPES = new Map<string, DebugCacheEventType>([
   ['written', 'write'],
   ['forgotten', 'delete'],
 ])
+
+/** The route collector's `file`: `app/Http/Controllers/UserController.php:12-30`. */
+const ROUTE_FILE = /^(.+?)(?::(\d+)(?:-\d+)?)?$/
 
 /** Log collector messages are formatted as `[12:34:56] LOG.info: text {context}`. */
 const LOG_PREFIX = /^\[\d{2}:\d{2}:\d{2}\] LOG\.\w+: /
@@ -62,6 +66,7 @@ export function createDebugbarAdapter(options: DebugbarAdapterOptions): BackendL
         .map(parseStatement)
 
       const accumulated = toNumber(queriesCollector.accumulated_duration)
+      const controllerSource = routeFileOf(request.file)
 
       return {
         id: asString(meta.id) ?? ref.id,
@@ -70,6 +75,8 @@ export function createDebugbarAdapter(options: DebugbarAdapterOptions): BackendL
         uri: asString(meta.uri),
         status: toNumber(request.status_code),
         controller: controllerOf(request.controller),
+        controllerSource,
+        basePath: basePathOf(queriesCollector.statements, request.file, controllerSource),
         startedAt: requestStart ?? toNumber(meta.utime),
         durationMs: secondsToMs(time.duration),
         memoryBytes: isRecord(record.memory) ? toNumber(record.memory.peak_usage) : undefined,
@@ -150,7 +157,12 @@ function parseMessage(message: Record<string, unknown>): DebugLogEntry {
     message: cleanMessage(String(message.message ?? ''), context !== undefined),
     context,
     time: toNumber(message.time),
+    callSite: frameOf(xdebugLinkOf(message.xdebug_link)),
   }
+}
+
+function frameOf(location: SourceLocation | undefined): StackFrame | undefined {
+  return location ? { ...location, isVendor: isVendorPath(location.file) } : undefined
 }
 
 /** Drops the `[time] LOG.level: ` prefix and the pretty-printed context the log collector appends. */
@@ -204,4 +216,57 @@ function parseException(exception: Record<string, unknown>): DebugException {
     file: asString(exception.file),
     line: toLine(exception.line),
   }
+}
+
+/** The controller's file and action line, relative to the project root. */
+function routeFileOf(value: unknown): SourceLocation | undefined {
+  const text = isRecord(value) ? asString(value.value) : asString(value)
+  const match = text ? ROUTE_FILE.exec(text.trim()) : null
+  return match ? { file: match[1]!, line: toLine(match[2]) } : undefined
+}
+
+/**
+ * The project root: backtrace frames carry the absolute `file` and the root-relative `name`, the
+ * route's editor link the absolute path of its root-relative `file`. Vendor paths are the fallback.
+ */
+function basePathOf(statements: unknown, routeFile: unknown, controllerSource: SourceLocation | undefined): string | undefined {
+  const frames = asArray(statements).filter(isRecord).flatMap(statement => asArray(statement.backtrace)).filter(isRecord)
+  const pairs = frames.map(frame => [asString(frame.file), asString(frame.name)] as const)
+  if (isRecord(routeFile) && controllerSource) {
+    pairs.push([xdebugLinkOf(routeFile.xdebug_link)?.file, controllerSource.file])
+  }
+  for (const [absolute, relative] of pairs) {
+    const root = absolute && relative ? basePathFromPair(absolute, relative) : undefined
+    if (root) {
+      return root
+    }
+  }
+  return basePathFromVendor(frames.flatMap(frame => asString(frame.file) ?? []))
+}
+
+/**
+ * php-debugbar's editor link (`xdebug_link.url`), built from its `editor` setting: either a
+ * `?file=…&line=…` query (PhpStorm, Sublime…) or a `scheme://file/<path>:<line>` path (VS Code, Zed…).
+ */
+function xdebugLinkOf(value: unknown): SourceLocation | undefined {
+  const url = isRecord(value) ? asString(value.url) : undefined
+  if (!url) {
+    return undefined
+  }
+  const line = isRecord(value) ? toLine(value.line) : null
+  try {
+    const file = new URL(url).searchParams.get('file')
+    if (file) {
+      return { file, line: line ?? toLine(new URL(url).searchParams.get('line')) }
+    }
+  }
+  catch {
+    return undefined
+  }
+  const match = /^[\w+.-]+:\/\/file\/?(.+?)(?::(\d+))?(?::\d+)?$/.exec(url)
+  if (!match) {
+    return undefined
+  }
+  const file = decodeURIComponent(match[1]!)
+  return { file: file.startsWith('/') || /^[A-Z]:/i.test(file) ? file : `/${file}`, line: line ?? toLine(match[2]) }
 }
