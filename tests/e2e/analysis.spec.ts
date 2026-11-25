@@ -173,6 +173,40 @@ test('a timeline query is highlighted and opens its statement indented below the
   await expect(opened).toHaveCount(0)
 })
 
+test('the search lists request matches first and matches inside records below them', async ({ page }) => {
+  await page.goto('/books')
+  const panel = await openPanel(page)
+  // Content search needs the records: wait for the prefetched query count.
+  await expect(row(panel, /GET\/api\/books\d+ ms\d+ q/)).toHaveCount(1)
+  const search = panel.getByTestId('backend-lens-search')
+  const list = panel.locator('.bl-list')
+
+  // "authors" is a table the N+1 queries of /api/books read, not part of any URL.
+  await search.fill('authors')
+  await expect(list.getByTestId('backend-lens-search-content')).toBeVisible()
+  const match = list.getByTestId('backend-lens-content-match')
+  await expect(match).toHaveCount(1)
+  await expect(match).toContainText('/api/books')
+  await expect(match.getByTestId('backend-lens-search-hits')).toContainText(/\d+ queries/)
+
+  // A request matching by its path is listed above, and not again among content matches.
+  await search.fill('books')
+  await expect(list.locator('li').first()).toContainText('/api/books')
+  await expect(list.getByTestId('backend-lens-content-match').filter({ hasText: '/api/books' })).toHaveCount(0)
+
+  await search.fill('no-such-thing')
+  await expect(list).toContainText('No matches.')
+
+  await search.press('Escape')
+  await expect(search).toHaveValue('')
+  await expect(row(panel, /GET\/api\/books/)).toHaveCount(1)
+  await expect(panel.getByTestId('backend-lens-search-clear')).toHaveCount(0)
+
+  await search.fill('books')
+  await panel.getByTestId('backend-lens-search-clear').click({ position: { x: 4, y: 4 } })
+  await expect(search).toHaveValue('')
+})
+
 test('the DevTools tab page finds the app lens and renders the embedded panel', async ({ page }) => {
   await page.goto('/stats')
   await expect(page.locator('main pre')).toContainText('books')
