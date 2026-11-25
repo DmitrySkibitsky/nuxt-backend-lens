@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v0.1.2
+
+[compare changes](https://github.com/DmitrySkibitsky/nuxt-backend-lens/compare/v0.1.1...v0.1.2)
+
+### 🚀 Enhancements
+
+- **ui:** Open timeline queries as highlighted statements ([fd30c91](https://github.com/DmitrySkibitsky/nuxt-backend-lens/commit/fd30c91))
+  - A query bar on the **Timeline** tab opens the query below it, as in an N+1 or duplicate group on the Queries tab: highlighted SQL, duration, call site and bindings.
+  - The bar labels are highlighted too.
+- **ui:** Search requests and their records ([a9f99b4](https://github.com/DmitrySkibitsky/nuxt-backend-lens/commit/a9f99b4))
+  - A search field across the panel filters the request list. Requests whose method, path or status match come first; requests that match only inside their record follow under "Found inside requests", with what matched: SQL and bindings, log messages, cache keys, exceptions, the controller, timeline events.
+  - Records not loaded yet are not searched. Escape or the ✕ button clears the search. See [The panel](https://github.com/DmitrySkibitsky/nuxt-backend-lens/blob/main/docs/features.md#the-panel).
+
+### ❤️ Contributors
+
+- Dmitry Skibitsky ([@DmitrySkibitsky](https://github.com/DmitrySkibitsky))
+
 ## v0.1.1
 
 [compare changes](https://github.com/DmitrySkibitsky/nuxt-backend-lens/compare/v0.1.0...v0.1.1)
