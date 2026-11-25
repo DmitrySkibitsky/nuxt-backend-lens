@@ -145,14 +145,42 @@
       </div>
       <div
         v-if="!settingsOpen"
+        class="bl-search"
+        role="search"
+      >
+        <input
+          v-model="search"
+          type="text"
+          class="bl-input"
+          placeholder="Search requests, then SQL, logs, cache keys, exceptions inside them"
+          aria-label="Search requests"
+          data-testid="backend-lens-search"
+          @keydown.esc="search = ''"
+        >
+        <button
+          v-if="search"
+          type="button"
+          class="bl-search-clear"
+          aria-label="Clear search"
+          title="Clear search"
+          data-testid="backend-lens-search-clear"
+          @click="search = ''"
+        >
+          ✕
+        </button>
+      </div>
+      <div
+        v-if="!settingsOpen"
         ref="body"
         class="bl-panel-body"
         :style="bodyStyle"
       >
         <RequestList
-          :entries="visible"
+          :entries="found.requests"
+          :content-matches="found.content"
           :selected-key="selectedKey"
           :show-navigation="showAll"
+          :empty="search.trim() && visible.length ? 'No matches.' : undefined"
           @select="select"
         />
         <ResizeHandle
@@ -186,6 +214,7 @@
 <script setup lang="ts">
 import { computed, ref, useTemplateRef } from 'vue'
 import { summarizeNavigation } from '../core/analysis'
+import { searchEntries } from '../core/search'
 import { analysisOptions, formatMs } from './format'
 import { LAYOUT_LIMITS, resizableEdges, usePanelLayout } from './layout'
 import RequestDetails from './RequestDetails.vue'
@@ -235,6 +264,9 @@ const selectedKey = ref<number>()
 const visible = computed(() => (showAll.value
   ? entries.value
   : entries.value.filter(entry => entry.navigationId === currentNavigationId.value)))
+
+const search = ref('')
+const found = computed(() => searchEntries(visible.value, search.value))
 
 const selected = computed(() => entries.value.find(entry => entry.key === selectedKey.value))
 

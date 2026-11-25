@@ -1,18 +1,25 @@
 <template>
   <ul class="bl-list">
     <template
-      v-for="(entry, index) in entries"
+      v-for="({ entry, hits }, index) in rows"
       :key="entry.key"
     >
       <li
-        v-if="startsActionGroup(index)"
+        v-if="index === entries.length && hits"
+        class="bl-action bl-search-section"
+        data-testid="backend-lens-search-content"
+      >
+        Found inside requests
+      </li>
+      <li
+        v-else-if="!hits && startsActionGroup(index)"
         class="bl-action"
         data-testid="backend-lens-action"
         :title="`Requests started within ${lens.options.actions.windowMs} ms of this action`"
       >
         <span aria-hidden="true">⚡</span> {{ actionLabel(entry) }}
       </li>
-      <li>
+      <li :data-testid="hits ? 'backend-lens-content-match' : undefined">
         <button
           type="button"
           class="bl-list-item"
@@ -59,22 +66,39 @@
             v-if="showNavigation"
             class="bl-muted bl-nav"
           >#{{ entry.navigationId }}</span>
+          <span
+            v-if="hits"
+            class="bl-search-hits"
+            data-testid="backend-lens-search-hits"
+          >{{ describeHits(hits) }}</span>
         </button>
       </li>
     </template>
+    <li
+      v-if="!rows.length && empty"
+      class="bl-empty"
+    >
+      {{ empty }}
+    </li>
   </ul>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { analyzeDetails } from '../core/analysis'
+import { type ContentHits, describeHits } from '../core/search'
 import type { RequestEntry } from '../core/types'
 import { analysisOptions, databaseMs, formatAction, formatMs, queryCount, statusClass } from './format'
 import { useLensUiState } from './state'
 
 const props = defineProps<{
   entries: readonly RequestEntry[]
+  /** Search matches inside records, listed after `entries` under their own header. */
+  contentMatches?: readonly { entry: RequestEntry, hits: ContentHits }[]
   selectedKey?: number
   showNavigation: boolean
+  /** Shown when there are no rows. */
+  empty?: string
 }>()
 
 const emit = defineEmits<{
@@ -82,6 +106,11 @@ const emit = defineEmits<{
 }>()
 
 const { lens, actions } = useLensUiState()
+
+const rows = computed<{ entry: RequestEntry, hits?: ContentHits }[]>(() => [
+  ...props.entries.map(entry => ({ entry })),
+  ...(props.contentMatches ?? []),
+])
 
 /** A header goes above the first request of each run of requests sharing an action. */
 function startsActionGroup(index: number): boolean {

@@ -445,6 +445,14 @@ button {
   color: var(--bl-muted);
 }
 
+/* Content matches: a line under the metrics says what matched inside the record. */
+.bl-search-hits {
+  grid-row: 3;
+  grid-column: 1 / -1;
+  color: var(--bl-accent);
+  font-size: 11px;
+}
+
 .bl-chip {
   display: inline-block;
   padding: 0 6px;
@@ -774,6 +782,46 @@ button.bl-waterfall-line[aria-expanded="true"] { background: var(--bl-hover); }
   box-shadow: 0 0 0 3px var(--bl-focus-ring);
 }
 
+/* A flat strip across the panel, edge to edge, like a DevTools filter bar. */
+.bl-search {
+  position: relative;
+  border-bottom: 1px solid var(--bl-border);
+}
+
+.bl-search .bl-input {
+  display: block;
+  height: 36px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  background: var(--bl-code);
+}
+
+.bl-search .bl-input:focus {
+  border-bottom-color: var(--bl-accent);
+  box-shadow: none;
+}
+
+.bl-search:has(.bl-search-clear) .bl-input { padding-right: 40px; }
+
+/* The whole square at the end of the field is the target, not just the glyph. */
+.bl-search-clear {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 36px;
+  border: 0;
+  background: transparent;
+  color: var(--bl-muted);
+  cursor: pointer;
+}
+
+.bl-search-clear:hover {
+  background: var(--bl-hover);
+  color: var(--bl-fg);
+}
+
 .bl-hint {
   color: var(--bl-muted);
   font-size: 12px;
@@ -910,7 +958,8 @@ button.bl-waterfall-line[aria-expanded="true"] { background: var(--bl-hover); }
 }
 
 .bl-embedded .bl-list-item,
-.bl-embedded .bl-summary {
+.bl-embedded .bl-summary,
+.bl-embedded .bl-search .bl-input {
   padding-left: 12px;
   padding-right: 12px;
 }
