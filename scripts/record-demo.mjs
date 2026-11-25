@@ -130,6 +130,18 @@ async function tour(page, startRecording) {
   await click(page, page.getByRole('button', { name: 'Run all' }), 900)
   await pointAt(page, panel.getByTestId('backend-lens-action').filter({ hasText: 'Run all' }))
   await page.waitForTimeout(2000)
+
+  await caption(page, 'Search: matching requests first, then matches inside their records')
+  await click(page, panel.getByText('all navigations'), 600)
+  const search = panel.getByTestId('backend-lens-search')
+  await click(page, search, 300)
+  await search.pressSequentially('books', { delay: 140 })
+  await page.waitForTimeout(1800)
+  await pointAt(page, panel.getByTestId('backend-lens-search-content'))
+  await page.waitForTimeout(800)
+  await click(page, panel.getByTestId('backend-lens-content-match').filter({ hasText: '/api/stats' }).first(), 600)
+  await click(page, tab('queries'), 1800)
+  await click(page, panel.getByTestId('backend-lens-search-clear'), 1000)
   await caption(page, '')
   await page.waitForTimeout(600)
 }

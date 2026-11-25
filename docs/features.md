@@ -33,6 +33,12 @@ iframe that reads it directly, so the tab and the toolbar never disagree.
 **Request list**: method, path, status, duration, query count and DB time, plus chips for N+1,
 duplicates and slow queries.
 
+**Search**: the strip under the summary bar filters the list (case-insensitive, the current
+navigation or all of them). Requests whose method, path or status match come first. Requests that
+match only inside their record follow under "Found inside requests", each with what matched: SQL and
+bindings, log messages, cache keys, exceptions, the controller, timeline events. Records not loaded
+yet are not searched. Escape or the ✕ button clears it.
+
 **Request details**: controller, duration, memory, which adapter read the record, and a link to
 the source's own UI and to the raw record. Source paths can open in an editor
 ([below](#opening-files-in-an-editor)). Four tabs:
