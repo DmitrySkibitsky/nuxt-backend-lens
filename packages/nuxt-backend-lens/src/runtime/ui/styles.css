@@ -546,13 +546,31 @@ button {
   list-style: none;
 }
 
-.bl-waterfall-row {
+.bl-waterfall-line {
   display: grid;
   grid-template-columns: 34% 1fr 64px;
   gap: 8px;
   align-items: center;
+  width: 100%;
   padding: 1px 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
 }
+
+button.bl-waterfall-line { cursor: pointer; }
+
+button.bl-waterfall-line:hover,
+button.bl-waterfall-line[aria-expanded="true"] { background: var(--bl-hover); }
+
+/* An opened query reads like a member of a Queries tab group: same indent and rule. */
+.bl-group-members.bl-waterfall-details {
+  margin-bottom: 6px;
+  color: var(--bl-bar-query);
+}
+.bl-waterfall-details > .bl-query { border-bottom: 0; }
 
 .bl-waterfall-label {
   overflow: hidden;
@@ -879,6 +897,12 @@ button {
   padding: 0;
   background: transparent;
   white-space: normal;
+}
+
+/* One line cut by the ellipsis: the inline SQL must not wrap inside it. */
+.bl-waterfall-label .bl-sql-inline {
+  font: inherit;
+  white-space: inherit;
 }
 
 .bl-embedded .bl-panel-header {

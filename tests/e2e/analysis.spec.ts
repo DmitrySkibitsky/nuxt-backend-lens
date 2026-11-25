@@ -151,6 +151,28 @@ test('the timeline puts queries on the request time axis', async ({ page }) => {
   await expect(timeline.locator('.bl-waterfall-event').first()).toBeVisible()
 })
 
+test('a timeline query is highlighted and opens its statement indented below the bar', async ({ page }) => {
+  await page.goto('/books')
+  const panel = await openPanel(page)
+  await row(panel, /GET\/api\/books\d/).click()
+  await panel.getByTestId('backend-lens-tab-timeline').click()
+  const timeline = panel.getByTestId('backend-lens-timeline')
+  const toggle = timeline.getByTestId('backend-lens-timeline-toggle').filter({ hasText: 'from "authors"' }).first()
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false')
+  await expect(toggle.locator('.bl-sql-keyword').first()).toBeVisible()
+
+  await toggle.click()
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true')
+  const opened = timeline.getByTestId('backend-lens-timeline-query')
+  await expect(opened).toHaveCount(1)
+  await expect(opened.locator('.bl-sql-keyword').first()).toBeVisible()
+  await expect(opened).toHaveCSS('border-left-width', '3px')
+  await expect(opened).toHaveCSS('margin-left', '18px')
+
+  await toggle.click()
+  await expect(opened).toHaveCount(0)
+})
+
 test('the DevTools tab page finds the app lens and renders the embedded panel', async ({ page }) => {
   await page.goto('/stats')
   await expect(page.locator('main pre')).toContainText('books')

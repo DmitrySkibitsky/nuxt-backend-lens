@@ -144,6 +144,8 @@
         <TimelineTab
           v-else
           :details="details"
+          :slow-query-ms="lens.options.slowQueryMs"
+          :sql-options="lens.options.sql"
         />
       </div>
     </template>

@@ -18,16 +18,52 @@
           :key="index"
           class="bl-waterfall-row"
           :class="`bl-waterfall-${row.kind}`"
-          :title="`${row.label} — ${formatMs(row.durationMs)} at ${formatMs(row.startMs)}`"
         >
-          <span class="bl-waterfall-label">{{ row.kind === 'query' ? `#${(row.queryIndex ?? 0) + 1} ${row.label}` : row.label }}</span>
-          <span class="bl-waterfall-track">
+          <component
+            :is="row.queryIndex === undefined ? 'div' : 'button'"
+            class="bl-waterfall-line"
+            :type="row.queryIndex === undefined ? undefined : 'button'"
+            :aria-expanded="row.queryIndex === undefined ? undefined : expanded.has(row.queryIndex)"
+            :data-testid="row.queryIndex === undefined ? undefined : 'backend-lens-timeline-toggle'"
+            :title="`${row.label} — ${formatMs(row.durationMs)} at ${formatMs(row.startMs)}`"
+            @click="row.queryIndex !== undefined && toggle(row.queryIndex)"
+          >
             <span
-              class="bl-waterfall-bar"
-              :style="barStyle(row.startMs, row.durationMs)"
-            />
-          </span>
-          <span class="bl-waterfall-time">{{ formatMs(row.durationMs) }}</span>
+              v-if="row.queryIndex === undefined"
+              class="bl-waterfall-label"
+            >{{ row.label }}</span>
+            <span
+              v-else
+              class="bl-waterfall-label"
+            >#{{ row.queryIndex + 1 }} <SqlCode
+              :sql="row.label"
+              :options="sqlOptions"
+              inline
+            /></span>
+            <span class="bl-waterfall-track">
+              <span
+                class="bl-waterfall-bar"
+                :style="barStyle(row.startMs, row.durationMs)"
+              />
+            </span>
+            <span class="bl-waterfall-time">{{ formatMs(row.durationMs) }}</span>
+          </component>
+          <div
+            v-if="row.queryIndex !== undefined && expanded.has(row.queryIndex) && details.queries[row.queryIndex]"
+            class="bl-group-members bl-waterfall-details"
+            data-testid="backend-lens-timeline-query"
+          >
+            <div
+              class="bl-query"
+              :class="{ 'bl-slow': details.queries[row.queryIndex]!.durationMs >= slowQueryMs }"
+            >
+              <QueryRow
+                :query="details.queries[row.queryIndex]!"
+                :index="row.queryIndex"
+                :sql-options="sqlOptions"
+              />
+            </div>
+          </div>
         </li>
       </ol>
     </template>
@@ -35,16 +71,36 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { buildWaterfall } from '../core/analysis'
+import type { SqlDisplayOptions } from '../core/options'
 import type { DebugDetails } from '../core/types'
 import { formatMs } from './format'
+import QueryRow from './QueryRow.vue'
+import SqlCode from './SqlCode.vue'
 
 const props = defineProps<{
   details: DebugDetails
+  slowQueryMs: number
+  sqlOptions: SqlDisplayOptions
 }>()
 
 const waterfall = computed(() => buildWaterfall(props.details))
+
+/** Query indexes whose statement is open below their bar. */
+const expanded = ref(new Set<number>())
+
+watch(() => props.details, () => {
+  expanded.value = new Set()
+})
+
+function toggle(queryIndex: number) {
+  const next = new Set(expanded.value)
+  if (!next.delete(queryIndex)) {
+    next.add(queryIndex)
+  }
+  expanded.value = next
+}
 
 /** Bars keep a minimal visible width so sub-millisecond queries still show up. */
 function barStyle(startMs: number, durationMs: number): Record<string, string> {
