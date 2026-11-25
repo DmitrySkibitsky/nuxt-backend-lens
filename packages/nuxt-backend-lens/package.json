@@ -1,6 +1,6 @@
 {
   "name": "nuxt-backend-lens",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Debugbar-like panel for Nuxt SPAs: the SQL, logs and timing behind every backend request (Clockwork, Laravel Debugbar)",
   "repository": {
     "type": "git",
